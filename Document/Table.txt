@@ -1,0 +1,143 @@
+Table Name:
+
+1. Users
+2. Products
+3. Categories
+4. Sub_categories
+5. Cupon_codes
+6. Testimonials
+7. Reviews
+8. Brands
+9. Contact_informations
+10. massages
+11. stores
+12. teams
+13. settings
+
+
+Table Details:
+
+1.Users Table
+	1.1) id		- int - 10    Autoincrement
+	1.2) name	- var - 100	 
+	1.3) email	- var - 200
+	1.4) password	- var - 100
+	1.5) img	- var - 100   default-> null
+	1.6) address	- var - 100   default-> null
+	1.7) facebook 	- var - 100   default-> null	
+	1.8) linkedin  	- var - 100   default-> null
+	1.9) phone  	- int - 20    default-> null
+	1.10) blood	- int - 10    default-> null (1=A+, 2=A-, 3=B+, 4=B-, 5=O+, 6=O-, 7=AB+, 8=AB-)
+	1.11) role	- int - 10    default-> 1    (1=Customer, 2=DalyvariMan, 3=Admin, 4=SuperAdmin)
+
+	1.12) Created_at - date	
+
+
+2.Products Table
+	2.1) id		- int - 10    Autoincrement
+	2.2) name	- var - 100	 
+	2.3) price	- int - 10
+	2.4) quantity	- int - 10
+	2.5) img	- var - 100   
+	2.6) subcategories- int - 10
+	2.7) categories	- int - 10
+	2.8) description- text- 300
+	2.9) action	- int - 10   default-> 1 (1=show, 2=hide)
+	2.10) alert_quantity - int - 10   default-> null	
+	2.11) discount_end - date - 10   default-> null
+	2.12) discount  	- int - 10    default-> null
+
+	2.13) Created_at - date	
+	2.14) added_by    - int - 10   
+
+
+3.Categories Table
+	3.1) id		- int - 10    Autoincrement
+	3.2) name	- var - 100	 
+	3.3) img	- var - 100   
+	3.4) action	- int - 10   default-> 1 (1=show, 2=hide)
+	3.5) Created_at - date
+	3.6) added_by    - int - 10   
+
+
+4.Sub_categories Table
+	4.1) id		- int - 10    Autoincrement
+	4.2) name	- var - 100	 
+	4.3) categories	- int - 10
+
+	4.4) Created_at - date	
+	4.5) added_by    - int - 10  
+
+
+5.Cupon_codes Table
+	5.1) id		- int - 10    Autoincrement
+	5.2) name	- var - 100
+	5.3) code	- var - 100
+	5.4) discount  	- int - 10 
+	5.5) discount_end - date - 10   default-> null  
+	5.6) action	- int - 10   default-> 1 (1=active, 2=unactive)
+
+	5.7) Created_at - date	
+	5.8) added_by    - int - 10   
+
+
+6.Testimonials Table
+	6.1) id		- int - 10    Autoincrement
+	6.2) name	- var - 100
+	6.3) title	- var - 100
+	6.4) img  	- var - 10 
+	6.5) feedback	- text- 500     
+	6.6) action	- int - 10   default-> 1 (1=active, 2=unactive)
+
+	6.7) Created_at - date	
+	6.8) added_by    - int - 10   
+
+
+7.Reviews Table
+	7.1) id		- int - 10    Autoincrement
+	7.2) customer_id- int - 10
+	7.3) product_id	- int - 10
+	7.4) feedback	- text- 500  
+	7.5) reviews	- int - 10   
+	7.6) action	- int - 10   default-> 1 (1=active, 2=unactive)
+
+	7.7) Created_at - date	
+	7.8) added_by    - int - 10   
+
+
+8.Brands Table
+	8.1) id		- int - 10    Autoincrement
+	8.2) Name	- var - 100
+	8.3) img	- var - 100
+	8.4) action	- int - 10   default-> 1 (1=active, 2=unactive)
+
+	8.5) Created_at - date	
+	8.6) added_by    - int - 10   
+
+
+
+
+
+9.Contact_inforamtions Table
+	8.1) id		- int - 10    Autoincrement
+	8.2) phone1	- int - 20
+	8.3) email	- var - 100
+	8.4) address	- var - 100   
+
+	8.5) facebook	- var - 100
+	8.6) twitter	- var - 100   	
+	8.6) linkedin	- var - 100 	
+	8.6) headquaters- var - 100   
+	8.6) phone2	- int - 20
+   	8.6) support_email- var - 100   
+	8.6) help_email	- var - 100   
+	8.6) maps	- var - 100   
+
+
+	8.6) headquaters- var - 100   
+	8.6) headquaters- var - 100   
+
+
+
+EMAIL: mail@riode.com
+ADDRESS: 123 Street Na

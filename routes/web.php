@@ -28,10 +28,40 @@ Route::get('/', [FrontendController::class, 'index'])->name('front');
 // Home
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
+
+
+
+
+
+
+
+
 // Category page
 Route::get('category', [CategoryController::class, 'index'])->name('category');
 Route::get('category/addcategory', [CategoryController::class, 'addcategory'])->name('addcategory');
+Route::get('category/recyclebin', [CategoryController::class, 'recyclebin'])->name('recyclebin_category');
+Route::post('category/img_update', [CategoryController::class, 'img_update'])->name('category_img_update');
+Route::post('category/update', [CategoryController::class, 'update'])->name('category_update');
+
+// category delete and restore
+Route::get('category/action/{id}', [CategoryController::class, 'action']);
+Route::get('category/restore/{id}', [CategoryController::class, 'restore']);
+Route::get('category/p_delete/{id}', [CategoryController::class, 'p_delete']);
+Route::get('category/view/{id}', [CategoryController::class, 'view_category']);
+Route::get('category/update/{id}', [CategoryController::class, 'update_category']);
+Route::get('category/soft_delete/{id}', [CategoryController::class, 'soft_delete']);
+Route::get('category_p_delete_all', [CategoryController::class, 'p_delete_all'])->name('category_p_delete_all');
+Route::get('category_soft_delete_all', [CategoryController::class, 'soft_delete_all'])->name('category_soft_delete_all');
+Route::post('category/form_action', [CategoryController::class, 'form_action'])->name('category_form_action');
 Route::post('category/addcategoryinsert', [CategoryController::class, 'addcategoryinsert'])->name('addcategoryinsert');
+
+
+
+
+
+
+
+
 
 
 // profail page

@@ -5,6 +5,11 @@
     active
 @endsection
 
+{{-- nav active satatus --}}
+@section('page_title')
+    Dasboard
+@endsection
+
 @section('content')
 
                 <div class="row">

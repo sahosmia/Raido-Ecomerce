@@ -19,6 +19,7 @@ class CreateCategoriesTable extends Migration
             $table->string('img', 100)->default('category.jpg');
             $table->integer('action')->default(1);
             $table->integer('added_by');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@
 
                @if (Route::has('login'))
                     @auth
-                        <a class="login-link" href="{{ url('/home') }}" ><i class="d-icon-user"></i>Account</a>
+                        <a class="login-link" href="{{ url('/home') }}" ><i class="d-icon-user"></i>{{ Auth::user()->name }}</a>
                     @else
                         <a class="login-link" href="{{ route('login') }}" data-toggle="login-modal"><i class="d-icon-user"></i>Sign in</a>
                         @if (Route::has('register'))

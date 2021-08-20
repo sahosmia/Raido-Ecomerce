@@ -361,19 +361,19 @@
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" title="User menu" data-toggle="dropdown">
                                 <figure class="avatar avatar-sm">
-                                    <img src="../../assets/media/image/user/man_avatar3.jpg"
-                                         class="rounded-circle"
+                                    <img src="{{ asset('upload/users') }}/{{ Auth::user()->img }}"
+                                         class="rounded-circle border"
                                          alt="avatar">
                                 </figure>
-                                <span class="ml-2 d-sm-inline d-none">Bony Gidden</span>
+                                <span class="ml-2 d-sm-inline d-none">{{ Auth::user()->name }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-big">
                                 <div class="text-center py-4">
                                     <figure class="avatar avatar-lg mb-3 border-0">
-                                        <img src="{{ asset('backend/assets/media/image/user/man_avatar3.jpg') }}"
+                                        <img src="{{ asset('upload/users') }}/{{ Auth::user()->img }}"
                                              class="rounded-circle" alt="image">
                                     </figure>
-                                    <h5 class="text-center">Bony Gidden</h5>
+                                    <h5 class="text-center">{{ Auth::user()->name }}</h5>
                                     <div class="mb-3 small text-center text-muted">@bonygidden</div>
                                     <a href="#" class="btn btn-outline-light btn-rounded">Manage Your Account</a>
                                 </div>

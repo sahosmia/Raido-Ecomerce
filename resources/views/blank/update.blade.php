@@ -67,7 +67,6 @@
                     @error('img')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
             </form>
@@ -80,9 +79,37 @@
         <div class="card-body">
             <form action="{{ route('category_update') }}" method="post">
                 @csrf
-                                    <input name="id" type="hidden" value="{{ $item->id }}">
+                    <input name="id" type="hidden" value="{{ $item->id }}">
+                <div class="form-group">
+                     <label>New Category Name</label>
+                    <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Category Name">
+                    @error('name')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
 
-
+                <div class="form-group">
+                     <label>New Category Name</label>
+                    <input name="email" value="{{ $item->email }}" type="text" class="form-control @error('email') is-invalid @enderror" placeholder="Enter New Category Name">
+                    @error('email')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                 <div class="form-group">
+                    <label>Example textarea</label>
+                    <textarea name="des" class="form-control @error('des') is-invalid @enderror" rows="3">{{ $item->des }}</textarea>
+                    @error('des')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                     <label>New Category Name</label>
+                    <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Category Name">
+                    @error('name')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
                 <div class="form-group">
                      <label>New Category Name</label>
                     <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Category Name">

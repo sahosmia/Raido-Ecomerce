@@ -12,7 +12,6 @@
 
 {{-- exta css  --}}
 @section('exta_css')
-<link rel="stylesheet" href="{{ asset('backend/vendors/datepicker/daterangepicker.css') }}">
 
 <!-- Style -->
 <link rel="stylesheet" href="{{ asset('backend/vendors/select2/css/select2.min.css') }}" type="text/css">
@@ -44,32 +43,40 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">Category Add++</div>
         <div class="card-body">
-            <form action="{{ route('addcategoryinsert') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('blank_form_submit') }}" method="post" enctype="multipart/form-data">
                 @csrf
+
+                {{-- name --}}
                 <div class="form-group">
                      <label>Name</label>
-                    <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter name">
+                    <input name="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter name">
                     @error('name')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
+                {{-- email  --}}
                 <div class="form-group">
                      <label>Email</label>
-                    <input name="email" type="text" class="form-control @error('email') is-invalid @enderror" placeholder="Enter Email">
+                    <input name="email" value="{{ old('email') }}" type="text" class="form-control @error('email') is-invalid @enderror" placeholder="Enter Email">
                     @error('email')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
+                {{-- password  --}}
                 <div class="form-group">
                      <label>Password</label>
-                    <input name="password" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter password">
+                    <input name="password" value="{{ old('password') }}" type="password" class="form-control @error('password') is-invalid @enderror" placeholder="Enter password">
                     @error('password')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
+                {{-- password  confirmation --}}
                 <div class="form-group">
                      <label>Password Confirmation</label>
-                    <input name="password_confirmation" type="text" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Enter Password Confirmation ">
+                    <input name="password_confirmation" value="{{ old('password_confirmation') }}" type="text" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Enter Password Confirmation ">
                     @error('password_confirmation')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -77,24 +84,40 @@
                 <!-- Textarea -->
                 <div class="form-group">
                     <label>Example textarea</label>
-                    <textarea name="des" class="form-control @error('des') is-invalid @enderror" rows="3"></textarea>
+                    <textarea name="des" class="form-control @error('des') is-invalid @enderror" rows="3">{{ old('des') }}</textarea>
                     @error('des')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-               <!-- File input -->
+                  {{-- date picker --}}
+                <div class="form-group">
+                     <label>Date</label>
+                     @php
+                        use Carbon\Carbon;
+                        $date = Carbon::now()->format('Y-m-d');
+                     @endphp
+
+
+                     <input name="date"  value="{{ $date }}"  type="date" class="form-control @error('date') is-invalid @enderror">
+                    @error('date')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+
+                </div>
+
+               <!-- File input single -->
                 <div class="form-group">
                     <label>Example file input</label>
-                    <input name="img" type="file" class="form-control-file">
+                    <input name="img" value="{{ old('img') }}" type="file" class="form-control-file">
                     @error('img')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
 
-               <!-- File input -->
+               <!-- File input multiple -->
                 <div class="form-group">
                     <label>Example Multiple file input</label>
-                    <input name="img_multuple[]" type="file" class="form-control-file" multiple>
+                    <input name="img_multuple[]" value="{{ old('img_multuple') }}" type="file" class="form-control-file" multiple>
                     @error('img_multuple')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -102,18 +125,17 @@
 
 
 
-
+                {{-- select option  --}}
                 <div class="form-group">
                      <label>Select Category</label>
-                     <select class="select2-example @error('select_name') is-invalid @enderror" name="select_name">
+                     <select class="select2-example @error('select_name') is-invalid @enderror" name="select_name" value="{{ old('select_name') }}">
                         <option>Select</option>
-                        <option value="France">France</option>
-                        <option value="Brazil">Brazil</option>
-                        <option value="Yemen">Yemen</option>
-                        <option value="United States">United States</option>
-                        <option value="China">China</option>
-                        <option value="Argentina">Argentina</option>
-                        <option value="Bulgaria">Bulgaria</option>
+                        <option {{ old('select_name') == "France"? "selected" : "" }} value="France">France</option>
+                        <option {{ old('select_name') == "Brazil"? "selected" : "" }} value="Brazil">Brazil</option>
+                        <option {{ old('select_name') == "Yemen"? "selected" : "" }} value="Yemen">Yemen</option>
+                        <option {{ old('select_name') == "China"? "selected" : "" }} value="China">China</option>
+                        <option {{ old('select_name') == "Argentina"? "selected" : "" }}  value="Argentina">Argentina</option>
+                        <option {{ old('select_name') == "Bulgaria"? "selected" : "" }} value="Bulgaria">Bulgaria</option>
                     </select>
                     @error('select_name')
                         <small class="text-danger">{{ $message }}</small>
@@ -122,13 +144,6 @@
 
 
 
-                <div class="form-group">
-                     <label>Date</label>
-                     <input name="daterangepicker" type="text" class="form-control @error('daterangepicker') is-invalid @enderror">
-                    @error('daterangepicker')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
 
                 <button type="submit" class="btn btn-primary btn-block">Submit</button>
             </form>
@@ -141,18 +156,10 @@
 {{-- exta js  --}}
 @section('exta_js')
 
-    <!-- date picker -->
-    <script src="{{ asset('backend/assets/js/examples/datepicker.js') }}"></script>
-
     <!-- select -->
     <script src="{{ asset('backend/vendors/select2/js/select2.min.js') }}"></script>
 
     <script>
-        // date picker
-        $('input[name="daterangepicker"]').daterangepicker({
-            singleDatePicker: true,
-            showDropdowns: true
-        });
 
         // select2
         $('.select2-example').select2({

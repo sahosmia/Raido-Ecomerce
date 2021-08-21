@@ -10,6 +10,9 @@
     Category
 @endsection
 
+
+
+
 @section('content')
     <div class="page-header">
         <div>

@@ -20,6 +20,7 @@ use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\Contact_informationController;
 
+use App\Http\Controllers\BlankController;
 
 
 // Frontend page
@@ -29,6 +30,11 @@ Route::get('/', [FrontendController::class, 'index'])->name('front');
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
 
+// black page
+
+Route::get('blank', [BlankController::class, 'index'])->name('blank');
+Route::get('blank_form', [BlankController::class, 'blank_form'])->name('blank_form');
+Route::post('blank_form_submit', [BlankController::class, 'blank_form_submit'])->name('blank_form_submit');
 
 
 

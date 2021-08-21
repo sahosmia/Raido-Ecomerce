@@ -10,7 +10,14 @@
     Category Add
 @endsection
 
+{{-- exta css  --}}
+@section('exta_css')
+<link rel="stylesheet" href="{{ asset('backend/vendors/datepicker/daterangepicker.css') }}">
 
+<!-- Style -->
+<link rel="stylesheet" href="{{ asset('backend/vendors/select2/css/select2.min.css') }}" type="text/css">
+
+@endsection
 
 {{-- content --}}
 @section('content')
@@ -67,3 +74,25 @@
 
 
 
+{{-- exta js  --}}
+@section('exta_js')
+
+    <!-- date picker -->
+    <script src="{{ asset('backend/assets/js/examples/datepicker.js') }}"></script>
+
+    <!-- select -->
+    <script src="{{ asset('backend/vendors/select2/js/select2.min.js') }}"></script>
+
+    <script>
+        // date picker
+        $('input[name="daterangepicker"]').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true
+        });
+
+        // select2
+        $('.select2-example').select2({
+            placeholder: 'Select'
+        });
+    </script>
+@endsection

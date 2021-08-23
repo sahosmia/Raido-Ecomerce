@@ -1,13 +1,13 @@
 @extends('layouts.backend')
 
 {{-- nav active satatus --}}
-@section('category')
+@section('brand')
     active
 @endsection
 
 {{-- title name --}}
 @section('page_title')
-    Category
+    brand
 @endsection
 
 
@@ -16,14 +16,14 @@
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Category Page</h3>
+            <h3>brand Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
 
-                    <li class="breadcrumb-item active" aria-current="page">Category Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">brand Page</li>
                 </ol>
             </nav>
         </div>
@@ -46,26 +46,26 @@
 @endif
 
     <div class="card text-center border border-primary p-3">
-        <form action="{{ route('category_form_action') }}" method="POST">
+        <form action="{{ route('brand_form_action') }}" method="POST">
 @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('addcategory') }}">Add New</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('addbrand') }}">Add New</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-dark mr-2" href="{{ route('recyclebin_category') }}">Recycle Bin</a>
+                <a class="nav-link btn btn-dark mr-2" href="{{ route('recyclebin_brand') }}">Recycle Bin</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2" href="{{ route('category_p_delete_all') }}">All P. Delete</a>
+                <a class="nav-link btn btn-danger mr-2 {{ $brands_count == 0 ? "disabled" : "" }}" href="{{ route('brand_p_delete_all') }}">All P. Delete</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-info mr-2" href="{{ route('category_soft_delete_all') }}">All S. Delete</a>
+                <a class="nav-link btn btn-info mr-2 {{ $brands_count == 0 ? "disabled" : "" }}" href="{{ route('brand_soft_delete_all') }}">All S. Delete</a>
             </li>
             <li class="nav-item">
-                <button class="nav-link btn btn-secondary mr-1" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
+                <button class="nav-link btn btn-secondary mr-1 {{ $brands_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
             </li>
             <li class="nav-item">
-                <button class="nav-link btn btn-warning mr-1" type="submit" name="action" value="mark_s_delete">Mark S. Delete</button>
+                <button class="nav-link btn btn-warning mr-1 {{ $brands_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_s_delete">Mark S. Delete</button>
             </li>
 
         </ul>
@@ -75,7 +75,7 @@
 
     <div class="card text-center border border-primary">
         <div class="card-header bg-primary">
-            <h5>Category Item</h5>
+            <h5>brand Item</h5>
         </div>
         <div class="card-body border-primary">
             <div class="table-responsive">
@@ -85,35 +85,28 @@
                             <th scope="col">Mark</th>
                             <th scope="col">No</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Category Image</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Details</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($categories as $key => $item)
+                    @forelse ($brands as $key => $item)
                         <tr>
                             <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
-                            <th>{{ $categories->firstItem() + $key }}</th>
+                            <th>{{ $brands->firstItem() + $key }}</th>
                             <td>{{ $item->name }}</td>
                             <td>
                                 <figure class="avatar">
-                                    <img src="{{ asset('upload/category') }}/{{ $item->img }}" alt="avatar">
+                                    <img src="{{ asset('upload/brand') }}/{{ $item->img }}" alt="avatar">
                                 </figure>
-                                {{-- <figure class="avatar">
-                                    <img class="rounded" src="{{ asset('backend/assets/media/image/photo2.jpg') }}" alt="avatar">
-                                </figure>
-                                <figure class="avatar">
-                                    <img class="rounded-circle" src="{{ asset('backend/assets/media/image/photo2.jpg') }}" alt="avatar">
-                                </figure> --}}
+
                             </td>
+
                             <td>
                                 <ul>
                                     <li>Added By :
-                                        @php
-                                        echo App\Models\User::find($item->added_by)->name;
-
-                                        @endphp
+                                        {{ App\Models\User::find($item->added_by)->name }}
                                     </li>
                                     <li>Active Status :
                                         @if ($item->action == 1)
@@ -153,30 +146,34 @@
                                         <i class="ti-more-alt"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="{{ url('category/view') }}/{{ $item->id }}" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('category/update') }}/{{ $item->id }}" class="dropdown-item text-info">Update</a>
-                                        <a href="{{ url('category/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
-                                        <a href="{{ url('category/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
+                                        <a href="{{ url('brand/view') }}/{{ $item->id }}" class="dropdown-item">View Detail</a>
+                                        <a href="{{ url('brand/update') }}/{{ $item->id }}" class="dropdown-item text-info">Update</a>
+                                        <a href="{{ url('brand/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
+                                        <a href="{{ url('brand/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
                                         @if ($item->action == 1)
-                                        <a href="{{ url('category/action') }}/{{ $item->id }}" class="dropdown-item text-primary">Dactive</a>
+                                        <a href="{{ url('brand/action') }}/{{ $item->id }}" class="dropdown-item text-primary">Dactive</a>
                                         @else
 
-                                        <a href="{{ url('category/action') }}/{{ $item->id }}" class="dropdown-item text-success">Active</a>
+                                        <a href="{{ url('brand/action') }}/{{ $item->id }}" class="dropdown-item text-success">Active</a>
                                         @endif
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    @endforeach
+                      @empty
+                        <tr colspan="50">
+                            <td colspan="15" class="text-danger">No Data to Show</td>
+                        </tr>
+                    @endforelse
                     </tbody>
                 </table>
             </form>
             </div>
-            {{ $categories->links() }}
+            {{ $brands->links() }}
         </div>
 
         <div class="card-footer bg-primary ">
-            <h5>Total Catagory: {{ $categories_count }}</h5>
+            <h5>Total brand: {{ $brands_count }}</h5>
         </div>
     </div>
 @endsection

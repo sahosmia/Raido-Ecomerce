@@ -27,6 +27,7 @@ use App\Http\Controllers\BlankController;
 Route::get('/', [FrontendController::class, 'index'])->name('front');
 
 // Home
+Auth::routes();
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
 
@@ -35,12 +36,6 @@ Route::get('home', [HomeController::class, 'index'])->name('home');
 Route::get('blank', [BlankController::class, 'index'])->name('blank');
 Route::get('blank_form', [BlankController::class, 'blank_form'])->name('blank_form');
 Route::post('blank_form_submit', [BlankController::class, 'blank_form_submit'])->name('blank_form_submit');
-
-
-
-
-
-
 
 // Category page
 Route::get('category', [CategoryController::class, 'index'])->name('category');
@@ -60,8 +55,6 @@ Route::get('category_soft_delete_all', [CategoryController::class, 'soft_delete_
 Route::get('category_p_delete_all', [CategoryController::class, 'p_delete_all'])->name('category_p_delete_all');
 Route::get('category_restore_all', [CategoryController::class, 'restore_all'])->name('category_restore_all');
 
-
-
 // SubCategory page
 Route::get('subcategory', [SubcategoryController::class, 'index'])->name('subcategory');
 Route::get('subcategory/addsubcategory', [SubcategoryController::class, 'addsubcategory'])->name('addsubcategory');
@@ -79,12 +72,10 @@ Route::get('subcategory_soft_delete_all', [SubcategoryController::class, 'soft_d
 Route::get('subcategory_p_delete_all', [SubcategoryController::class, 'p_delete_all'])->name('subcategory_p_delete_all');
 Route::get('subcategory_restore_all', [SubcategoryController::class, 'restore_all'])->name('subcategory_restore_all');
 
-
 // Cupon Controller
 Route::get('cupon', [CuponController::class, 'index'])->name('cupon');
-
-Route::get('cupon/addsubcategory', [CuponController::class, 'addcupon'])->name('addcupon');
-Route::post('cupon/addsubcategoryinsert', [CuponController::class, 'addcuponinsert'])->name('addcuponinsert');
+Route::get('cupon/addcupon', [CuponController::class, 'addcupon'])->name('addcupon');
+Route::post('cupon/addcuponinsert', [CuponController::class, 'addcuponinsert'])->name('addcuponinsert');
 Route::get('cupon/recyclebin', [CuponController::class, 'recyclebin'])->name('recyclebin_cupon');
 Route::post('cupon/update', [CuponController::class, 'update'])->name('cupon_update');
 Route::post('cupon/form_action', [CuponController::class, 'form_action'])->name('cupon_form_action');
@@ -98,10 +89,80 @@ Route::get('cupon_soft_delete_all', [CuponController::class, 'soft_delete_all'])
 Route::get('cupon_p_delete_all', [CuponController::class, 'p_delete_all'])->name('cupon_p_delete_all');
 Route::get('cupon_restore_all', [CuponController::class, 'restore_all'])->name('cupon_restore_all');
 
+// Brand
+Route::get('brand', [BrandController::class, 'index'])->name('brand');
+Route::get('brand/addbrand', [BrandController::class, 'addbrand'])->name('addbrand');
+Route::post('brand/addbrandinsert', [BrandController::class, 'addbrandinsert'])->name('addbrandinsert');
+Route::get('brand/recyclebin', [BrandController::class, 'recyclebin'])->name('recyclebin_brand');
+Route::post('brand/update', [BrandController::class, 'update'])->name('brand_update');
+Route::post('brand/form_action', [BrandController::class, 'form_action'])->name('brand_form_action');
+Route::get('brand/view/{id}', [BrandController::class, 'view_brand']);
+Route::get('brand/update/{id}', [BrandController::class, 'update_brand']);
+Route::post('brand/img_update', [BrandController::class, 'img_update'])->name('brand_img_update');
+Route::get('brand/soft_delete/{id}', [BrandController::class, 'soft_delete']);
+Route::get('brand/p_delete/{id}', [BrandController::class, 'p_delete']);
+Route::get('brand/restore/{id}', [BrandController::class, 'restore']);
+Route::get('brand/action/{id}', [BrandController::class, 'action']);
+Route::get('brand_soft_delete_all', [BrandController::class, 'soft_delete_all'])->name('brand_soft_delete_all');
+Route::get('brand_p_delete_all', [BrandController::class, 'p_delete_all'])->name('brand_p_delete_all');
+Route::get('brand_restore_all', [BrandController::class, 'restore_all'])->name('brand_restore_all');
+
+
+
+// Product
+Route::get('product', [ProductController::class, 'index'])->name('product');
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Team
+Route::get('team', [BrandController::class, 'index'])->name('team');
+
+Route::get('team/addteam', [TeamController::class, 'addteam'])->name('addteam');
+Route::post('team/addteaminsert', [TeamController::class, 'addteaminsert'])->name('addteaminsert');
+Route::get('team/recyclebin', [TeamController::class, 'recyclebin'])->name('recyclebin_team');
+Route::post('team/update', [TeamController::class, 'update'])->name('team_update');
+Route::post('team/form_action', [TeamController::class, 'form_action'])->name('team_form_action');
+Route::get('team/view/{id}', [TeamController::class, 'view_team']);
+Route::get('team/update/{id}', [TeamController::class, 'update_team']);
+Route::get('team/soft_delete/{id}', [TeamController::class, 'soft_delete']);
+Route::get('team/p_delete/{id}', [TeamController::class, 'p_delete']);
+Route::get('team/restore/{id}', [TeamController::class, 'restore']);
+Route::get('team/action/{id}', [TeamController::class, 'action']);
+Route::get('team_soft_delete_all', [TeamController::class, 'soft_delete_all'])->name('team_soft_delete_all');
+Route::get('team_p_delete_all', [TeamController::class, 'p_delete_all'])->name('team_p_delete_all');
+Route::get('team_restore_all', [TeamController::class, 'restore_all'])->name('team_restore_all');
 
 
 
@@ -110,11 +171,6 @@ Route::get('cupon_restore_all', [CuponController::class, 'restore_all'])->name('
 // profail page
 Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
-// Product
-Route::get('product', [ProductController::class, 'index'])->name('product');
-
-// SubCategory page
-Route::get('subcategory', [SubcategoryController::class, 'index'])->name('subcategory');
 
 
 
@@ -124,8 +180,6 @@ Route::get('order', [OrderController::class, 'index'])->name('order');
 // Testimonial
 Route::get('testimonial', [TestimonialController::class, 'index'])->name('tesimonial');
 
-// Brand
-Route::get('brand', [BrandController::class, 'index'])->name('brand');
 
 // Message
 Route::get('message', [MessageController::class, 'index'])->name('message');
@@ -159,9 +213,6 @@ Route::get('contact_information', [Contact_informationController::class, 'index'
 // Route::post('cart.update', [AddtocartController::class, 'cart_update'])->name('cart_update');
 // Route::post('add_to_cart', [AddtocartController::class, 'add_to_cart']);
 
-// Cupon Controller
-Route::get('cupon/cupon_add_page', [CuponController::class, 'cupon_add_page'])->name('cupon_add_page');
-Route::post('cupon.insert', [CuponController::class, 'insert'])->name('cupon_insert');
 
 // checkout page
 Route::get('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
@@ -175,27 +226,6 @@ Route::post('profile/update.email', [ProfileController::class, 'update_email']);
 Route::post('profile/update.password', [ProfileController::class, 'update_password']);
 Route::post('profile/update.profile_img', [ProfileController::class, 'update_profile_img']);
 
-// category page
-Route::get('category/add', [categoryController::class, 'add']);
-Route::get('category/delete_all', [categoryController::class, 'delete_all']);
-Route::get('category/trashed_item', [categoryController::class, 'trashed_item']);
-Route::get('category/update_view/{category_id}', [categoryController::class, 'update_view']);
-Route::get('category/restore/{restore_category_id}', [categoryController::class, 'restore']);
-Route::get('category/soft_delete/{subcategory_id}',  [categoryController::class, 'soft_delete']);
-Route::get('category/permanent_delete/{subcategory_id}', [categoryController::class, 'permanent_delete']);
-Route::post('category.insert', [categoryController::class, 'insert']);
-Route::post('category.update', [categoryController::class, 'update_action']);
-Route::post('category/mark_delete', [categoryController::class, 'mark_delete']);
-
-// Sub category
-Route::get('subcategory/add', [SubcategoryController::class, 'add']);
-Route::get('subcategory/trashed_item', [SubcategoryController::class, 'trashed_item']);
-Route::get('subcategory/delete/{subcategory_id}',  [SubcategoryController::class, 'delete']);
-Route::get('subcategory/update_view/{subcategory_id}', [SubcategoryController::class, 'update_view']);
-Route::get('subcategory/restore/{restore_subcategory_id}', [SubcategoryController::class, 'restore']);
-Route::get('subcategory/permanent_delete/{subcategory_id}', [SubcategoryController::class, 'permanent_delete']);
-Route::post('subcategory.insert', [SubcategoryController::class, 'insert']);
-Route::post('subcategory.update', [SubcategoryController::class, 'update']);
 
 // Product
 Route::get('product', [ProductController::class, 'index'])->name('product');
@@ -208,7 +238,7 @@ Route::get('testimonial/add', [TestimonialController::class, 'add']);
 Route::post('testimonial.add_action', [TestimonialController::class, 'insert']);
 
 // home page
-Auth::routes();
+
 Route::get('home/invoice/{order_id}', [HomeController::class, 'pdf_download']);
 
 

@@ -1286,27 +1286,22 @@
   </div>
 </section>
 
+
+{{-- brand section --}}
 <section class="mt-2 pb-6 pt-10 pb-md-10 appear-animate" data-animation-options="{
           'delay': '.3s'
       }">
   <h2 class="title d-none">Our Brand</h2>
   <div class="container">
-    <div
-      class="
-        owl-carousel owl-theme
-        row
-        brand-carousel
-        cols-xl-6 cols-lg-5 cols-md-4 cols-sm-3 cols-2
-      "
-      data-owl-options="{
-                  'nav': false,
-                  'dots': false,
-                  'autoplay': true,
-                  'margin': 20,
-                  'loop': true,
-                  'responsive': {
-                      '0': {
-                          'items': 2
+    <div class="owl-carousel owl-theme row brand-carousel cols-xl-6 cols-lg-5 cols-md-4 cols-sm-3 cols-2" data-owl-options="{
+                'nav': false,
+                'dots': false,
+                'autoplay': true,
+                'margin': 20,
+                'loop': true,
+                'responsive': {
+                '0': {
+                        'items': 2
                       },
                       '576': {
                           'items': 3
@@ -1321,56 +1316,12 @@
                           'items': 6
                       }
                   }
-              }"
-    >
-      <figure>
-        <img
-          src="{{ asset('frontend/images/brands/1.png')}}"
-          alt="brand"
-          width="180"
-          height="100"
-        />
-      </figure>
-      <figure>
-        <img
-          src="{{ asset('frontend/images/brands/2.png')}}"
-          alt="brand"
-          width="180"
-          height="100"
-        />
-      </figure>
-      <figure>
-        <img
-          src="{{ asset('frontend/images/brands/3.png')}}"
-          alt="brand"
-          width="180"
-          height="100"
-        />
-      </figure>
-      <figure>
-        <img
-          src="{{ asset('frontend/images/brands/4.png')}}"
-          alt="brand"
-          width="180"
-          height="100"
-        />
-      </figure>
-      <figure>
-        <img
-          src="{{ asset('frontend/images/brands/5.png')}}"
-          alt="brand"
-          width="180"
-          height="100"
-        />
-      </figure>
-      <figure>
-        <img
-          src="{{ asset('frontend/images/brands/6.png')}}"
-          alt="brand"
-          width="180"
-          height="100"
-        />
-      </figure>
+              }">
+              @foreach ($brands as $item)
+              <figure>
+                <img src="{{ asset('upload/brand')}}/{{ $item->img }}" alt="brand" width="180" height="100"/>
+              </figure>
+              @endforeach
     </div>
   </div>
 </section>

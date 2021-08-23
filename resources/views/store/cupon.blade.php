@@ -1,29 +1,29 @@
 @extends('layouts.backend')
 
 {{-- nav active satatus --}}
-@section('brand')
+@section('cupon')
     active
 @endsection
 
 {{-- title name --}}
 @section('page_title')
-    brand
+    cupon
 @endsection
+
+
+
 
 @section('content')
     <div class="page-header">
         <div>
-            <h3>brand Page</h3>
+            <h3>cupon Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('brand') }}">brand</a>
-                    </li>
 
-                    <li class="breadcrumb-item active" aria-current="page">Recyclebin</li>
+                    <li class="breadcrumb-item active" aria-current="page">cupon Page</li>
                 </ol>
             </nav>
         </div>
@@ -46,38 +46,36 @@
 @endif
 
     <div class="card text-center border border-primary p-3">
-        <form action="{{ route('brand_form_action') }}" method="POST">
+        <form action="{{ route('cupon_form_action') }}" method="POST">
 @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('brand') }}">Back brand</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('addcupon') }}">Add New</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $brands_count == 0 ? "disabled" : "" }}" href="#">All P. Delete</a>
+                <a class="nav-link btn btn-dark mr-2" href="{{ route('recyclebin_cupon') }}">Recycle Bin</a>
             </li>
             <li class="nav-item">
-                 <button class="nav-link btn btn-secondary mr-1 {{ $brands_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
+                <a class="nav-link btn btn-danger mr-2 {{ $cupons_count == 0 ? "disabled" : "" }}" href="{{ route('cupon_p_delete_all') }}">All P. Delete</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $brands_count == 0 ? "disabled" : "" }}" href="{{ route('brand_restore_all') }}">All Restore</a>
+                <a class="nav-link btn btn-info mr-2 {{ $cupons_count == 0 ? "disabled" : "" }}" href="{{ route('cupon_soft_delete_all') }}">All S. Delete</a>
             </li>
-
             <li class="nav-item">
-                <button class="nav-link btn btn-warning mr-1 {{ $brands_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_restore">Mark Restore</button>
+                <button class="nav-link btn btn-secondary mr-1 {{ $cupons_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
             </li>
-    <!-- fields -->
-
+            <li class="nav-item">
+                <button class="nav-link btn btn-warning mr-1 {{ $cupons_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_s_delete">Mark S. Delete</button>
+            </li>
 
         </ul>
 
     </div>
 
 
-
-
     <div class="card text-center border border-primary">
         <div class="card-header bg-primary">
-            <h5>brand Item</h5>
+            <h5>cupon Item</h5>
         </div>
         <div class="card-body border-primary">
             <div class="table-responsive">
@@ -87,28 +85,27 @@
                             <th scope="col">Mark</th>
                             <th scope="col">No</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Image</th>
+                            <th scope="col">Code</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Cupon End</th>
                             <th scope="col">Details</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @forelse ($brands as $key => $item)
+                    @forelse ($cupons as $key => $item)
                         <tr>
-                          <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
-                            <th>{{ $brands->firstItem() + $key }}</th>
-                             <td>{{ $item->name }}</td>
-                            <td>
-                                <figure class="avatar">
-                                    <img src="{{ asset('upload/brand') }}/{{ $item->img }}" alt="avatar">
-                                </figure>
+                            <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
+                            <th>{{ $cupons->firstItem() + $key }}</th>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->code }}</td>
+                            <td>{{ $item->discount }}%</td>
+                            <td>{{ $item->end_cupon }}</td>
 
-                            </td>
                             <td>
                                 <ul>
                                     <li>Added By :
-                                       {{ App\Models\User::find($item->added_by)->name }}
-
+                                        {{ App\Models\User::find($item->added_by)->name }}
                                     </li>
                                     <li>Active Status :
                                         @if ($item->action == 1)
@@ -148,27 +145,34 @@
                                         <i class="ti-more-alt"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('brand/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">P. Delete</a>
-                                        <a href="{{ url('brand/restore') }}/{{ $item->id }}" class="dropdown-item text-primary">Resotor</a>
+                                        <a href="{{ url('cupon/view') }}/{{ $item->id }}" class="dropdown-item">View Detail</a>
+                                        <a href="{{ url('cupon/update') }}/{{ $item->id }}" class="dropdown-item text-info">Update</a>
+                                        <a href="{{ url('cupon/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
+                                        <a href="{{ url('cupon/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
+                                        @if ($item->action == 1)
+                                        <a href="{{ url('cupon/action') }}/{{ $item->id }}" class="dropdown-item text-primary">Dactive</a>
+                                        @else
+
+                                        <a href="{{ url('cupon/action') }}/{{ $item->id }}" class="dropdown-item text-success">Active</a>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    @empty
+                      @empty
                         <tr colspan="50">
                             <td colspan="15" class="text-danger">No Data to Show</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
-                </form>
+            </form>
             </div>
-            {{ $brands->links() }}
+            {{ $cupons->links() }}
         </div>
 
         <div class="card-footer bg-primary ">
-            <h5>Total brand: {{ $brands_count }}</h5>
+            <h5>Total cupon: {{ $cupons_count }}</h5>
         </div>
     </div>
 @endsection

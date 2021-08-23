@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-class Cupon_code extends Model
+class Cupon extends Model
 {
     use SoftDeletes;
     use HasFactory;
@@ -15,7 +14,7 @@ class Cupon_code extends Model
         'name',
         'code',
         'discount',
-        'cupon_end',
+        'end_cupon',
         'action',
 
     ];

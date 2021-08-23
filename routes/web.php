@@ -80,7 +80,23 @@ Route::get('subcategory_p_delete_all', [SubcategoryController::class, 'p_delete_
 Route::get('subcategory_restore_all', [SubcategoryController::class, 'restore_all'])->name('subcategory_restore_all');
 
 
+// Cupon Controller
+Route::get('cupon', [CuponController::class, 'index'])->name('cupon');
 
+Route::get('cupon/addsubcategory', [CuponController::class, 'addcupon'])->name('addcupon');
+Route::post('cupon/addsubcategoryinsert', [CuponController::class, 'addcuponinsert'])->name('addcuponinsert');
+Route::get('cupon/recyclebin', [CuponController::class, 'recyclebin'])->name('recyclebin_cupon');
+Route::post('cupon/update', [CuponController::class, 'update'])->name('cupon_update');
+Route::post('cupon/form_action', [CuponController::class, 'form_action'])->name('cupon_form_action');
+Route::get('cupon/view/{id}', [CuponController::class, 'view_cupon']);
+Route::get('cupon/update/{id}', [CuponController::class, 'update_cupon']);
+Route::get('cupon/soft_delete/{id}', [CuponController::class, 'soft_delete']);
+Route::get('cupon/p_delete/{id}', [CuponController::class, 'p_delete']);
+Route::get('cupon/restore/{id}', [CuponController::class, 'restore']);
+Route::get('cupon/action/{id}', [CuponController::class, 'action']);
+Route::get('cupon_soft_delete_all', [CuponController::class, 'soft_delete_all'])->name('cupon_soft_delete_all');
+Route::get('cupon_p_delete_all', [CuponController::class, 'p_delete_all'])->name('cupon_p_delete_all');
+Route::get('cupon_restore_all', [CuponController::class, 'restore_all'])->name('cupon_restore_all');
 
 
 
@@ -101,8 +117,6 @@ Route::get('product', [ProductController::class, 'index'])->name('product');
 Route::get('subcategory', [SubcategoryController::class, 'index'])->name('subcategory');
 
 
-// Cupon Controller
-Route::get('cupon', [CuponController::class, 'index'])->name('cupon');
 
 // Cupon Controller
 Route::get('order', [OrderController::class, 'index'])->name('order');

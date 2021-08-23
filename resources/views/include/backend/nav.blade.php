@@ -49,6 +49,22 @@
                         </a>
                     </li>
                     <li>
+                        <a class="@yield('cupon')" href="{{ route('cupon') }}">
+                            <span class="nav-link-icon">
+                                <i data-feather="pie-chart"></i>
+                            </span>
+                            <span>Cupon</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="@yield('brand')" href="{{ route('brand') }}">
+                            <span class="nav-link-icon">
+                                <i data-feather="pie-chart"></i>
+                            </span>
+                            <span>Brand</span>
+                        </a>
+                    </li>
+                    <li>
                         <a  href="{{ route('product') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>

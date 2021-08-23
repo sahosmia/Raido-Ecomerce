@@ -43,7 +43,7 @@ class BlankController extends Controller
             // 'password' => 'required|confirmed|min:6',
             // 'des' => 'required|string|min:120|max:2000',
             'select_name' => 'required',
-            // 'date' => 'required|date|after:tomorrow',
+            'date' => 'required|date|after:tomorrow',
         ]);
 
 

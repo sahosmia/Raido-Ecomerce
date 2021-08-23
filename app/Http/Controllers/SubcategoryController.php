@@ -81,7 +81,7 @@ class SubcategoryController extends Controller
         $name = $req->name;
         $category = $req->category_id;
         $id = $req->id;
-        die();
+
         if (Subcategory::where('category', $req->category_id)->where('name', $req->name)->exists()) {
             return back()->with('error_status', 'This subcategory already exists');
         } else {
@@ -162,9 +162,6 @@ view id page
     // p_delete single
     public function p_delete($id)
     {
-        // die();
-        $img = Subcategory::withTrashed()->find($id)->img;
-        unlink('upload/subcategory/' . $img);
         Subcategory::withTrashed()->find($id)->forceDelete();
         return back()->with('error', 'You are soft all delete your subcategory');
     }
@@ -203,10 +200,6 @@ view id page
     // p_delete all
     public function p_delete_all()
     {
-        $items = Subcategory::withTrashed()->get();
-        foreach ($items as $item) {
-            unlink('upload/subcategory/' . $item->img);
-        }
         Subcategory::truncate();
         return back()->with('error', 'You are permanent all delete your subcategory');
     }

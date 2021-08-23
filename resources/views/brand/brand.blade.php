@@ -10,6 +10,9 @@
     Category
 @endsection
 
+
+
+
 @section('content')
     <div class="page-header">
         <div>
@@ -19,11 +22,8 @@
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('category') }}">Category</a>
-                    </li>
 
-                    <li class="breadcrumb-item active" aria-current="page">Recyclebin</li>
+                    <li class="breadcrumb-item active" aria-current="page">Category Page</li>
                 </ol>
             </nav>
         </div>
@@ -50,29 +50,27 @@
 @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('category') }}">Back Category</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('addcategory') }}">Add New</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-dark mr-2" href="{{ route('recyclebin_category') }}">Recycle Bin</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger mr-2" href="{{ route('category_p_delete_all') }}">All P. Delete</a>
             </li>
             <li class="nav-item">
-                 <button class="nav-link btn btn-secondary mr-1" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
+                <a class="nav-link btn btn-info mr-2" href="{{ route('category_soft_delete_all') }}">All S. Delete</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2" href="{{ route('category_restore_all') }}">All Restore</a>
+                <button class="nav-link btn btn-secondary mr-1" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
             </li>
-
             <li class="nav-item">
-                <button class="nav-link btn btn-warning mr-1" type="submit" name="action" value="mark_restore">Mark Restore</button>
+                <button class="nav-link btn btn-warning mr-1" type="submit" name="action" value="mark_s_delete">Mark S. Delete</button>
             </li>
-    <!-- fields -->
-
 
         </ul>
 
     </div>
-
-
 
 
     <div class="card text-center border border-primary">
@@ -114,6 +112,7 @@
                                     <li>Added By :
                                         @php
                                         echo App\Models\User::find($item->added_by)->name;
+
                                         @endphp
                                     </li>
                                     <li>Active Status :
@@ -154,9 +153,16 @@
                                         <i class="ti-more-alt"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('category/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">P. Delete</a>
-                                        <a href="{{ url('category/restore') }}/{{ $item->id }}" class="dropdown-item text-primary">Resotor</a>
+                                        <a href="{{ url('category/view') }}/{{ $item->id }}" class="dropdown-item">View Detail</a>
+                                        <a href="{{ url('category/update') }}/{{ $item->id }}" class="dropdown-item text-info">Update</a>
+                                        <a href="{{ url('category/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
+                                        <a href="{{ url('category/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
+                                        @if ($item->action == 1)
+                                        <a href="{{ url('category/action') }}/{{ $item->id }}" class="dropdown-item text-primary">Dactive</a>
+                                        @else
+
+                                        <a href="{{ url('category/action') }}/{{ $item->id }}" class="dropdown-item text-success">Active</a>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -164,7 +170,7 @@
                     @endforeach
                     </tbody>
                 </table>
-                </form>
+            </form>
             </div>
             {{ $categories->links() }}
         </div>

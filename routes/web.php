@@ -45,21 +45,42 @@ Route::post('blank_form_submit', [BlankController::class, 'blank_form_submit'])-
 // Category page
 Route::get('category', [CategoryController::class, 'index'])->name('category');
 Route::get('category/addcategory', [CategoryController::class, 'addcategory'])->name('addcategory');
+Route::post('category/addcategoryinsert', [CategoryController::class, 'addcategoryinsert'])->name('addcategoryinsert');
 Route::get('category/recyclebin', [CategoryController::class, 'recyclebin'])->name('recyclebin_category');
-Route::post('category/img_update', [CategoryController::class, 'img_update'])->name('category_img_update');
 Route::post('category/update', [CategoryController::class, 'update'])->name('category_update');
-
-// category delete and restore
-Route::get('category/action/{id}', [CategoryController::class, 'action']);
-Route::get('category/restore/{id}', [CategoryController::class, 'restore']);
-Route::get('category/p_delete/{id}', [CategoryController::class, 'p_delete']);
+Route::post('category/img_update', [CategoryController::class, 'img_update'])->name('category_img_update');
+Route::post('category/form_action', [CategoryController::class, 'form_action'])->name('category_form_action');
 Route::get('category/view/{id}', [CategoryController::class, 'view_category']);
 Route::get('category/update/{id}', [CategoryController::class, 'update_category']);
 Route::get('category/soft_delete/{id}', [CategoryController::class, 'soft_delete']);
-Route::get('category_p_delete_all', [CategoryController::class, 'p_delete_all'])->name('category_p_delete_all');
+Route::get('category/p_delete/{id}', [CategoryController::class, 'p_delete']);
+Route::get('category/restore/{id}', [CategoryController::class, 'restore']);
+Route::get('category/action/{id}', [CategoryController::class, 'action']);
 Route::get('category_soft_delete_all', [CategoryController::class, 'soft_delete_all'])->name('category_soft_delete_all');
-Route::post('category/form_action', [CategoryController::class, 'form_action'])->name('category_form_action');
-Route::post('category/addcategoryinsert', [CategoryController::class, 'addcategoryinsert'])->name('addcategoryinsert');
+Route::get('category_p_delete_all', [CategoryController::class, 'p_delete_all'])->name('category_p_delete_all');
+Route::get('category_restore_all', [CategoryController::class, 'restore_all'])->name('category_restore_all');
+
+
+
+// SubCategory page
+Route::get('subcategory', [SubcategoryController::class, 'index'])->name('subcategory');
+Route::get('subcategory/addsubcategory', [SubcategoryController::class, 'addsubcategory'])->name('addsubcategory');
+Route::post('subcategory/addsubcategoryinsert', [SubcategoryController::class, 'addsubcategoryinsert'])->name('addsubcategoryinsert');
+Route::get('subcategory/recyclebin', [SubcategoryController::class, 'recyclebin'])->name('recyclebin_subcategory');
+Route::post('subcategory/update', [SubcategoryController::class, 'update'])->name('subcategory_update');
+Route::post('subcategory/form_action', [SubcategoryController::class, 'form_action'])->name('subcategory_form_action');
+Route::get('subcategory/view/{id}', [SubcategoryController::class, 'view_subcategory']);
+Route::get('subcategory/update/{id}', [SubcategoryController::class, 'update_subcategory']);
+Route::get('subcategory/soft_delete/{id}', [SubcategoryController::class, 'soft_delete']);
+Route::get('subcategory/p_delete/{id}', [SubcategoryController::class, 'p_delete']);
+Route::get('subcategory/restore/{id}', [SubcategoryController::class, 'restore']);
+Route::get('subcategory/action/{id}', [SubcategoryController::class, 'action']);
+Route::get('subcategory_soft_delete_all', [SubcategoryController::class, 'soft_delete_all'])->name('subcategory_soft_delete_all');
+Route::get('subcategory_p_delete_all', [SubcategoryController::class, 'p_delete_all'])->name('subcategory_p_delete_all');
+Route::get('subcategory_restore_all', [SubcategoryController::class, 'restore_all'])->name('subcategory_restore_all');
+
+
+
 
 
 

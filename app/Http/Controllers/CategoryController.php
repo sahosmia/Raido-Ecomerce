@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-
-
-use Illuminate\Http\Request;
 use Auth;
 use Carbon\Carbon;
 use Image;
+
+
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -18,12 +18,12 @@ class CategoryController extends Controller
         // $this->middleware('checkauth');
     }
 
+    // category page view
     public function index()
     {
         return view('category.category', [
             'categories' => Category::latest()->paginate(10),
             'categories_count' => Category::count(),
-
         ]);
     }
 
@@ -64,13 +64,15 @@ class CategoryController extends Controller
     }
 
     // recyclebin page view
-    public function update_category($id)
+    public function recyclebin()
     {
-        return view('category.update_category', [
-            'item' => Category::find($id),
+        return view('category.recyclebin_category', [
+            'categories' => Category::onlyTrashed()->paginate(10),
+            'categories_count' => Category::onlyTrashed()->count(),
         ]);
     }
-    
+
+    // update view
     public function update(Request $req)
     {
         $req->validate([
@@ -86,6 +88,7 @@ class CategoryController extends Controller
         return back()->with('success', 'You are success to add a new category');
     }
 
+    // img update
     public function img_update(Request $req)
     {
 
@@ -112,74 +115,7 @@ class CategoryController extends Controller
         return back()->with('success', 'You are success to add a new category');
     }
 
-    // recyclebin page view
-    public function recyclebin($id)
-    {
-        return view('category.update_category', [
-            'categories' => Category::onlyTrashed()->paginate(10),
-            'categories_count' => Category::onlyTrashed()->count(),
-        ]);
-    }
-
-    // soft_delete single
-    public function soft_delete($id)
-    {
-        Category::withTrashed()->find($id)->delete();
-        return back()->with('error', 'You are soft all delete your category');
-    }
-
-    // p_delete single
-    public function p_delete($id)
-    {
-        // die();
-        $img = Category::withTrashed()->find($id)->img;
-        unlink('upload/category/' . $img);
-        Category::withTrashed()->find($id)->forceDelete();
-        return back()->with('error', 'You are soft all delete your category');
-    }
-
-    // soft_delete all
-    public function soft_delete_all()
-    {
-        Category::whereNotNull('id')->delete();
-        // Category::truncate();
-        return back()->with('error', 'You are soft all delete your category');
-    }
-
-    // p_delete all
-    public function p_delete_all()
-    {
-        $items = Category::withTrashed()->get();
-        foreach ($items as $item) {
-            unlink('upload/category/' . $item->img);
-        }
-        Category::truncate();
-        return back()->with('error', 'You are permanent all delete your category');
-    }
-
-    // restore single
-    public function restore($id)
-    {
-        Category::onlyTrashed()->find($id)->restore();
-        return back()->with('success', 'You are success to restore your category');
-    }
-
-    // action active deactive
-    public function action($id)
-    {
-        if (Category::find($id)->action == 1) {
-            Category::find($id)->update([
-                "action" => 2,
-            ]);
-            return back()->with('warning', 'You are success to deactive your category');
-        } else {
-            Category::find($id)->update([
-                "action" => 1,
-            ]);
-            return back()->with('success', 'You are success to active your category');
-        }
-    }
-
+    // form_action
     public function form_action(Request $req)
     {
 
@@ -209,5 +145,97 @@ class CategoryController extends Controller
 
                 break;
         }
+    }
+
+
+
+
+    /* view id page
+.
+.
+.
+.
+.
+.
+.view id page
+.
+.
+.
+.
+view id page
+*/
+
+    // update_category page view
+    public function update_category($id)
+    {
+        return view('category.update_category', [
+            'item' => Category::find($id),
+        ]);
+    }
+
+    // soft_delete single
+    public function soft_delete($id)
+    {
+        Category::withTrashed()->find($id)->delete();
+        return back()->with('error', 'You are soft all delete your category');
+    }
+
+    // p_delete single
+    public function p_delete($id)
+    {
+        // die();
+        $img = Category::withTrashed()->find($id)->img;
+        unlink('upload/category/' . $img);
+        Category::withTrashed()->find($id)->forceDelete();
+        return back()->with('error', 'You are soft all delete your category');
+    }
+
+    // restore single
+    public function restore($id)
+    {
+        Category::onlyTrashed()->find($id)->restore();
+        return back()->with('success', 'You are success to restore your category');
+    }
+
+    // action active deactive
+    public function action($id)
+    {
+        if (Category::find($id)->action == 1) {
+            Category::find($id)->update([
+                "action" => 2,
+            ]);
+            return back()->with('warning', 'You are success to deactive your category');
+        } else {
+            Category::find($id)->update([
+                "action" => 1,
+            ]);
+            return back()->with('success', 'You are success to active your category');
+        }
+    }
+
+    // soft_delete all
+    public function soft_delete_all()
+    {
+        Category::whereNotNull('id')->delete();
+        // Category::truncate();
+        return back()->with('error', 'You are soft all delete your category');
+    }
+
+    // p_delete all
+    public function p_delete_all()
+    {
+        $items = Category::withTrashed()->get();
+        foreach ($items as $item) {
+            unlink('upload/category/' . $item->img);
+        }
+        Category::truncate();
+        return back()->with('error', 'You are permanent all delete your category');
+    }
+
+    // restore all
+    public function restore_all()
+    {
+        Category::onlyTrashed()->restore();
+        return back()->with('success', 'You are success to restore your category');
     }
 }

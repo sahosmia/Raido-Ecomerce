@@ -53,13 +53,13 @@
                 <a class="nav-link btn btn-primary mr-2" href="{{ route('category') }}">Back Category</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2" href="{{ route('category_p_delete_all') }}">All P. Delete</a>
+                <a class="nav-link btn btn-danger mr-2" href="#">All P. Delete</a>
             </li>
             <li class="nav-item">
                  <button class="nav-link btn btn-secondary mr-1" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2" href="{{ route('category_restore_all') }}">All Restore</a>
+                <a class="nav-link btn btn-danger mr-2" href="#">All Restore</a>
             </li>
 
             <li class="nav-item">

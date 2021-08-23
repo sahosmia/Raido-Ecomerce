@@ -25,7 +25,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="@yield('subcetegory')" href="{{ route('subcategory') }}">
+                        <a class="@yield('subcategory')" href="{{ route('subcategory') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>
                             </span>

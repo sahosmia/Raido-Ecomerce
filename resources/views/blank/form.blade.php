@@ -130,12 +130,9 @@
                      <label>Select Category</label>
                      <select class="select2-example @error('select_name') is-invalid @enderror" name="select_name" value="{{ old('select_name') }}">
                         <option>Select</option>
-                        <option {{ old('select_name') == "France"? "selected" : "" }} value="France">France</option>
-                        <option {{ old('select_name') == "Brazil"? "selected" : "" }} value="Brazil">Brazil</option>
-                        <option {{ old('select_name') == "Yemen"? "selected" : "" }} value="Yemen">Yemen</option>
-                        <option {{ old('select_name') == "China"? "selected" : "" }} value="China">China</option>
-                        <option {{ old('select_name') == "Argentina"? "selected" : "" }}  value="Argentina">Argentina</option>
-                        <option {{ old('select_name') == "Bulgaria"? "selected" : "" }} value="Bulgaria">Bulgaria</option>
+                         @foreach ($categories as $item)
+                        <option {{ old('select_name') == $item->id ? "selected" : "" }} value="{{ $item->id }}">{{ $item->name }}</option>
+                        @endforeach
                     </select>
                     @error('select_name')
                         <small class="text-danger">{{ $message }}</small>

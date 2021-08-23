@@ -177,3 +177,31 @@
         </div>
     </div>
 @endsection
+
+
+
+
+
+
+
+{{-- // Product
+Route::get('abc', [DEFController::class, 'index'])->name('abc');
+
+
+Route::get('abc/addabc', [DEFController::class, 'addabc'])->name('addabc');
+Route::post('abc/addabcinsert', [DEFController::class, 'addabcinsert'])->name('addabcinsert');
+Route::get('abc/recyclebin', [DEFController::class, 'recyclebin'])->name('recyclebin_abc');
+Route::post('abc/update', [DEFController::class, 'update'])->name('abc_update');
+Route::post('abc/form_action', [DEFController::class, 'form_action'])->name('abc_form_action');
+Route::get('abc/view/{id}', [DEFController::class, 'view_abc']);
+Route::get('abc/update/{id}', [DEFController::class, 'update_abc']);
+Route::post('abc/img_update', [DEFController::class, 'img_update'])->name('abc_img_update');
+Route::get('abc/soft_delete/{id}', [DEFController::class, 'soft_delete']);
+Route::get('abc/p_delete/{id}', [DEFController::class, 'p_delete']);
+Route::get('abc/restore/{id}', [DEFController::class, 'restore']);
+Route::get('abc/action/{id}', [DEFController::class, 'action']);
+Route::get('abc_soft_delete_all', [DEFController::class, 'soft_delete_all'])->name('abc_soft_delete_all');
+Route::get('abc_p_delete_all', [DEFController::class, 'p_delete_all'])->name('abc_p_delete_all');
+Route::get('abc_restore_all', [DEFController::class, 'restore_all'])->name('abc_restore_all'); --}}
+
+ 

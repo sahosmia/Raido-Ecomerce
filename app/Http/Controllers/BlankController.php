@@ -44,6 +44,8 @@ class BlankController extends Controller
             // 'des' => 'required|string|min:120|max:2000',
             'select_name' => 'required',
             'date' => 'required|date|after:tomorrow',
+            'discount' => 'required|numeric|min:5|max:50',
+
         ]);
 
 

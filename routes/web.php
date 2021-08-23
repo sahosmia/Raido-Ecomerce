@@ -25,6 +25,7 @@ use App\Http\Controllers\BlankController;
 
 // Frontend page
 Route::get('/', [FrontendController::class, 'index'])->name('front');
+Route::get('/allproduct', [FrontendController::class, 'allproduct'])->name('allproduct');
 
 // Home
 Auth::routes();
@@ -112,6 +113,22 @@ Route::get('brand_restore_all', [BrandController::class, 'restore_all'])->name('
 // Product
 Route::get('product', [ProductController::class, 'index'])->name('product');
 
+
+Route::get('product/addproduct', [ProductController::class, 'addproduct'])->name('addproduct');
+Route::post('product/addproductinsert', [ProductController::class, 'addproductinsert'])->name('addproductinsert');
+Route::get('product/recyclebin', [ProductController::class, 'recyclebin'])->name('recyclebin_product');
+Route::post('product/update', [ProductController::class, 'update'])->name('product_update');
+Route::post('product/form_action', [ProductController::class, 'form_action'])->name('product_form_action');
+Route::get('product/view/{id}', [ProductController::class, 'view_product']);
+Route::get('product/update/{id}', [ProductController::class, 'update_product']);
+Route::post('product/img_update', [ProductController::class, 'img_update'])->name('product_img_update');
+Route::get('product/soft_delete/{id}', [ProductController::class, 'soft_delete']);
+Route::get('product/p_delete/{id}', [ProductController::class, 'p_delete']);
+Route::get('product/restore/{id}', [ProductController::class, 'restore']);
+Route::get('product/action/{id}', [ProductController::class, 'action']);
+Route::get('product_soft_delete_all', [ProductController::class, 'soft_delete_all'])->name('product_soft_delete_all');
+Route::get('product_p_delete_all', [ProductController::class, 'p_delete_all'])->name('product_p_delete_all');
+Route::get('product_restore_all', [ProductController::class, 'restore_all'])->name('product_restore_all');
 
 
 

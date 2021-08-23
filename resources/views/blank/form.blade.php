@@ -97,7 +97,6 @@
                         $date = Carbon::now()->format('Y-m-d');
                      @endphp
 
-
                      <input name="date"  value="{{ $date }}"  type="date" class="form-control @error('date') is-invalid @enderror">
                     @error('date')
                         <small class="text-danger">{{ $message }}</small>

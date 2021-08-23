@@ -53,7 +53,7 @@ class CategoryController extends Controller
 
         $img = $req->file('img');
         $img_extention = $img->getClientOriginalExtension();
-        $img_name = $id . rand(1, 9999) . "." . $img_extention;
+        $img_name = $id . "category" . rand(1, 9999) . "." . $img_extention;
         Image::make($img)->save(base_path('public/upload/category/' . $img_name));
 
         Category::find($id)->update([

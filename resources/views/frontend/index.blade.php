@@ -275,123 +275,38 @@
                       }
                   }
               }">
-        <div class="category category-light category-absolute overlay-zoom">
-          <a href="#">
-            <figure class="category-media">
-              <img
-                src="{{ asset('frontend/images/categories/category1.jpg')}}"
-                alt="category"
-                width="280"
-                height="245"
-              />
-            </figure>
-          </a>
-          <div class="category-content">
-            <h4 class="category-name"><a href="#">For sahjo's</a></h4>
-          </div>
-        </div>
-        <div
-          class="
-            category category-light category-absolute
-            overlay-zoom
-          "
-        >
-          <a href="#">
-            <figure class="category-media">
-              <img
-                src="{{ asset('frontend/images/categories/category1.jpg')}}"
-                alt="category"
-                width="280"
-                height="245"
-              />
-            </figure>
-          </a>
-          <div class="category-content">
-            <h4 class="category-name"><a href="#">For Men's</a></h4>
-          </div>
-        </div>
-        <div
-          class="
-            category category-light category-absolute
-            overlay-zoom
-          "
-        >
-          <a href="#">
-            <figure class="category-media">
-              <img
-                src="{{ asset('frontend/images/categories/category1.jpg')}}"
-                alt="category"
-                width="280"
-                height="245"
-              />
-            </figure>
-          </a>
-          <div class="category-content">
-            <h4 class="category-name"><a href="#">For Men's</a></h4>
-          </div>
-        </div>
-        <div
-          class="
-            category category-light category-absolute
-            overlay-zoom
-          "
-        >
-          <a href="#">
-            <figure class="category-media">
-              <img
-                src="{{ asset('frontend/images/categories/category2.jpg')}}"
-                alt="category"
-                width="280"
-                height="245"
-              />
-            </figure>
-          </a>
-          <div class="category-content">
-            <h4 class="category-name"><a href="#">Accessories</a></h4>
-          </div>
-        </div>
-        <div
-          class="
-            category category-light category-absolute
-            overlay-zoom
-          "
-        >
-          <a href="#">
-            <figure class="category-media">
-              <img
-                src="{{ asset('frontend/images/categories/category3.jpg')}}"
-                alt="category"
-                width="280"
-                height="245"
-              />
-            </figure>
-          </a>
-          <div class="category-content">
-            <h4 class="category-name">
-              <a href="#">Fashionable Women’s</a>
-            </h4>
-          </div>
-        </div>
-        <div
-          class="
-            category category-light category-absolute
-            overlay-zoom
-          "
-        >
-          <a href="#">
-            <figure class="category-media">
-              <img
-                src="{{ asset('frontend/images/categories/category4.jpg')}}"
-                alt="category"
-                width="280"
-                height="245"
-              />
-            </figure>
-          </a>
-          <div class="category-content">
-            <h4 class="category-name"><a href="#">Cosmetic</a></h4>
-          </div>
-        </div>
+
+
+              @foreach ($categories as $item)
+
+              <div class="category category-default1 category-absolute banner-radius overlay-zoom">
+                  <a href="{{ route('allproduct') }}">
+                      <figure class="category-media">
+                          <img
+                          src="{{ asset('upload/category')}}/{{ $item->img }}"
+                          alt="category"
+                          width="280"
+                          height="245"
+                          />
+                        </figure>
+                    </a>
+                    <a href="{{ route('allproduct') }}">
+                    <div class="category-content">
+                        <h4 class="category-name ">{{ $item->name }}</h4>
+                    </div>
+                    </a>
+                </div>
+                @endforeach
+
+
+
+
+
+
+
+
+
+
       </div>
     </div>
   </div>

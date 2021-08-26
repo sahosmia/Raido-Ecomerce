@@ -25,7 +25,9 @@ class BlankController extends Controller
     }
     public function blank_form()
     {
-        return view('blank.form');
+        return view('blank.form', [
+            'categories' => Category::latest()->paginate(10),
+        ]);
     }
     public function blank_form_submit(Request $req)
     {
@@ -35,20 +37,21 @@ class BlankController extends Controller
 
         print_r($req->all());
 
-        die();
+
         $req->validate([
             'name' => 'required|unique:categories,name|string|min:3|max:40',
             // 'email' => 'required|email|unique:users,email',
             // 'img' => 'required|file|image|mimes:jpeg,jpg,png',
             // 'password' => 'required|confirmed|min:6',
             // 'des' => 'required|string|min:120|max:2000',
-            'select_name' => 'required',
-            'date' => 'required|date|after:tomorrow',
-            'discount' => 'required|numeric|min:5|max:50',
+            // 'select_name' => 'required',
+            // 'date' => 'required|date|after:tomorrow',
+            // 'discount' => 'required|numeric|min:5|max:50',
+            'url' => 'required|url',
 
         ]);
 
-
+        die();
         $id = Category::insertGetId([
             "name" => $name,
             "added_by" => $added_by,

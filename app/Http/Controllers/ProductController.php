@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Product_photo;
 use App\Models\Subcategory;
 use Auth;
 use Carbon\Carbon;
@@ -24,6 +25,8 @@ class ProductController extends Controller
         return view('product.product', [
             'products' => Product::latest()->paginate(10),
             'products_count' => Product::count(),
+            'product_photos' => Product_photo::all(),
+            'product_photos_count' => Product_photo::count(),
         ]);
     }
 
@@ -39,11 +42,10 @@ class ProductController extends Controller
     // insert item
     public function addproductinsert(Request $req)
     {
-
-
         $req->validate([
             'name' => 'required|string|min:3|max:40',
             'img' => 'required|file|image|mimes:jpeg,jpg,png',
+            'img_multiple' => 'required',
             'price' => 'required|numeric|min:1',
             'quantity' => 'required|numeric|min:1',
             'notification_quantity' => 'required|numeric|min:1',
@@ -52,14 +54,11 @@ class ProductController extends Controller
             'subcategory' => 'required',
             'des' => 'required|string|min:120',
         ]);
-        // print_r($req->all());
-
-
-
 
 
         $name = $req->name;
-        $img = $req->img;
+        $img = $req->file('img');
+        $img_multiple = $req->file('img_multiple');
         $price = $req->price;
         $quantity = $req->quantity;
         $notification_quantity = $req->notification_quantity;
@@ -69,7 +68,7 @@ class ProductController extends Controller
         $des = $req->des;
         $added_by = Auth::id();
         $created_at = Carbon::now();
-        // die();
+
         $id = Product::insertGetId([
             "name" => $name,
             "price" => $price,
@@ -91,6 +90,32 @@ class ProductController extends Controller
         Product::find($id)->update([
             "img" => $img_name,
         ]);
+
+
+
+        foreach ($img_multiple as $product_photo) {
+            $product_photo;
+            $img_extention = $product_photo->getClientOriginalExtension();
+            $img_name = $id . "product_photo" . rand(1, 9999) . "." . $img_extention;
+            Image::make($product_photo)->save(base_path('public/upload/product_photo/' . $img_name));
+
+            Product_photo::insert([
+                "img" => $img_name,
+                "product" => $id,
+                "added_by" => $added_by,
+                "created_at" => $created_at,
+
+            ]);
+        }
+
+
+
+
+
+
+
+
+
 
         return redirect('product')->with('success', 'You are success to add a new product');
     }
@@ -180,26 +205,22 @@ class ProductController extends Controller
     }
 
 
+    // product view
+
+    public function view_product($id)
+    {
+        return view('product.view_product', [
+            'item' => Product::find($id),
+            'product_photos' => Product_photo::where('product', $id)->get(),
+        ]);
+    }
 
 
-    /* view id page
-    .
-    .
-    .
-    .
-    .
-    .
-    .view id page
-    .
-    .
-    .
-    .
-    view id page
-    */
 
     // update_product page view
     public function update_product($id)
     {
+
         return view('product.update_product', [
             'item' => Product::find($id),
         ]);
@@ -268,5 +289,99 @@ class ProductController extends Controller
     {
         Product::onlyTrashed()->restore();
         return back()->with('success', 'You are success to restore your product');
+    }
+
+
+
+
+
+
+    // product photo view
+    public function view_product_photo($id)
+    {
+
+        return view('product.view_product_photo', [
+            'id' => $id,
+            'product_photos' => Product_photo::where('product', $id)->paginate(10),
+            'product_photos_count' => Product_photo::where('product', $id)->count(),
+        ]);
+    }
+
+    // action_product_photo active deactive
+    public function action_product_photo($id)
+    {
+        if (Product_photo::find($id)->action == 1) {
+            Product_photo::find($id)->update([
+                "action" => 2,
+            ]);
+            return back()->with('warning', 'You are success to deactive your product');
+        } else {
+            Product_photo::find($id)->update([
+                "action" => 1,
+            ]);
+            return back()->with('success', 'You are success to active your product');
+        }
+    }
+
+
+    // delete_product_photo single
+    public function delete_product_photo($id)
+    {
+        $img = Product_photo::find($id)->img;
+        unlink('upload/product_photo/' . $img);
+        Product_photo::find($id)->forceDelete();
+        return back()->with('error', 'You are soft all delete your product');
+    }
+
+    // p_delete all
+    public function product_photo_delete_all()
+    {
+        $items = Product_photo::all();
+        foreach ($items as $item) {
+            unlink('upload/product_photo/' . $item->img);
+        }
+        Product_photo::truncate();
+        return back()->with('error', 'You are permanent all delete your product');
+    }
+
+
+    // addproductphoto page view
+    public function addproductphoto($id)
+    {
+        return view('product.addproductphoto', [
+            'id' => $id,
+        ]);
+    }
+
+
+    // insert item
+    public function addproductphotoinsert(Request $req)
+    {
+        $req->validate([
+            'img_multiple' => 'required',
+        ]);
+
+        $id = $req->product_id;
+        $img_multiple = $req->file('img_multiple');
+        $added_by = Auth::id();
+        $created_at = Carbon::now();
+
+
+
+        foreach ($img_multiple as $product_photo) {
+            $product_photo;
+            $img_extention = $product_photo->getClientOriginalExtension();
+            $img_name = $id . "product_photo" . rand(1, 9999) . "." . $img_extention;
+            Image::make($product_photo)->save(base_path('public/upload/product_photo/' . $img_name));
+
+            Product_photo::insert([
+                "img" => $img_name,
+                "product" => $id,
+                "added_by" => $added_by,
+                "created_at" => $created_at,
+
+            ]);
+        }
+        return redirect('product')->with('success', 'You are success to add a new product');
     }
 }

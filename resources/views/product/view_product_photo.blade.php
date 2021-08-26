@@ -7,13 +7,16 @@
 
 {{-- title name --}}
 @section('page_title')
-    product
+    product photo
 @endsection
+
+
+
 
 @section('content')
     <div class="page-header">
         <div>
-            <h3>product Page</h3>
+            <h3>product photo Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -23,7 +26,7 @@
                         <a href="{{ route('product') }}">product</a>
                     </li>
 
-                    <li class="breadcrumb-item active" aria-current="page">Recyclebin</li>
+                    <li class="breadcrumb-item active" aria-current="page">product_photo Page</li>
                 </ol>
             </nav>
         </div>
@@ -46,91 +49,53 @@
 @endif
 
     <div class="card text-center border border-primary p-3">
-        <form action="{{ route('product_form_action') }}" method="POST">
-@csrf
+
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('product') }}">Back product</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $products_count == 0 ? "disabled" : "" }}" href="#">All P. Delete</a>
-            </li>
-            <li class="nav-item">
-                 <button class="nav-link btn btn-secondary mr-1 {{ $products_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $products_count == 0 ? "disabled" : "" }}" href="{{ route('product_restore_all') }}">All Restore</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ url('product/addproductphoto') }}/{{ $id }}">Add New{{ $id }}</a>
             </li>
 
             <li class="nav-item">
-                <button class="nav-link btn btn-warning mr-1 {{ $products_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_restore">Mark Restore</button>
+                <a class="nav-link btn btn-danger mr-2 {{ $product_photos_count == 0 ? "disabled" : "" }}" href="{{ route('product_photo_delete_all') }}">All Delete</a>
             </li>
-    <!-- fields -->
-
-
         </ul>
 
     </div>
 
 
-
-
     <div class="card text-center border border-primary">
         <div class="card-header bg-primary">
-            <h5>product Item</h5>
+            <h5>product_photo Item</h5>
         </div>
         <div class="card-body border-primary">
             <div class="table-responsive">
                 <table class="table table-hover table-bordered">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Mark</th>
                             <th scope="col">No</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
                             <th scope="col">Image</th>
+                            <th scope="col">Product</th>
                             <th scope="col">Details</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @forelse ($products as $key => $item)
+
+                    @forelse ($product_photos as $key => $item)
                         <tr>
-                          <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
-                            <th>{{ $products->firstItem() + $key }}</th>
-                            <td>{{ $item->name }}</td>
-                            <td>{{ $item->price }}</td>
+                            <th scope="row">{{ $product_photos->firstItem() + $key }}</th>
                             <td>
                                 <figure class="avatar">
-                                    <img src="{{ asset('upload/product') }}/{{ $item->img }}" alt="avatar">
+                                    <img src="{{ asset('upload/product_photo') }}/{{ $item->img }}" alt="avatar">
                                 </figure>
-
                             </td>
+                            <td> {{ App\Models\Product::find($item->product)->name }}</td>
+
+
+
 
                             <td>
                                 <ul>
-                                    @if ($item->discount != null)
-                                    <li>Discount :
-                                        {{ $item->discount }}%
-                                    </li>
-                                    @endif
-                                    <li>Subcategory :
-                                        {{ App\Models\Subcategory::find($item->subcategory)->name }}
-                                    </li>
-                                    <li>Category :
-                                        {{ App\Models\Category::find($item->category)->name }}
-                                    </li>
-                                    <li>Quantity :
-                                        {{ $item->quantity }}
-                                    </li>
-
-
-                                    @if ($item->notification_quantity != null)
-                                    <li>Notification Quantity :
-                                        {{ $item->notification_quantity }}
-                                    </li>
-                                    @endif
-
                                     <li>Added By :
                                         {{ App\Models\User::find($item->added_by)->name }}
                                     </li>
@@ -165,34 +130,36 @@
                                 </ul>
                             </td>
                             <td>
-                                <div class="dropdown">
-                                    <a href="#" data-toggle="dropdown"
-                                        class="btn btn-floating"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="ti-more-alt"></i>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <a href="{{ url('product/product_photo/delete') }}/{{ $item->id }}" class="btn btn-danger">
+                                        <i class="ti-trash"></i>
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('product/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">P. Delete</a>
-                                        <a href="{{ url('product/restore') }}/{{ $item->id }}" class="dropdown-item text-primary">Resotor</a>
+                                    @if ($item->action == 1)
+                                    <a href="{{ url('product/product_photo/action') }}/{{ $item->id }}" class="btn btn-primary">
+                                        <i class="ti-na"></i>
+                                    </a>
+                                    @else
+                                    <a href="{{ url('product/product_photo/action') }}/{{ $item->id }}" class="btn btn-success">
+                                        <i class="ti-eye"></i>
+                                    </a>
+                                    @endif
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                    @empty
+                      @empty
                         <tr colspan="50">
                             <td colspan="15" class="text-danger">No Data to Show</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
-                </form>
             </div>
-            {{ $products->links() }}
+            {{-- {{ $product_photos->links() }} --}}
         </div>
 
         <div class="card-footer bg-primary ">
-            <h5>Total product: {{ $products_count }}</h5>
+            <h5>Total product photo: {{ $product_photos_count }}</h5>
         </div>
     </div>
 @endsection

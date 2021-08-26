@@ -54,6 +54,14 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+                {{-- url --}}
+                <div class="form-group">
+                     <label>url</label>
+                    <input name="url" value="{{ old('url') }}" type="text" class="form-control @error('url') is-invalid @enderror" placeholder="Enter url">
+                    @error('url')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
 
                 {{-- email  --}}
                 <div class="form-group">
@@ -116,8 +124,8 @@
                <!-- File input multiple -->
                 <div class="form-group">
                     <label>Example Multiple file input</label>
-                    <input name="img_multuple[]" value="{{ old('img_multuple') }}" type="file" class="form-control-file" multiple>
-                    @error('img_multuple')
+                    <input name="img_multiple[]" value="{{ old('img_multiple') }}" type="file" class="form-control-file" multiple>
+                    @error('img_multiple')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>

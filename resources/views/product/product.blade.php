@@ -85,7 +85,9 @@
                             <th scope="col">Mark</th>
                             <th scope="col">No</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Price</th>
                             <th scope="col">Image</th>
+                            <th scope="col">Product Photo</th>
                             <th scope="col">Details</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -96,15 +98,50 @@
                             <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
                             <th>{{ $products->firstItem() + $key }}</th>
                             <td>{{ $item->name }}</td>
+                            <td>{{ $item->price }}</td>
                             <td>
                                 <figure class="avatar">
                                     <img src="{{ asset('upload/product') }}/{{ $item->img }}" alt="avatar">
                                 </figure>
 
                             </td>
+                            <td>
+                                <a href="{{ url('product/product_photo/view') }}/{{ $item->id }}">
+                                <div class="avatar-group">
+                                @foreach ($product_photos->where('product', $item->id) as $product_photo)
+                                    <figure class="avatar">
+                                        <img src="{{ asset('upload/product_photo') }}/{{ $product_photo->img }}" class="rounded-circle" alt="avatar">
+                                    </figure>
+                                @endforeach
+                                </div>
+                                </a>
+                            </td>
+
 
                             <td>
                                 <ul>
+                                    @if ($item->discount != null)
+                                    <li>Discount :
+                                        {{ $item->discount }}%
+                                    </li>
+                                    @endif
+                                    <li>Subcategory :
+                                        {{ App\Models\Subcategory::find($item->subcategory)->name }}
+                                    </li>
+                                    <li>Category :
+                                        {{ App\Models\Category::find($item->category)->name }}
+                                    </li>
+                                    <li>Quantity :
+                                        {{ $item->quantity }}
+                                    </li>
+
+
+                                    @if ($item->notification_quantity != null)
+                                    <li>Notification Quantity :
+                                        {{ $item->notification_quantity }}
+                                    </li>
+                                    @endif
+
                                     <li>Added By :
                                         {{ App\Models\User::find($item->added_by)->name }}
                                     </li>
@@ -148,6 +185,7 @@
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a href="{{ url('product/view') }}/{{ $item->id }}" class="dropdown-item">View Detail</a>
                                         <a href="{{ url('product/update') }}/{{ $item->id }}" class="dropdown-item text-info">Update</a>
+                                        <a href="{{ url('product/product_photo/view') }}/{{ $item->id }}" class="dropdown-item">View Product Photo</a>
                                         <a href="{{ url('product/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
                                         <a href="{{ url('product/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
                                         @if ($item->action == 1)

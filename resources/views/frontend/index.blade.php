@@ -244,6 +244,7 @@
   </div>
 </section>
 
+{{-- category --}}
 <section class="pt-10 mt-7 appear-animate"
       data-animation-options="{
           'delay': '.3s'
@@ -317,13 +318,7 @@
           'delay': '.3s'
       }">
   <h2 class="title title-center mb-5">Best Sellers</h2>
-  <div
-    class="
-      owl-carousel owl-theme
-      row
-      owl-nav-full
-      cols-2 cols-md-3 cols-lg-4
-    "
+  <div class="owl-carousel owl-theme row owl-nav-full cols-2 cols-md-3 cols-lg-4"
     data-owl-options="{
               'items': 5,
               'nav': false,
@@ -344,139 +339,23 @@
                       'nav': true
                   }
               }
-          }"
-  >
-    <div class="product text-center">
-      <figure class="product-media">
-        <a href="product.html">
-          <img
-            src="{{ asset('frontend/images/demos/demo1/products/product1.jpg')}}"
-            alt="Blue Pinafore Denim Dress"
-            width="280"
-            height="315"
-            style="background-color: #f2f3f5"
-          />
-        </a>
-        <div class="product-label-group">
-          <label class="product-label label-new">new</label>
-        </div>
-        <div class="product-action-vertical">
-          <a
-            href="#"
-            class="btn-product-icon btn-cart"
-            data-toggle="modal"
-            data-target="#addCartModal"
-            title="Add to cart"
-            ><i class="d-icon-bag"></i
-          ></a>
-          <a
-            href="#"
-            class="btn-product-icon btn-wishlist"
-            title="Add to wishlist"
-            ><i class="d-icon-heart"></i
-          ></a>
-        </div>
-        <div class="product-action">
-          <a
-            href="#"
-            class="btn-product btn-quickview"
-            title="Quick View"
-            >Quick View</a
-          >
-        </div>
-      </figure>
-      <div class="product-details">
-        <div class="product-cat">
-          <a href="shop-grid-3cols.html">Clothing</a>
-        </div>
-        <h3 class="product-name">
-          <a href="product.html"
-            >Solid pattern in fashion summer dress</a
-          >
-        </h3>
-        <div class="product-price">
-          <span class="price">$140.00</span>
-        </div>
-        <div class="ratings-container">
-          <div class="ratings-full">
-            <span class="ratings" style="width: 100%"></span>
-            <span class="tooltiptext tooltip-top"></span>
-          </div>
-          <a href="product.html" class="rating-reviews"
-            >( 12 reviews )</a
-          >
-        </div>
-      </div>
-    </div>
-    <div class="product product-classic product-variable">
-      <figure class="product-media">
-        <a href="product.html">
-          <img
-            src="{{ asset('frontend/images/products/product1.jpg')}}"
-            alt="product"
-            width="280"
-            height="315"
-          />
-        </a>
-        <div class="product-label-group">
-          <label class="product-label label-new">new</label>
-          <label class="product-label label-sale">25% Off</label>
-        </div>
-      </figure>
-      <div class="product-details">
-        <div class="product-cat">
-          <a href="shop-grid-3col.html">Women’s</a>
-        </div>
-        <h3 class="product-name">
-          <a href="product.html">Beyond Top NLY Trend</a>
-        </h3>
-        <div class="product-price">
-          <ins class="new-price">$199.00</ins
-          ><del class="old-price">$210.00</del>
-        </div>
-        <div class="ratings-container">
-          <div class="ratings-full">
-            <span class="ratings" style="width: 100%"></span>
-            <span class="tooltiptext tooltip-top"></span>
-          </div>
-          <a href="product.html" class="rating-reviews"
-            >( 6 reviews )</a
-          >
-        </div>
-        <div class="product-action">
-          <a
-            href="product.html"
-            class="btn-product btn-cart"
-            title="Select Options"
-            ><span>Select Options</span></a
-          >
-          <a
-            href="#"
-            class="btn-product-icon btn-wishlist"
-            title="Add to wishlist"
-            ><i class="d-icon-heart"></i
-          ></a>
-          <a
-            href="#"
-            class="btn-product-icon btn-quickview"
-            title="Quick View"
-            ><i class="d-icon-search"></i
-          ></a>
-        </div>
-      </div>
-    </div>
+          }">
+
+
+@foreach ($products as $item)
+
 
     <div class="product product-classic">
       <figure class="product-media">
         <a href="product.html">
           <img
-            src="{{ asset('frontend/images/products/product2.jpg')}}"
+            src="{{ asset('upload/product')}}/{{ $item->img }}"
             alt="product"
             width="280"
-            height="315"
-          />
+            height="315"/>
         </a>
         <div class="product-label-group">
+            <label class="product-label label-new">new</label>
           <label class="product-label label-sale">25% Off</label>
         </div>
       </figure>
@@ -524,127 +403,11 @@
         </div>
       </div>
     </div>
-    <div class="product text-center">
-      <figure class="product-media">
-        <a href="product.html">
-          <img
-            src="{{ asset('frontend/images/demos/demo1/products/product4.jpg')}}"
-            alt="Blue Pinafore Denim Dress"
-            width="280"
-            height="315"
-            style="background-color: #f2f3f5"
-          />
-        </a>
-        <div class="product-label-group">
-          <label class="product-label label-new">New</label>
-        </div>
-        <div class="product-action-vertical">
-          <a
-            href="#"
-            class="btn-product-icon btn-cart"
-            data-toggle="modal"
-            data-target="#addCartModal"
-            title="Add to cart"
-            ><i class="d-icon-bag"></i
-          ></a>
-          <a
-            href="#"
-            class="btn-product-icon btn-wishlist"
-            title="Add to wishlist"
-            ><i class="d-icon-heart"></i
-          ></a>
-        </div>
-        <div class="product-action">
-          <a
-            href="#"
-            class="btn-product btn-quickview"
-            title="Quick View"
-            >Quick View</a
-          >
-        </div>
-      </figure>
-      <div class="product-details">
-        <div class="product-cat">
-          <a href="shop-grid-3cols.html">Clothing</a>
-        </div>
-        <h3 class="product-name">
-          <a href="product.html">Women Red Fur Overcoat</a>
-        </h3>
-        <div class="product-price">
-          <span class="price">$184.00</span>
-        </div>
-        <div class="ratings-container">
-          <div class="ratings-full">
-            <span class="ratings" style="width: 80%"></span>
-            <span class="tooltiptext tooltip-top"></span>
-          </div>
-          <a href="product.html" class="rating-reviews"
-            >( 6 reviews )</a
-          >
-        </div>
-      </div>
-    </div>
-    <div class="product text-center">
-      <figure class="product-media">
-        <a href="product.html">
-          <img
-            src="{{ asset('frontend/images/demos/demo1/products/product2.jpg')}}"
-            alt="Blue Pinafore Denim Dress"
-            width="280"
-            height="315"
-            style="background-color: #f2f3f5"
-          />
-        </a>
-        <div class="product-label-group">
-          <span class="product-label label-sale">25% off</span>
-        </div>
-        <div class="product-action-vertical">
-          <a
-            href="#"
-            class="btn-product-icon btn-cart"
-            data-toggle="modal"
-            data-target="#addCartModal"
-            title="Add to cart"
-            ><i class="d-icon-bag"></i
-          ></a>
-          <a
-            href="#"
-            class="btn-product-icon btn-wishlist"
-            title="Add to wishlist"
-            ><i class="d-icon-heart"></i
-          ></a>
-        </div>
-        <div class="product-action">
-          <a
-            href="#"
-            class="btn-product btn-quickview"
-            title="Quick View"
-            >Quick View</a
-          >
-        </div>
-      </figure>
-      <div class="product-details">
-        <div class="product-cat">
-          <a href="shop-grid-3cols.html">Bags & Backpacks</a>
-        </div>
-        <h3 class="product-name">
-          <a href="product.html">Mackintosh Poket backpack</a>
-        </h3>
-        <div class="product-price">
-          <ins class="new-price">$125.99</ins
-          ><del class="old-price">$160.99</del>
-        </div>
-        <div class="ratings-container">
-          <div class="ratings-full">
-            <span class="ratings" style="width: 60%"></span>
-            <span class="tooltiptext tooltip-top"></span>
-          </div>
-          <a href="product.html" class="rating-reviews"
-            >( 8 reviews )</a
-          >
-        </div>
-      </div>
-    </div>
+    @endforeach
+
+
+
+
   </div>
 </section>
 

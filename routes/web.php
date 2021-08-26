@@ -112,8 +112,6 @@ Route::get('brand_restore_all', [BrandController::class, 'restore_all'])->name('
 
 // Product
 Route::get('product', [ProductController::class, 'index'])->name('product');
-
-
 Route::get('product/addproduct', [ProductController::class, 'addproduct'])->name('addproduct');
 Route::post('product/addproductinsert', [ProductController::class, 'addproductinsert'])->name('addproductinsert');
 Route::get('product/recyclebin', [ProductController::class, 'recyclebin'])->name('recyclebin_product');
@@ -129,6 +127,19 @@ Route::get('product/action/{id}', [ProductController::class, 'action']);
 Route::get('product_soft_delete_all', [ProductController::class, 'soft_delete_all'])->name('product_soft_delete_all');
 Route::get('product_p_delete_all', [ProductController::class, 'p_delete_all'])->name('product_p_delete_all');
 Route::get('product_restore_all', [ProductController::class, 'restore_all'])->name('product_restore_all');
+
+
+Route::get('product/product_photo/view/{id}', [ProductController::class, 'view_product_photo']);
+Route::get('product/product_photo/action/{id}', [ProductController::class, 'action_product_photo']);
+Route::get('product/product_photo/delete/{id}', [ProductController::class, 'delete_product_photo']);
+Route::get('product_photo_delete_all', [ProductController::class, 'product_photo_delete_all'])->name('product_photo_delete_all');
+Route::get('product/addproductphoto/{id}', [ProductController::class, 'addproductphoto']);
+
+
+
+Route::post('product/addproductphotoinsert', [ProductController::class, 'addproductphotoinsert'])->name('addproductphotoinsert');
+
+
 
 
 

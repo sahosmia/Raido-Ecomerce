@@ -1,13 +1,13 @@
 @extends('layouts.backend')
 
 {{-- nav active satatus --}}
-@section('brand')
+@section('product')
     active
 @endsection
 
 {{-- title name --}}
 @section('page_title')
-    brand Update
+    product Update
 @endsection
 
 
@@ -16,17 +16,17 @@
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add brand Page</h3>
+            <h3>Add product Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('brand') }}">brand</a>
+                        <a href="{{ route('product') }}">product</a>
                     </li>
 
-                    <li class="breadcrumb-item active" aria-current="page">Update brand Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Update product Page</li>
                 </ol>
             </nav>
         </div>
@@ -55,15 +55,15 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">Image</div>
         <div class="card-body">
-            <form action="{{ route('brand_img_update') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('product_img_update') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                    <input name="id" type="hidden" value="{{ $item->id }}">
+                <input name="id" type="hidden" value="{{ $item->id }}">
                  <figure class="avatar avatar-xl">
-                    <img class="" src="{{ asset('upload/brand') }}/{{ $item->img }}" alt="avatar">
+                    <img class="" src="{{ asset('upload/product') }}/{{ $item->img }}" alt="avatar">
                  </figure>
                 <!-- File input -->
                 <div class="form-group">
-                    <label>Select brand Image</label>
+                    <label>Select product Image</label>
                     <input name="img" value="{{ old('img') }}" type="file" class="form-control-file">
                     @error('img')
                         <small class="text-danger">{{ $message }}</small>
@@ -79,12 +79,12 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">All Update</div>
         <div class="card-body">
-            <form action="{{ route('brand_update') }}" method="post">
+            <form action="{{ route('product_update') }}" method="post">
                 @csrf
                 <input name="id" type="hidden" value="{{ $item->id }}">
                 <div class="form-group">
-                     <label>New brand Name</label>
-                    <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New brand Name">
+                     <label>New product Name</label>
+                    {{-- <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New product Name"> --}}
                     @error('name')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror

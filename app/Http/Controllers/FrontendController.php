@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Subcategory;
 
 class FrontendController extends Controller
@@ -14,6 +15,8 @@ class FrontendController extends Controller
         return view('frontend.index', [
             'brands' => Brand::where('action', 1)->get(),
             'categories' => Category::where('action', 1)->get(),
+            'products' => Product::where('action', 1)->get(),
+
         ]);
     }
     public function allproduct()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('backend.home');
+        return view('backend.home', [
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
+        ]);
     }
 }

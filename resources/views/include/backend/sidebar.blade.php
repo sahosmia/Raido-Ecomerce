@@ -65,207 +65,60 @@
                     </a>
                 </h6>
                 <div class="list-group list-group-flush">
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
+                    @foreach ($messages as $item)
+
+                    @php
+                        $name = $item->name;
+                        $first_latter = strtoupper(substr($name, 0,1));
+                        if($first_latter == "A" || $first_latter == "G" || $first_latter == "M" || $first_latter == "S" || $first_latter == "Y"){
+                            $color = "primary";
+                        }
+                        elseif($first_latter == "B" || $first_latter == "H" || $first_latter == "N" || $first_latter == "T" || $first_latter == "Z"){
+                            $color = "secondary";
+                        }
+                        elseif($first_latter == "C" || $first_latter == "I" || $first_latter == "O" || $first_latter == "U"){
+                            $color = "success";
+                        }
+                        elseif($first_latter == "D" || $first_latter == "J" || $first_latter == "P" || $first_latter == "V"){
+                            $color = "danger";
+                        }
+                        elseif($first_latter == "E" || $first_latter == "K" || $first_latter == "Q" || $first_latter == "W"){
+                            $color = "warning";
+                        }
+                        elseif($first_latter == "F" || $first_latter == "L" || $first_latter == "R" || $first_latter == "X"){
+                            $color = "info";
+                        }
+
+                    @endphp
+                    <a href="{{ url('message/view') }}/{{ $item->id }}" class="list-group-item px-0 d-flex align-items-start">
                         <div class="pr-3">
-                            <span class="avatar avatar-state-danger">
-                                <img src="{{ asset('backend/assets/media/image/user/women_avatar3.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div class="flex-grow- 1">
-                            <h6 class="mb-1">Cass Queyeiro</h6>
-                            <span class="text-muted">
-                                <i class="fa fa-image mr-1"></i> Photo
-                            </span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">Yesterday</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-warning">
-                                <img src="{{ asset('backend/assets/media/image/user/man_avatar4.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="mb-1">Evered Asquith</h6>
-                            <span class="text-muted">
-                                <i class="fa fa-video-camera mr-1"></i> Video
-                            </span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">Last week</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item px-0 d-flex align-items-start">
-                        <div class="pr-3">
-                            <div class="avatar avatar-state-danger">
-                                <span class="avatar-title bg-success rounded-circle">F</span>
+                            <div class="avatar">
+                                <span class="avatar-title bg-{{ $color }} rounded-circle">{{ $first_latter }}</span>
                             </div>
                         </div>
                         <div>
-                            <h6 class="mb-1">Francisco Ubsdale</h6>
-                            <span class="text-muted">Hello how are you?</span>
+                            <h6 class="mb-1">{{ $item->name }}</h6>
+                            <span class="{{ $item->action == 1 ? "text-dark" : "text-muted" }}">{{ $item->message }}</span>
                         </div>
                         <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">2:32 PM</span>
+                            @if ($item->created_at->diffInDays() >= 30)
+                            <span class="small text-muted">
+                                {{ $item->created_at->format('d M, Y') }}
+                            </span>
+                            @elseif ($item->created_at->diffInDays() >= 2)
+                            <span class="small text-muted">
+                                {{ $item->created_at->diffForHumans() }}
+                            </span>
+                            @else
+                                <span class="bsmall text-muted">
+                                    {{ $item->created_at->diffForHumans() }}
+                                </span>
+                            @endif
                         </div>
                     </a>
-                    <a href="chat.html" class="list-group-item px-0 d-flex align-items-start">
-                        <div class="pr-3">
-                            <div class="avatar avatar-state-success">
-                                <img src="{{ asset('backend/assets/media/image/user/women_avatar1.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </div>
-                        </div>
-                        <div>
-                            <h6 class="mb-1">Natale Janu</h6>
-                            <span class="text-muted">Hi!</span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="badge badge-primary badge-pill ml-auto mb-2">3</span>
-                            <span class="small text-muted">08:27 PM</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-warning">
-                                <img src="{{ asset('backend/assets/media/image/user/women_avatar2.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div class="flex-grow- 1">
-                            <h6 class="mb-1">Orelie Rockhall</h6>
-                            <span class="text-muted">
-                                <i class="fa fa-image mr-1"></i> Photo
-                            </span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">Yesterday</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-info">
-                                <img src="{{ asset('backend/assets/media/image/user/man_avatar1.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="mb-1">Barbette Bolf</h6>
-                            <span class="text-muted">
-                                <i class="fa fa-video-camera mr-1"></i> Video
-                            </span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">Last week</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-secondary">
-                                <span class="avatar-title bg-warning rounded-circle">D</span>
-                            </span>
-                        </div>
-                        <div>
-                            <h6 class="mb-1">Dudley Laborde</h6>
-                            <span class="text-muted">Hello how are you?</span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">2:32 PM</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-success">
-                                <img src="{{ asset('backend/assets/media/image/user/man_avatar2.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div>
-                            <h6 class="mb-1">Barbaraanne Riby</h6>
-                            <span class="text-muted">Hi!</span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">08:27 PM</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-danger">
-                                <img src="{{ asset('backend/assets/media/image/user/women_avatar3.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div class="flex-grow- 1">
-                            <h6 class="mb-1">Mariana Ondrousek</h6>
-                            <span class="text-muted">
-                                <i class="fa fa-image mr-1"></i> Photo
-                            </span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">Yesterday</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-warning">
-                                <img src="{{ asset('backend/assets/media/image/user/man_avatar4.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="mb-1">Ruprecht Lait</h6>
-                            <span class="text-muted">
-                                <i class="fa fa-video-camera mr-1"></i> Video
-                            </span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">Last week</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-info">
-                                <img src="{{ asset('backend/assets/media/image/user/man_avatar1.jpg')}}"
-                                     class="rounded-circle"
-                                     alt="image">
-                            </span>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="mb-1">Cosme Hubbold</h6>
-                            <span class="text-muted">
-                                <i class="fa fa-video-camera mr-1"></i> Video
-                            </span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">Last week</span>
-                        </div>
-                    </a>
-                    <a href="chat.html" class="list-group-item d-flex px-0 align-items-start">
-                        <div class="pr-3">
-                            <span class="avatar avatar-state-secondary">
-                                <span class="avatar-title bg-secondary rounded-circle">M</span>
-                            </span>
-                        </div>
-                        <div>
-                            <h6 class="mb-1">Mallory Darch</h6>
-                            <span class="text-muted">Hello how are you?</span>
-                        </div>
-                        <div class="text-right ml-auto d-flex flex-column">
-                            <span class="small text-muted">2:32 PM</span>
-                        </div>
-                    </a>
+                     @endforeach
+
+
                 </div>
             </div>
         </div>

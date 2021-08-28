@@ -89,7 +89,7 @@ class CuponController extends Controller
         $end_cupon  = $req->date;
         $id = $req->id;
 
-        cupon::find($id)->update([
+        Cupon::find($id)->update([
             "name" => $name,
             "code" => $code,
             "end_cupon" => $end_cupon,

@@ -38,6 +38,7 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/demo1.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.min.css') }}"/>
   </head>
 
   <body class="home">

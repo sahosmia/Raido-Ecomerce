@@ -73,12 +73,14 @@
                         </a>
                     </li>
                     <li>
-                        <a  href="chat.html">
+                        <a class="@yield('message')"  href="chat.html">
                     <span class="nav-link-icon">
                         <i data-feather="message-circle"></i>
                     </span>
                             <span>Chat</span>
-                            <span class="badge badge-danger">5</span>
+                            @if ($message_count != 0)
+                            <span class="badge badge-danger">{{ $message_count }}</span>
+                            @endif
                         </a>
                     </li>
                     <li>

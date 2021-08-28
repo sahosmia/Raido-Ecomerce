@@ -25,7 +25,9 @@ use App\Http\Controllers\BlankController;
 
 // Frontend page
 Route::get('/', [FrontendController::class, 'index'])->name('front');
-Route::get('/allproduct', [FrontendController::class, 'allproduct'])->name('allproduct');
+Route::get('front/contact_us', [FrontendController::class, 'contact_us'])->name('front_contact_us');
+Route::get('front/category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct']);
+Route::get('front/product/{id}', [FrontendController::class, 'product_view_single']);
 
 // Home
 Auth::routes();
@@ -73,6 +75,38 @@ Route::get('subcategory_soft_delete_all', [SubcategoryController::class, 'soft_d
 Route::get('subcategory_p_delete_all', [SubcategoryController::class, 'p_delete_all'])->name('subcategory_p_delete_all');
 Route::get('subcategory_restore_all', [SubcategoryController::class, 'restore_all'])->name('subcategory_restore_all');
 
+
+// Product
+Route::get('product', [ProductController::class, 'index'])->name('product');
+Route::get('product/addproduct', [ProductController::class, 'addproduct'])->name('addproduct');
+Route::post('product/addproductinsert', [ProductController::class, 'addproductinsert'])->name('addproductinsert');
+Route::get('product/recyclebin', [ProductController::class, 'recyclebin'])->name('recyclebin_product');
+Route::post('product/update', [ProductController::class, 'update'])->name('product_update');
+Route::post('product/form_action', [ProductController::class, 'form_action'])->name('product_form_action');
+Route::get('product/view/{id}', [ProductController::class, 'view_product']);
+Route::get('product/update/{id}', [ProductController::class, 'update_product']);
+Route::post('product/img_update', [ProductController::class, 'img_update'])->name('product_img_update');
+Route::get('product/soft_delete/{id}', [ProductController::class, 'soft_delete']);
+Route::get('product/p_delete/{id}', [ProductController::class, 'p_delete']);
+Route::get('product/restore/{id}', [ProductController::class, 'restore']);
+Route::get('product/action/{id}', [ProductController::class, 'action']);
+Route::get('product_soft_delete_all', [ProductController::class, 'soft_delete_all'])->name('product_soft_delete_all');
+Route::get('product_p_delete_all', [ProductController::class, 'p_delete_all'])->name('product_p_delete_all');
+Route::get('product_restore_all', [ProductController::class, 'restore_all'])->name('product_restore_all');
+
+
+Route::get('product/product_photo/view/{id}', [ProductController::class, 'view_product_photo']);
+Route::get('product/product_photo/action/{id}', [ProductController::class, 'action_product_photo']);
+Route::get('product/product_photo/delete/{id}', [ProductController::class, 'delete_product_photo']);
+Route::get('product_photo_delete_all', [ProductController::class, 'product_photo_delete_all'])->name('product_photo_delete_all');
+Route::get('product/addproductphoto/{id}', [ProductController::class, 'addproductphoto']);
+Route::post('product/addproductphotoinsert', [ProductController::class, 'addproductphotoinsert'])->name('addproductphotoinsert');
+
+// Review
+Route::post('front.review_add', [ReviewController::class, 'review_add'])->name('review_add');
+
+
+
 // Cupon Controller
 Route::get('cupon', [CuponController::class, 'index'])->name('cupon');
 Route::get('cupon/addcupon', [CuponController::class, 'addcupon'])->name('addcupon');
@@ -110,42 +144,11 @@ Route::get('brand_restore_all', [BrandController::class, 'restore_all'])->name('
 
 
 
-// Product
-Route::get('product', [ProductController::class, 'index'])->name('product');
-Route::get('product/addproduct', [ProductController::class, 'addproduct'])->name('addproduct');
-Route::post('product/addproductinsert', [ProductController::class, 'addproductinsert'])->name('addproductinsert');
-Route::get('product/recyclebin', [ProductController::class, 'recyclebin'])->name('recyclebin_product');
-Route::post('product/update', [ProductController::class, 'update'])->name('product_update');
-Route::post('product/form_action', [ProductController::class, 'form_action'])->name('product_form_action');
-Route::get('product/view/{id}', [ProductController::class, 'view_product']);
-Route::get('product/update/{id}', [ProductController::class, 'update_product']);
-Route::post('product/img_update', [ProductController::class, 'img_update'])->name('product_img_update');
-Route::get('product/soft_delete/{id}', [ProductController::class, 'soft_delete']);
-Route::get('product/p_delete/{id}', [ProductController::class, 'p_delete']);
-Route::get('product/restore/{id}', [ProductController::class, 'restore']);
-Route::get('product/action/{id}', [ProductController::class, 'action']);
-Route::get('product_soft_delete_all', [ProductController::class, 'soft_delete_all'])->name('product_soft_delete_all');
-Route::get('product_p_delete_all', [ProductController::class, 'p_delete_all'])->name('product_p_delete_all');
-Route::get('product_restore_all', [ProductController::class, 'restore_all'])->name('product_restore_all');
 
-
-Route::get('product/product_photo/view/{id}', [ProductController::class, 'view_product_photo']);
-Route::get('product/product_photo/action/{id}', [ProductController::class, 'action_product_photo']);
-Route::get('product/product_photo/delete/{id}', [ProductController::class, 'delete_product_photo']);
-Route::get('product_photo_delete_all', [ProductController::class, 'product_photo_delete_all'])->name('product_photo_delete_all');
-Route::get('product/addproductphoto/{id}', [ProductController::class, 'addproductphoto']);
-
-
-
-Route::post('product/addproductphotoinsert', [ProductController::class, 'addproductphotoinsert'])->name('addproductphotoinsert');
-
-
-
-
-
-
-
-
+// Message
+Route::post('message.add', [MessageController::class, 'message_add'])->name('message_add');
+Route::get('message/delete/{id}', [MessageController::class, 'message_delete']);
+Route::get('message/view/{id}', [MessageController::class, 'message_view']);
 
 
 
@@ -200,20 +203,14 @@ Route::get('team_restore_all', [TeamController::class, 'restore_all'])->name('te
 Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
 
-
-
-// Cupon Controller
-Route::get('order', [OrderController::class, 'index'])->name('order');
-
 // Testimonial
 Route::get('testimonial', [TestimonialController::class, 'index'])->name('tesimonial');
 
+// Testimonial
+Route::get('order', [OrdermonialController::class, 'index'])->name('order');
 
-// Message
-Route::get('message', [MessageController::class, 'index'])->name('message');
 
-// Riview
-Route::get('review', [ReviewController::class, 'index'])->name('review');
+
 
 // Setting
 Route::get('setting', [SettingController::class, 'index'])->name('setting');
@@ -247,23 +244,7 @@ Route::get('checkout', [CheckoutController::class, 'checkout'])->name('checkout'
 Route::post('checkout.insert', [CheckoutController::class, 'checkout_insert']);
 Route::post('getcitylist', [CheckoutController::class, 'getcitylist']);
 
-// profail page
-Route::get('profile/update', [ProfileController::class, 'profile_update']);
-Route::post('profile/update.name', [ProfileController::class, 'update_name']);
-Route::post('profile/update.email', [ProfileController::class, 'update_email']);
-Route::post('profile/update.password', [ProfileController::class, 'update_password']);
-Route::post('profile/update.profile_img', [ProfileController::class, 'update_profile_img']);
 
-
-// Product
-Route::get('product', [ProductController::class, 'index'])->name('product');
-Route::get('product/add', [ProductController::class, 'add']);
-Route::post('product.add_action', [ProductController::class, 'add_action']);
-
-
-// Testimonial
-Route::get('testimonial/add', [TestimonialController::class, 'add']);
-Route::post('testimonial.add_action', [TestimonialController::class, 'insert']);
 
 // home page
 

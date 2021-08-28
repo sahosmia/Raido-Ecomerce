@@ -126,7 +126,7 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link nav-link-notify" title="Chats" data-sidebar-target="#chat-list">
+                            <a href="#" class="nav-link {{ $message_count == 0 ? "" : "nav-link-notify" }}" title="Chats" data-sidebar-target="#chat-list">
                                 <i data-feather="message-circle"></i>
                             </a>
                         </li>

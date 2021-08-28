@@ -24,8 +24,8 @@ class CreateProductsTable extends Migration
             $table->integer('subcategory');
             $table->integer('added_by');
             $table->integer('action')->default(1);
-            $table->integer('discount')->default(null);
-            $table->integer('notification_quantity')->default(null);
+            $table->integer('discount')->default(0);
+            $table->integer('notification_quantity')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

@@ -42,20 +42,6 @@ class ProductController extends Controller
     // insert item
     public function addproductinsert(Request $req)
     {
-        $req->validate([
-            'name' => 'required|string|min:3|max:40',
-            'img' => 'required|file|image|mimes:jpeg,jpg,png',
-            'img_multiple' => 'required',
-            'price' => 'required|numeric|min:1',
-            'quantity' => 'required|numeric|min:1',
-            'notification_quantity' => 'required|numeric|min:1',
-            'discount' => 'required|numeric|min:5|max:70',
-            'category' => 'required',
-            'subcategory' => 'required',
-            'des' => 'required|string|min:120',
-        ]);
-
-
         $name = $req->name;
         $img = $req->file('img');
         $img_multiple = $req->file('img_multiple');
@@ -69,12 +55,33 @@ class ProductController extends Controller
         $added_by = Auth::id();
         $created_at = Carbon::now();
 
+        $req->validate([
+            'name' => 'required|string|min:3|max:40',
+            'img' => 'required|file|image|mimes:jpeg,jpg,png',
+            'img_multiple' => 'required',
+            'price' => 'required|numeric|min:1',
+            'quantity' => 'required|numeric|min:1',
+            'category' => 'required',
+            'subcategory' => 'required',
+            'des' => 'required|string|min:12',
+        ]);
+        if ($notification_quantity) {
+            $req->validate([
+                'notification_quantity' => 'numeric|min:1',
+            ]);
+        }
+
+        if ($discount) {
+            $req->validate([
+                'discount' => 'numeric|min:5|max:70',
+            ]);
+        }
+
+
         $id = Product::insertGetId([
             "name" => $name,
             "price" => $price,
             "quantity" => $quantity,
-            "notification_quantity" => $notification_quantity,
-            "discount" => $discount,
             "category" => $category,
             "subcategory" => $subcategory,
             "des" => $des,
@@ -91,7 +98,17 @@ class ProductController extends Controller
             "img" => $img_name,
         ]);
 
+        if ($notification_quantity) {
+            Product::find($id)->update([
+                "notification_quantity" => $notification_quantity,
+            ]);
+        }
 
+        if ($discount) {
+            Product::find($id)->update([
+                "discount" => $discount,
+            ]);
+        }
 
         foreach ($img_multiple as $product_photo) {
             $product_photo;
@@ -104,18 +121,8 @@ class ProductController extends Controller
                 "product" => $id,
                 "added_by" => $added_by,
                 "created_at" => $created_at,
-
             ]);
         }
-
-
-
-
-
-
-
-
-
 
         return redirect('product')->with('success', 'You are success to add a new product');
     }
@@ -129,25 +136,81 @@ class ProductController extends Controller
         ]);
     }
 
+
+    // update_product page view
+    public function update_product($id)
+    {
+
+        return view('product.update_product', [
+            'item' => Product::find($id),
+            'categories' => Category::all(),
+            'subcategories' => Subcategory::all(),
+        ]);
+    }
     // update view
     public function update(Request $req)
     {
+        $id = $req->id;
+        $name = $req->name;
+        $price = $req->price;
+        $quantity = $req->quantity;
+        $notification_quantity = $req->notification_quantity;
+        $discount = $req->discount;
+        $category = $req->category;
+        $subcategory = $req->subcategory;
+        $des = $req->des;
+
+
         $req->validate([
-            'name' => 'required',
+            'name' => 'required|string|min:3|max:40',
+            'price' => 'required|numeric|min:1',
+            'quantity' => 'required|numeric|min:1',
+            'category' => 'required',
+            'subcategory' => 'required',
+            'des' => 'required|string|min:12',
+
         ]);
 
-        $name = $req->name;
-        $id = $req->id;
+        if ($notification_quantity != 0) {
+            $req->validate([
+                'notification_quantity' => 'numeric|min:1',
+            ]);
+        }
+
+        if ($discount != 0) {
+            $req->validate([
+                'discount' => 'numeric|min:5|max:70',
+            ]);
+        }
+
+
+        if ($notification_quantity != 0) {
+            Product::find($id)->update([
+                "notification_quantity" => $notification_quantity,
+            ]);
+        }
+
+        if ($discount != 0) {
+            Product::find($id)->update([
+                "discount" => $discount,
+            ]);
+        }
 
         Product::find($id)->update([
             "name" => $name,
+            "price" => $price,
+            "quantity" => $quantity,
+            "category" => $category,
+            "subcategory" => $subcategory,
+            "des" => $des,
+            "discount" => $discount,
+            "notification_quantity" => $notification_quantity,
         ]);
         return back()->with('success', 'You are success to add a new product');
     }
     // img update
     public function img_update(Request $req)
     {
-
         $req->validate([
             'img' => 'required',
         ]);
@@ -158,12 +221,8 @@ class ProductController extends Controller
 
         $img = $req->file('img');
         $img_extention = $img->getClientOriginalExtension();
-        $img_name = $id . rand(1, 9999) . "." . $img_extention;
+        $img_name = $id . "product" . rand(1, 9999) . "." . $img_extention;
         Image::make($img)->save(base_path('public/upload/product/' . $img_name));
-
-        Product::find($id)->update([
-            "img" => $img_name,
-        ]);
 
         Product::find($id)->update([
             "img" => $img_name,
@@ -217,14 +276,7 @@ class ProductController extends Controller
 
 
 
-    // update_product page view
-    public function update_product($id)
-    {
 
-        return view('product.update_product', [
-            'item' => Product::find($id),
-        ]);
-    }
 
     // soft_delete single
     public function soft_delete($id)

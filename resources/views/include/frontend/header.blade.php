@@ -9,7 +9,7 @@
               </p>
             </div>
             <div class="header-right">
-              <a href="contact-us.html" class="contact d-lg-show"><i class="d-icon-map"></i>Contact</a>
+              <a href="{{ route('front_contact_us') }}" class="contact d-lg-show"><i class="d-icon-map"></i>Contact</a>
               <a href="#" class="help d-lg-show"><i class="d-icon-info"></i> Need Help</a>
 
                @if (Route::has('login'))
@@ -34,7 +34,7 @@
               <a href="#" class="mobile-menu-toggle">
                 <i class="d-icon-bars2"></i>
               </a>
-              <a href="demo1.html" class="logo">
+              <a href="{{ route('front') }}" class="logo">
                 <img src="{{ asset('frontend/images/logo.png')}}" alt="logo" width="153" height="44" />
               </a>
               <!-- End Logo -->

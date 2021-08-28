@@ -281,7 +281,7 @@
               @foreach ($categories as $item)
 
               <div class="category category-default1 category-absolute banner-radius overlay-zoom">
-                  <a href="{{ route('allproduct') }}">
+                  <a href="{{ url('front/category/subcategory') }}/{{ $item->id }}/{{ 'null' }}">
                       <figure class="category-media">
                           <img
                           src="{{ asset('upload/category')}}/{{ $item->img }}"
@@ -291,7 +291,7 @@
                           />
                         </figure>
                     </a>
-                    <a href="{{ route('allproduct') }}">
+                    <a href="{{ url('front/category/subcategory') }}/{{ $item->id }}/{{ 'null' }}">
                     <div class="category-content">
                         <h4 class="category-name ">{{ $item->name }}</h4>
                     </div>
@@ -313,6 +313,7 @@
   </div>
 </section>
 
+{{-- best sellers --}}
 <section class="product-wrapper container appear-animate mt-6 mt-md-10 pt-4 pb-8"
   data-animation-options="{
           'delay': '.3s'
@@ -342,72 +343,63 @@
           }">
 
 
-@foreach ($products as $item)
-
-
+    @foreach ($products as $item)
     <div class="product product-classic">
       <figure class="product-media">
         <a href="product.html">
-          <img
-            src="{{ asset('upload/product')}}/{{ $item->img }}"
-            alt="product"
-            width="280"
-            height="315"/>
+          <img src="{{ asset('upload/product')}}/{{ $item->img }}" alt="product" width="280" height="315"/>
         </a>
         <div class="product-label-group">
+            @if ($item->created_at->diffInDays() <= 7)
             <label class="product-label label-new">new</label>
-          <label class="product-label label-sale">25% Off</label>
+            @endif
+
+            @if ($item->discount != 0)
+            <label class="product-label label-sale">{{ $item->discount }}% Off</label>
+            @endif
         </div>
       </figure>
       <div class="product-details">
         <div class="product-cat">
-          <a href="shop-grid-3col.html">men</a>
+          <a href="shop-grid-3col.html">{{ App\Models\Category::find($item->category)->name }}</a>
         </div>
-        <h3 class="product-name">
-          <a href="product.html">Osaka Entry Tee Superdry</a>
-        </h3>
+        <h3 class="product-name"><a href="{{ url('front/product') }}/{{ $item->id }}">{{ $item->name }}</a></h3>
         <div class="product-price">
-          <ins class="new-price">$199.00</ins
-          ><del class="old-price">$210.00</del>
+          @if ($item->discount != 0)
+           <ins class="new-price">${{ $item->price - ($item->price*$item->discount/100) }}</ins>
+           <del class="old-price">${{ $item->price }}</del>
+          @else
+           <ins class="new-price">${{ $item->price }}</ins>
+          @endif
         </div>
         <div class="ratings-container">
           <div class="ratings-full">
-            <span class="ratings" style="width: 100%"></span>
+               @php
+                $reviews_count = App\Models\Review::where('product', $item->id)->count();
+                $reviews = App\Models\Review::where('product', $item->id)->get();
+                if ($reviews_count != 0) {
+                    $rating_total = 0;
+                    foreach ($reviews as $review) {
+                        $rating = $review->rating;
+                        $rating_total += $rating;
+                    }
+                    $rating_point = $rating_total/$reviews_count;
+                    $rating_persent = 100*$rating_point/5;
+                }
+                @endphp
+            <span class="ratings" style="width: {{ $rating_persent }}%"></span>
             <span class="tooltiptext tooltip-top"></span>
           </div>
-          <a href="product.html" class="rating-reviews"
-            >( 6 reviews )</a
-          >
+          <a href="product.html" class="rating-reviews">( {{  $reviews_count }} reviews )</a>
         </div>
         <div class="product-action">
-          <a
-            href="#"
-            class="btn-product btn-cart"
-            data-toggle="modal"
-            data-target="#addCartModal"
-            title="Add to cart"
-            ><i class="d-icon-bag"></i><span>Add to cart</span></a
-          >
-          <a
-            href="#"
-            class="btn-product-icon btn-wishlist"
-            title="Add to wishlist"
-            ><i class="d-icon-heart"></i
-          ></a>
-          <a
-            href="#"
-            class="btn-product-icon btn-quickview"
-            title="Quick View"
-            ><i class="d-icon-search"></i
-          ></a>
+          <a href="#" class="btn-product btn-cart" data-toggle="modal" data-target="#addCartModal" title="Add to cart"><i class="d-icon-bag"></i><span>Add to cart</span></a>
+          <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"><i class="d-icon-heart"></i></a>
+          <a href="#" class="btn-product-icon btn-quickview" title="Quick View"><i class="d-icon-search"></i></a>
         </div>
       </div>
     </div>
     @endforeach
-
-
-
-
   </div>
 </section>
 
@@ -416,12 +408,7 @@
           'delay': '.6s'
       }">
   <h2 class="title title-center">Our Featured</h2>
-  <div
-    class="
-      owl-carousel owl-theme
-      row
-      cols-2 cols-md-3 cols-lg-4 cols-xl-5
-    "
+  <div class=" owl-carousel owl-theme row cols-2 cols-md-3 cols-lg-4 cols-xl-5"
     data-owl-options="{
               'items': 5,
               'nav': false,
@@ -444,8 +431,7 @@
                       'nav': true
                   }
               }
-          }"
-  >
+          }">
     <div class="product text-center">
       <figure class="product-media">
         <a href="product.html">

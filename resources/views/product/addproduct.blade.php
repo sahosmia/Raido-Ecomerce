@@ -45,7 +45,7 @@
         <div class="card-body">
             <form action="{{ route('addproductinsert') }}" method="post" enctype="multipart/form-data">
                 @csrf
-      {{-- select option  --}}
+                {{-- category option  --}}
                 <div class="form-row">
                 <div class="form-group col-md-6">
                      <label>Select Category</label>
@@ -60,7 +60,7 @@
                     @enderror
                 </div>
 
-                      {{-- select option  --}}
+                {{-- subcategory option  --}}
                 <div class="form-group col-md-6">
                      <label>Select Subcategory</label>
                      <select class="select2-example @error('subcategory') is-invalid @enderror" name="subcategory">
@@ -74,6 +74,7 @@
                     @enderror
                 </div>
 
+                {{-- name --}}
                 <div class="form-group col-md-6">
                      <label>New Product Name</label>
                     <input name="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Product Name">
@@ -82,6 +83,7 @@
                     @enderror
                 </div>
 
+                {{-- price --}}
                 <div class="form-group col-md-6">
                      <label>Product price</label>
                     <input name="price" value="{{ old('price') }}" type="number" class="form-control @error('price') is-invalid @enderror" placeholder="Enter New Product price">
@@ -89,7 +91,7 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-
+                {{-- Product Quantity --}}
                 <div class="form-group col-md-4">
                      <label>Product Quantity</label>
                     <input name="quantity" value="{{ old('quantity') }}" type="number" class="form-control @error('quantity') is-invalid @enderror" placeholder="Enter New Product quantity">
@@ -98,6 +100,7 @@
                     @enderror
                 </div>
 
+                {{-- Discount --}}
                 <div class="form-group col-md-4">
                      <label>Discount</label>
                     <input name="discount" value="{{ old('discount') }}" type="number" class="form-control @error('discount') is-invalid @enderror" placeholder="Enter New Product discount">
@@ -105,6 +108,8 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
+                {{-- Notification Quantity --}}
                 <div class="form-group col-md-4">
                      <label>Notification Quantity</label>
                     <input name="notification_quantity" value="{{ old('notification_quantity') }}" type="number" class="form-control @error('notification_quantity') is-invalid @enderror" placeholder="Enter New Product notification_quantity">

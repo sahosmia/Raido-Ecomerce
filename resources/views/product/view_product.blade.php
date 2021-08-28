@@ -66,24 +66,18 @@
                         <div class="col-md-6">
                             <div class="slider-for">
                                 <div class="slick-slide-item">
-                                    <img src="{{ asset('upload/product') }}/{{ $item->img }}"
-                                         class="img-fluid rounded"
-                                         alt="image">
+                                    <img src="{{ asset('upload/product') }}/{{ $item->img }}" class="img-fluid rounded" alt="image">
                                 </div>
                                 <div class="slick-slide-item">
-                                    <img src="{{ asset('upload/product') }}/{{ $item->img }}"
-                                         class="img-fluid rounded"
-                                         alt="image">
+                                    <img src="{{ asset('upload/product') }}/{{ $item->img }}" class="img-fluid rounded" alt="image">
                                 </div>
-                                                                @foreach ($product_photos as $photo)
-
+                                @foreach ($product_photos as $photo)
                                 <div class="slick-slide-item">
                                     <img src="{{ asset('upload/product_photo') }}/{{ $photo->img }}"
                                          class="img-fluid rounded"
                                          alt="image">
                                 </div>
                                 @endforeach
-
                             </div>
                             <div class="slider-nav mt-4">
                                 <div class="slick-slide-item">
@@ -93,16 +87,12 @@
                                 </div>
 
                                 @foreach ($product_photos as $photo)
-
                                 <div class="slick-slide-item">
                                     <img src="{{ asset('upload/product_photo') }}/{{ $photo->img }}"
                                     class="img-fluid rounded"
                                     alt="image">
                                 </div>
                                 @endforeach
-
-
-
                             </div>
                         </div>
                         <div class="col-md-6">

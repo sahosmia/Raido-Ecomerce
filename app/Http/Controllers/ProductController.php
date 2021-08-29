@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Product_photo;
 use App\Models\Subcategory;
+use App\Models\Message;
 use Auth;
 use Carbon\Carbon;
 use Image;
@@ -27,6 +28,9 @@ class ProductController extends Controller
             'products_count' => Product::count(),
             'product_photos' => Product_photo::all(),
             'product_photos_count' => Product_photo::count(),
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
+
         ]);
     }
 
@@ -36,6 +40,9 @@ class ProductController extends Controller
         return view('product.addproduct', [
             'categories' => Category::all(),
             'subcategories' => Subcategory::all(),
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
+
         ]);
     }
 
@@ -133,6 +140,8 @@ class ProductController extends Controller
         return view('product.recyclebin_product', [
             'products' => Product::onlyTrashed()->paginate(10),
             'products_count' => Product::onlyTrashed()->count(),
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
         ]);
     }
 
@@ -145,6 +154,8 @@ class ProductController extends Controller
             'item' => Product::find($id),
             'categories' => Category::all(),
             'subcategories' => Subcategory::all(),
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
         ]);
     }
     // update view
@@ -271,6 +282,8 @@ class ProductController extends Controller
         return view('product.view_product', [
             'item' => Product::find($id),
             'product_photos' => Product_photo::where('product', $id)->get(),
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
         ]);
     }
 
@@ -356,6 +369,8 @@ class ProductController extends Controller
             'id' => $id,
             'product_photos' => Product_photo::where('product', $id)->paginate(10),
             'product_photos_count' => Product_photo::where('product', $id)->count(),
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
         ]);
     }
 
@@ -402,6 +417,8 @@ class ProductController extends Controller
     {
         return view('product.addproductphoto', [
             'id' => $id,
+            'messages' => Message::latest()->get(),
+            'message_count' => Message::where('action', 1)->count(),
         ]);
     }
 

@@ -29,6 +29,12 @@ Route::get('front/contact_us', [FrontendController::class, 'contact_us'])->name(
 Route::get('front/category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct']);
 Route::get('front/product/{id}', [FrontendController::class, 'product_view_single']);
 
+
+// ProfileController
+Route::get('front/profile', [ProfileController::class, 'front_profile'])->name('front_profile');
+Route::post('profile.update', [ProfileController::class, 'profile_update'])->name('profile_update');
+Route::get('front/dashboard', [ProfileController::class, 'front_dashboard'])->name('front_dashboard');
+
 // Home
 Auth::routes();
 Route::get('home', [HomeController::class, 'index'])->name('home');

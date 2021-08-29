@@ -14,7 +14,31 @@
 
                @if (Route::has('login'))
                     @auth
-                        <a class="login-link" href="{{ url('/home') }}" ><i class="d-icon-user"></i>{{ Auth::user()->name }}</a>
+
+                    <div class="dropdown ml-5">
+                            <a class="login-link" href="{{ route('front_profile') }}" ><i class="d-icon-user"></i>{{ Auth::user()->name }}</a>
+                            <ul class="dropdown-box">
+                                <li>
+                                    <a href="{{ route('front_profile') }}">View Profile</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('front_dashboard') }}">Dashboard</a>
+                                </li>
+                                @if (Auth::user()->role != 1)
+                                <li>
+                                    <a href="{{ route('home') }}">Site Dashboard</a>
+                                </li>
+                                @endif
+                                <li>
+                                    <a href="{{ route('logout') }}" data-sidebar-target="#settings" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">Sign Out</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </li>
+
+                            </ul>
+                        </div>
                     @else
                         <a class="login-link" href="{{ route('login') }}" data-toggle="login-modal"><i class="d-icon-user"></i>Sign in</a>
                         @if (Route::has('register'))

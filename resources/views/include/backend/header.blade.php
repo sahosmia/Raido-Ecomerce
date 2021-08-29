@@ -36,66 +36,7 @@
                                 </form>
                             </div>
                         </li>
-                        <li class="nav-item dropdown d-none d-md-block">
-                            <a href="#" class="nav-link" title="Apps" data-toggle="dropdown">Apps</a>
-                            <div class="dropdown-menu dropdown-menu-big">
-                                <div class="border-bottom px-4 py-3 text-center d-flex justify-content-between">
-                                    <h5 class="mb-0">Apps</h5>
-                                </div>
-                                <div class="p-3">
-                                    <div class="row row-xs">
-                                        <div class="col-6">
-                                            <a href="chat.html">
-                                                <div class="border-radius-1 text-center mb-3">
-                                                    <figure class="avatar avatar-lg border-0">
-                                                <span class="avatar-title bg-primary text-white rounded-circle">
-                                                    <i class="width-30 height-30" data-feather="message-circle"></i>
-                                                </span>
-                                                    </figure>
-                                                    <div class="mt-2">Chat</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="mail.html">
-                                                <div class="border-radius-1 text-center mb-3">
-                                                    <figure class="avatar avatar-lg border-0">
-                                                <span class="avatar-title bg-secondary text-white rounded-circle">
-                                                    <i class="width-30 height-30" data-feather="mail"></i>
-                                                </span>
-                                                    </figure>
-                                                    <div class="mt-2">Mail</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="todo-list.html">
-                                                <div class="border-radius-1 text-center">
-                                                    <figure class="avatar avatar-lg border-0">
-                                                <span class="avatar-title bg-info text-white rounded-circle">
-                                                    <i class="width-30 height-30" data-feather="check-circle"></i>
-                                                </span>
-                                                    </figure>
-                                                    <div class="mt-2">Todo List</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="file-manager.html">
-                                                <div class="border-radius-1 text-center">
-                                                    <figure class="avatar avatar-lg border-0">
-                                                <span class="avatar-title bg-warning text-white rounded-circle">
-                                                    <i class="width-30 height-30" data-feather="file"></i>
-                                                </span>
-                                                    </figure>
-                                                    <div class="mt-2">File Manager</div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+
                         <li class="nav-item dropdown d-none d-md-block">
                             <a href="#" class="nav-link" title="Actions" data-toggle="dropdown">Create</a>
                             <div class="dropdown-menu">
@@ -374,7 +315,6 @@
                                              class="rounded-circle" alt="image">
                                     </figure>
                                     <h5 class="text-center">{{ Auth::user()->name }}</h5>
-                                    <div class="mb-3 small text-center text-muted">@bonygidden</div>
                                     <a href="#" class="btn btn-outline-light btn-rounded">Manage Your Account</a>
                                 </div>
                                 <div class="list-group">
@@ -386,22 +326,7 @@
                                         @csrf
                                     </form>
                                 </div>
-                                <div class="p-4">
-                                    <div class="mb-4">
-                                        <h6 class="d-flex justify-content-between">
-                                            Storage
-                                            <span>%25</span>
-                                        </h6>
-                                        <div class="progress" style="height: 5px;">
-                                            <div class="progress-bar bg-success-gradient" role="progressbar" style="width: 40%;"
-                                                 aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                    <hr class="mb-3">
-                                    <p class="small mb-0">
-                                        <a href="#">Privacy policy</a>
-                                    </p>
-                                </div>
+
                             </div>
                         </li>
                     </ul>

@@ -18,9 +18,16 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('img')->default('user.jpg');
-            $table->string('role')->default(1);
+            $table->integer('role')->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('address')->default(null);
+            $table->string('facebook')->default(null);
+            $table->string('instragram')->default(null);
+            $table->string('linkedin')->default(null);
+            $table->string('twitter')->default(null);
+            $table->integer('phone')->default(null);
+            $table->string('blood')->default(null);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

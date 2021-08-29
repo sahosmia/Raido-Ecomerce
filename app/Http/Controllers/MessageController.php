@@ -42,8 +42,8 @@ class MessageController extends Controller
         }
 
         return view('frontend.message', [
-            'messages' => Message::latest()->get(),
             'messages_id' => Message::find($id),
+            'messages' => Message::latest()->get(),
             'message_count' => Message::where('action', 1)->count(),
         ]);
     }

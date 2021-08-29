@@ -100,7 +100,6 @@ Route::get('product_soft_delete_all', [ProductController::class, 'soft_delete_al
 Route::get('product_p_delete_all', [ProductController::class, 'p_delete_all'])->name('product_p_delete_all');
 Route::get('product_restore_all', [ProductController::class, 'restore_all'])->name('product_restore_all');
 
-
 Route::get('product/product_photo/view/{id}', [ProductController::class, 'view_product_photo']);
 Route::get('product/product_photo/action/{id}', [ProductController::class, 'action_product_photo']);
 Route::get('product/product_photo/delete/{id}', [ProductController::class, 'delete_product_photo']);
@@ -110,8 +109,6 @@ Route::post('product/addproductphotoinsert', [ProductController::class, 'addprod
 
 // Review
 Route::post('front.review_add', [ReviewController::class, 'review_add'])->name('review_add');
-
-
 
 // Cupon Controller
 Route::get('cupon', [CuponController::class, 'index'])->name('cupon');
@@ -157,7 +154,25 @@ Route::get('message/delete/{id}', [MessageController::class, 'message_delete']);
 Route::get('message/view/{id}', [MessageController::class, 'message_view']);
 
 
+// Testimonial
+Route::get('testimonial', [TestimonialController::class, 'index'])->name('testimonial');
 
+
+Route::get('testimonial/addtestimonial', [TestimonialController::class, 'addtestimonial'])->name('addtestimonial');
+Route::post('testimonial/addtestimonialinsert', [TestimonialController::class, 'addtestimonialinsert'])->name('addtestimonialinsert');
+Route::get('testimonial/recyclebin', [TestimonialController::class, 'recyclebin'])->name('recyclebin_testimonial');
+Route::post('testimonial/update', [TestimonialController::class, 'update'])->name('testimonial_update');
+Route::post('testimonial/form_action', [TestimonialController::class, 'form_action'])->name('testimonial_form_action');
+Route::get('testimonial/view/{id}', [TestimonialController::class, 'view_testimonial']);
+Route::get('testimonial/update/{id}', [TestimonialController::class, 'update_testimonial']);
+Route::post('testimonial/img_update', [TestimonialController::class, 'img_update'])->name('testimonial_img_update');
+Route::get('testimonial/soft_delete/{id}', [TestimonialController::class, 'soft_delete']);
+Route::get('testimonial/p_delete/{id}', [TestimonialController::class, 'p_delete']);
+Route::get('testimonial/restore/{id}', [TestimonialController::class, 'restore']);
+Route::get('testimonial/action/{id}', [TestimonialController::class, 'action']);
+Route::get('testimonial_soft_delete_all', [TestimonialController::class, 'soft_delete_all'])->name('testimonial_soft_delete_all');
+Route::get('testimonial_p_delete_all', [TestimonialController::class, 'p_delete_all'])->name('testimonial_p_delete_all');
+Route::get('testimonial_restore_all', [TestimonialController::class, 'restore_all'])->name('testimonial_restore_all');
 
 
 
@@ -209,8 +224,7 @@ Route::get('team_restore_all', [TeamController::class, 'restore_all'])->name('te
 Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
 
-// Testimonial
-Route::get('testimonial', [TestimonialController::class, 'index'])->name('tesimonial');
+
 
 // Testimonial
 Route::get('order', [OrdermonialController::class, 'index'])->name('order');

@@ -4,12 +4,12 @@
 <section class="intro-section">
   <div class="owl-carousel owl-theme row owl-dot-inner owl-dot-white intro-slider animation-slider cols-1 gutter-no"
       data-owl-options="{
-          'nav': false,
+          'nav': true,
           'dots': true,
           'loop': true,
           'items': 1,
           'autoplay': true,
-          'autoplayTimeout': 8000
+          'autoplayTimeout': 2000
           }">
     <div class="banner banner-fixed intro-slide1" style="background-color: #46b2e8">
       <figure>
@@ -18,25 +18,10 @@
       <div class="container">
         <div class="banner-content y-50">
           <h4 class="banner-subtitle font-weight-bold ls-l">
-            <span
-              class="d-inline-block slide-animate"
-              data-animation-options="{'name': 'fadeInRightShorter', 'duration': '1s', 'delay': '.2s'}"
-              >Buy 2 Get</span
-            >
-            <span
-              class="
-                d-inline-block
-                label-star
-                bg-white
-                text-primary
-                slide-animate
-              "
-              data-animation-options="{'name': 'fadeInRightShorter', 'duration': '1s', 'delay': '.4s'}"
-              >1 Free</span
-            >
+            <span class="d-inline-block slide-animate" data-animation-options="{'name': 'fadeInRightShorter', 'duration': '1s', 'delay': '.2s'}">Buy 2 Get</span>
+            <span class="d-inline-block label-star bg-white text-primary slide-animate" data-animation-options="{'name': 'fadeInRightShorter', 'duration': '1s', 'delay': '.4s'}">1 Free</span>
           </h4>
-          <h2 class="banner-title font-weight-bold text-white lh-1 ls-md  slide-animate"
-            data-animation-options="{'name': 'fadeInUpShorter', 'duration': '1.2s', 'delay': '1s'}">
+          <h2 class="banner-title font-weight-bold text-white lh-1 ls-md  slide-animate" data-animation-options="{'name': 'fadeInUpShorter', 'duration': '1.2s', 'delay': '1s'}">
             Fashionable
           </h2>
           <h3 class="font-weight-normal lh-1 ls-l text-white slide-animate"
@@ -47,19 +32,12 @@
             data-animation-options="{'name': 'fadeInUpShorter', 'duration': '1.2s', 'delay': '1s'}">
             Get Free Shipping on all orders over $99.00
           </p>
-          <a
-            href="shop.html"
-            class="btn btn-dark btn-rounded slide-animate"
-            data-animation-options="{'name': 'fadeInUpShorter', 'duration': '1s', 'delay': '1.8s'}"
-            >Shop Now<i class="d-icon-arrow-right"></i
-          ></a>
+          <a href="shop.html" class="btn btn-dark btn-rounded slide-animate" data-animation-options="{'name': 'fadeInUpShorter', 'duration': '1s', 'delay': '1.8s'}"
+            >Shop Now<i class="d-icon-arrow-right"></i></a>
         </div>
       </div>
     </div>
-    <div
-      class="banner banner-fixed intro-slide2"
-      style="background-color: #dddee0"
-    >
+    <div class="banner banner-fixed intro-slide2" style="background-color: #dddee0">
       <figure>
         <img
           src="{{ asset('frontend/images/demos/demo1/slides/slide2.jpg')}}"
@@ -169,8 +147,7 @@
 
   <div class="container mt-6 appear-animate">
     <div class="service-list">
-      <div
-        class="owl-carousel owl-theme row cols-lg-3 cols-sm-2 cols-1"
+      <div class="owl-carousel owl-theme row cols-lg-3 cols-sm-2 cols-1"
         data-owl-options="{
                           'items': 3,
                           'nav': false,
@@ -190,15 +167,14 @@
                                   'loop': false
                               }
                           }
-                      }"
-      >
-        <div
-          class="icon-box icon-box-side icon-box1 appear-animate"
+                      }">
+
+        <div class="icon-box icon-box-side icon-box1 appear-animate"
           data-animation-options="{
                               'name': 'fadeInRightShorter',
                               'delay': '.3s'
-                          }"
-        >
+                          }">
+
           <i class="icon-box-icon d-icon-truck"></i>
           <div class="icon-box-content">
             <h4 class="icon-box-title text-capitalize ls-normal lh-1">
@@ -208,13 +184,11 @@
           </div>
         </div>
 
-        <div
-          class="icon-box icon-box-side icon-box2 appear-animate"
+        <div class="icon-box icon-box-side icon-box2 appear-animate"
           data-animation-options="{
                               'name': 'fadeInRightShorter',
                               'delay': '.4s'
-                          }"
-        >
+                          }">
           <i class="icon-box-icon d-icon-service"></i>
           <div class="icon-box-content">
             <h4 class="icon-box-title text-capitalize ls-normal lh-1">

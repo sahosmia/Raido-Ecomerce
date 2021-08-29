@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Hash;
 use Auth;
+use Image;
 
 class ProfileController extends Controller
 {
@@ -21,6 +22,7 @@ class ProfileController extends Controller
         $id = Auth::id();
         $name = $req->name;
         $email = $req->email;
+        $img = $req->file('img');
         $address = $req->address;
         $facebook = $req->facebook;
         $instragram = $req->instragram;
@@ -37,6 +39,19 @@ class ProfileController extends Controller
                 'email' => $email,
             ]);
 
+            if ($img) {
+                if (Auth::user()->img != "user.jpg") {
+                    $old_img = Auth::user()->img;
+                    unlink('upload/users/' . $old_img);
+                }
+
+                $img_extention = $img->getClientOriginalExtension();
+                $img_name = $id . "user" . rand(1, 9999) . "." . $img_extention;
+                Image::make($img)->save(base_path('public/upload/users/' . $img_name));
+                User::find($id)->update([
+                    'img' => $img_name,
+                ]);
+            }
             if ($address) {
                 User::find($id)->update([
                     'address' => $address,
@@ -74,6 +89,10 @@ class ProfileController extends Controller
             }
             return back()->with('success', 'you are success to update your profile');
         } else {
+            $req->validate([
+                'password' => 'required',
+                'confirmation_password' => 'required|confirmed',
+            ]);
             if (Hash::check($old_password, Auth::user()->password)) {
                 User::find($id)->update([
                     'password' => bcrypt($password),

@@ -1,26 +1,26 @@
 @extends('layouts.backend')
 
 {{-- nav active satatus --}}
-@section('cupon')
+@section('testimonial')
     active
 @endsection
 
 {{-- title name --}}
 @section('page_title')
-    cupon
+    testimonial
 @endsection
 
 @section('content')
     <div class="page-header">
         <div>
-            <h3>cupon Page</h3>
+            <h3>testimonial Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('cupon') }}">cupon</a>
+                        <a href="{{ route('testimonial') }}">testimonial</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Recyclebin</li>
@@ -46,24 +46,24 @@
 @endif
 
     <div class="card text-center border border-primary p-3">
-        <form action="{{ route('cupon_form_action') }}" method="POST">
+        <form action="{{ route('testimonial_form_action') }}" method="POST">
 @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('cupon') }}">Back cupon</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('testimonial') }}">Back testimonial</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $cupons_count == 0 ? "disabled" : "" }}" href="#">All P. Delete</a>
+                <a class="nav-link btn btn-danger mr-2 {{ $testimonials_count == 0 ? "disabled" : "" }}" href="#">All P. Delete</a>
             </li>
             <li class="nav-item">
-                 <button class="nav-link btn btn-secondary mr-1 {{ $cupons_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
+                 <button class="nav-link btn btn-secondary mr-1 {{ $testimonials_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $cupons_count == 0 ? "disabled" : "" }}" href="{{ route('cupon_restore_all') }}">All Restore</a>
+                <a class="nav-link btn btn-danger mr-2 {{ $testimonials_count == 0 ? "disabled" : "" }}" href="{{ route('testimonial_restore_all') }}">All Restore</a>
             </li>
 
             <li class="nav-item">
-                <button class="nav-link btn btn-warning mr-1 {{ $cupons_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_restore">Mark Restore</button>
+                <button class="nav-link btn btn-warning mr-1 {{ $testimonials_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_restore">Mark Restore</button>
             </li>
     <!-- fields -->
 
@@ -77,38 +77,43 @@
 
     <div class="card text-center border border-primary">
         <div class="card-header bg-primary">
-            <h5>cupon Item</h5>
+            <h5>testimonial Item</h5>
         </div>
         <div class="card-body border-primary">
             <div class="table-responsive">
                 <table class="table table-hover table-bordered">
                     <thead class="thead-dark">
                         <tr>
-                           <th scope="col">Mark</th>
+                            <th scope="col">Mark</th>
                             <th scope="col">No</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Discount</th>
-                            <th scope="col">Cupon End</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Message</th>
+                            <th scope="col">Image</th>
                             <th scope="col">Details</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
+                
                     <tbody>
-                    @forelse ($cupons as $key => $item)
+                    @forelse ($testimonials as $key => $item)
                         <tr>
                           <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
-                            <th>{{ $cupons->firstItem() + $key }}</th>
-                           <td>{{ $item->name }}</td>
-                            <td>{{ $item->code }}</td>
-                            <td>{{ $item->discount }}%</td>
-                            <td>{{ $item->end_cupon }}</td>
+                            <th>{{ $testimonials->firstItem() + $key }}</th>
+                             <td>{{ $item->name }}</td>
+                             <td>{{ $item->title }}</td>
+                            <td>{{ $item->des }}</td>
+                            <td>
+                                <figure class="avatar">
+                                    <img src="{{ asset('upload/testimonial') }}/{{ $item->img }}" alt="avatar">
+                                </figure>
+
+                            </td>
                             <td>
                                 <ul>
                                     <li>Added By :
-                                        @php
-                                        echo App\Models\User::find($item->added_by)->name;
-                                        @endphp
+                                       {{ App\Models\User::find($item->added_by)->name }}
+
                                     </li>
                                     <li>Active Status :
                                         @if ($item->action == 1)
@@ -149,8 +154,8 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a href="#" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('cupon/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">P. Delete</a>
-                                        <a href="{{ url('cupon/restore') }}/{{ $item->id }}" class="dropdown-item text-primary">Resotor</a>
+                                        <a href="{{ url('testimonial/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">P. Delete</a>
+                                        <a href="{{ url('testimonial/restore') }}/{{ $item->id }}" class="dropdown-item text-primary">Resotor</a>
                                     </div>
                                 </div>
                             </td>
@@ -164,11 +169,11 @@
                 </table>
                 </form>
             </div>
-            {{ $cupons->links() }}
+            {{ $testimonials->links() }}
         </div>
 
         <div class="card-footer bg-primary ">
-            <h5>Total cupon: {{ $cupons_count }}</h5>
+            <h5>Total testimonial: {{ $testimonials_count }}</h5>
         </div>
     </div>
 @endsection

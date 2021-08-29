@@ -146,24 +146,6 @@ class BrandController extends Controller
         }
     }
 
-
-
-
-    /* view id page
-    .
-    .
-    .
-    .
-    .
-    .
-    .view id page
-    .
-    .
-    .
-    .
-    view id page
-    */
-
     // update_brand page view
     public function update_brand($id)
     {

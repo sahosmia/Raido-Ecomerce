@@ -4,7 +4,7 @@
 
 @endsection
 @section('content')
-@include('include.frontend.page_header')
+@include('include.frontend.page_header', ['name' => 'shop'])
 			<!-- End PageHeader -->
 
 <div class="container">

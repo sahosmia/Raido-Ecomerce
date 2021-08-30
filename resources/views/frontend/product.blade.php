@@ -7,6 +7,7 @@
 @section('content')
 {{-- @include('include.frontend.page_header') --}}
 			<!-- End PageHeader -->
+
 <div class="container">
     <div class="product product-single row mb-8">
         <div class="col-md-6">
@@ -360,7 +361,6 @@
         </div>
     </section>
 </div>
-
 
 @endsection
 @section('exta_js')

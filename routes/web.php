@@ -16,6 +16,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\Contact_informationController;
@@ -29,6 +30,11 @@ Route::get('front/contact_us', [FrontendController::class, 'contact_us'])->name(
 Route::get('front/category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct']);
 Route::get('front/product/{id}', [FrontendController::class, 'product_view_single']);
 
+
+// WishlistController page
+Route::get('front/wishlist', [WishlistController::class, 'wishlist'])->name('wishlist');
+Route::get('front/wishlist/product_id/{id}', [WishlistController::class, 'wishlistadd']);
+Route::get('front/wishlist/delete/product_id/{id}', [WishlistController::class, 'wishlistdelete']);
 
 // ProfileController
 Route::get('front/profile', [ProfileController::class, 'front_profile'])->name('front_profile');

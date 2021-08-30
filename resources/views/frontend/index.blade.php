@@ -1,6 +1,7 @@
 @extends('layouts.frontend')
 
 @section('content')
+{{-- banner pert --}}
 <section class="intro-section">
   <div class="owl-carousel owl-theme row owl-dot-inner owl-dot-white intro-slider animation-slider cols-1 gutter-no"
       data-owl-options="{
@@ -320,7 +321,7 @@
     @foreach ($products as $item)
     <div class="product product-classic">
       <figure class="product-media">
-        <a href="product.html">
+        <a href="{{ url('front/product') }}/{{ $item->id }}">
           <img src="{{ asset('upload/product')}}/{{ $item->img }}" alt="product" width="280" height="315"/>
         </a>
         <div class="product-label-group">
@@ -332,10 +333,17 @@
             <label class="product-label label-sale">{{ $item->discount }}% Off</label>
             @endif
         </div>
+         <div class="product-action-vertical">
+                                            <a href="#" class="btn-product-icon btn-cart" data-toggle="modal"
+                                                data-target="#addCartModal" title="Add to cart"><i
+                                                    class="d-icon-bag"></i></a>
+                                            <a href="{{ url('front') }}" class="btn-product-icon btn-wishlist" title="Add to wishlist"><i
+                                                    class="d-icon-heart"></i></a>
+                                        </div>
       </figure>
       <div class="product-details">
         <div class="product-cat">
-          <a href="shop-grid-3col.html">{{ App\Models\Category::find($item->category)->name }}</a>
+          <a href="{{ url('front/category/subcategory') }}/{{ $item->category }}/{{ 'null' }}">{{ App\Models\Category::find($item->category)->name }}</a>
         </div>
         <h3 class="product-name"><a href="{{ url('front/product') }}/{{ $item->id }}">{{ $item->name }}</a></h3>
         <div class="product-price">
@@ -361,15 +369,14 @@
                     $rating_persent = 100*$rating_point/5;
                 }
                 @endphp
-            <span class="ratings" style="width: {{ $rating_persent }}%"></span>
+            <span class="ratings" style="width: {{ $reviews_count == 0 ? 0 : $rating_persent }}%"></span>
             <span class="tooltiptext tooltip-top"></span>
           </div>
-          <a href="product.html" class="rating-reviews">( {{  $reviews_count }} reviews )</a>
+          <a class="rating-reviews">( {{  $reviews_count }} reviews )</a>
         </div>
         <div class="product-action">
-          <a href="#" class="btn-product btn-cart" data-toggle="modal" data-target="#addCartModal" title="Add to cart"><i class="d-icon-bag"></i><span>Add to cart</span></a>
-          <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"><i class="d-icon-heart"></i></a>
-          <a href="#" class="btn-product-icon btn-quickview" title="Quick View"><i class="d-icon-search"></i></a>
+          <a href="{{ url('home') }}" class="btn-cart" ><i class="d-icon-bag"></i><span>Add to cart</span></a>
+          <a href="{{ url('front/wishlist/product_id') }}/{{ $item->id }}" class="btn-product-icon " title="Add to wishlist"><i class="d-icon-heart"></i></a>
         </div>
       </div>
     </div>

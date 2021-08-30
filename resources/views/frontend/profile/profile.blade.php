@@ -146,13 +146,19 @@
 							<div class="tab-pane active" id="account">
 								<form action="{{ route('profile_update') }}" method="post" class="form" enctype="multipart/form-data">
                                     @csrf
-                                     @if(session()->has('success'))
-                                        <div class="alert alert-success d-flex align-items-center" role="alert">
-                                            <i class="ti-check mr-2"></i> {{ session()->get('success') }}
-                                        </div>
-                                    @endif
 
 
+
+
+                            @if(session()->has('success'))
+                                <div class="alert alert-success alert-dark alert-round alert-inline">
+                                    <i class="fas fa-check"></i>
+                                    {{ session()->get('success') }}
+                                    <button type="button" class="btn btn-link btn-close">
+                                        <i class="d-icon-times"></i>
+                                    </button>
+                                </div>
+                            @endif
 
                                     <fieldset>
                                         <legend>Profile Update</legend>
@@ -211,14 +217,23 @@
                                     </fieldset>
                                     <button type="submit" name="btn_name" value="all" class="btn btn-primary">SAVE CHANGES</button>
 
-                                    @if(session()->has('password_success'))
-                                    <div class="alert alert-success d-flex align-items-center" role="alert">
-                                        <i class="ti-check mr-2"></i> {{ session()->get('success') }}
-                                    </div>
+
+                                     @if(session()->has('password_success'))
+                                        <div class="alert alert-success alert-dark alert-round alert-inline">
+                                            <i class="fas fa-check"></i>
+                                            {{ session()->get('password_success') }}
+                                            <button type="button" class="btn btn-link btn-close">
+                                                <i class="d-icon-times"></i>
+                                            </button>
+                                        </div>
                                     @endif
                                     @if(session()->has('error'))
-                                        <div class="alert alert-danger d-flex align-items-center" role="alert">
-                                            <i class="ti-close mr-2"></i> {{ session()->get('error') }}
+                                        <div class="alert alert-danger alert-dark alert-round alert-inline">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            {{ session()->get('error') }}
+                                            <button type="button" class="btn btn-link btn-close">
+                                                <i class="d-icon-times"></i>
+                                            </button>
                                         </div>
                                     @endif
                                     <fieldset>

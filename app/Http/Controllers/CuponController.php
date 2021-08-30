@@ -108,21 +108,21 @@ class CuponController extends Controller
         switch ($req->action) {
             case "mark_p_delete":
                 foreach ($select_item as $item) {
-                    cupon::withTrashed()->find($item)->forceDelete();
+                    Cupon::withTrashed()->find($item)->forceDelete();
                 }
                 return back()->with('error', 'You all selected item permanent delete');
 
                 break;
             case "mark_s_delete":
                 foreach ($select_item as $item) {
-                    cupon::withTrashed()->find($item)->delete();
+                    Cupon::withTrashed()->find($item)->delete();
                 }
                 return back()->with('warning', 'You all selected item soft delete');
 
                 break;
             case "mark_restore":
                 foreach ($select_item as $item) {
-                    cupon::withTrashed()->find($item)->restore();
+                    Cupon::withTrashed()->find($item)->restore();
                 }
                 return back()->with('success', 'You all selected item Restore');
 
@@ -152,41 +152,41 @@ class CuponController extends Controller
     public function update_cupon($id)
     {
         return view('cupon.update_cupon', [
-            'item' => cupon::find($id),
+            'item' => Cupon::find($id),
         ]);
     }
 
     // soft_delete single
     public function soft_delete($id)
     {
-        cupon::withTrashed()->find($id)->delete();
+        Cupon::withTrashed()->find($id)->delete();
         return back()->with('error', 'You are soft all delete your cupon');
     }
 
     // p_delete single
     public function p_delete($id)
     {
-        cupon::withTrashed()->find($id)->forceDelete();
+        Cupon::withTrashed()->find($id)->forceDelete();
         return back()->with('error', 'You are soft all delete your cupon');
     }
 
     // restore single
     public function restore($id)
     {
-        cupon::onlyTrashed()->find($id)->restore();
+        Cupon::onlyTrashed()->find($id)->restore();
         return back()->with('success', 'You are success to restore your cupon');
     }
 
     // action active deactive
     public function action($id)
     {
-        if (cupon::find($id)->action == 1) {
-            cupon::find($id)->update([
+        if (Cupon::find($id)->action == 1) {
+            Cupon::find($id)->update([
                 "action" => 2,
             ]);
             return back()->with('warning', 'You are success to deactive your cupon');
         } else {
-            cupon::find($id)->update([
+            Cupon::find($id)->update([
                 "action" => 1,
             ]);
             return back()->with('success', 'You are success to active your cupon');
@@ -196,7 +196,7 @@ class CuponController extends Controller
     // soft_delete all
     public function soft_delete_all()
     {
-        cupon::whereNotNull('id')->delete();
+        Cupon::whereNotNull('id')->delete();
         // Category::truncate();
         return back()->with('error', 'You are soft all delete your cupon');
     }
@@ -204,14 +204,14 @@ class CuponController extends Controller
     // p_delete all
     public function p_delete_all()
     {
-        cupon::truncate();
+        Cupon::truncate();
         return back()->with('error', 'You are permanent all delete your cupon');
     }
 
     // restore all
     public function restore_all()
     {
-        cupon::onlyTrashed()->restore();
+        Cupon::onlyTrashed()->restore();
         return back()->with('success', 'You are success to restore your cupon');
     }
 }

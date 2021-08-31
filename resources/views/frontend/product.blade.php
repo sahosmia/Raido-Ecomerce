@@ -97,16 +97,20 @@
                 <hr class="product-divider">
 
                 <div class="product-form product-qty">
+                    <form action="{{ route('cartaddmultiple') }}" method="POST">
+                        @csrf
                     <div class="product-form-group">
                         <div class="input-group mr-2">
-                            <button class="quantity-minus d-icon-minus"></button>
-                            <input class="quantity form-control" type="number" min="1" max="1000000">
-                            <button class="quantity-plus d-icon-plus"></button>
+                            <input type="hidden" name="id" value="{{ $product->id }}">
+                            <button type="button" class="quantity-minus d-icon-minus"></button>
+                            <input class="quantity form-control" type="number" name="quantity" min="1" max="1000000">
+                            <button type="button" class="quantity-plus d-icon-plus"></button>
                         </div>
-                        <button class="btn-product btn-cart text-normal ls-normal font-weight-semi-bold"><i
+                        <button type="submit" class="btn-product btn-cart-c text-normal ls-normal font-weight-semi-bold"><i
                                 class="d-icon-bag"></i>Add to
                             Cart</button>
-                    </div>
+                        </div>
+                    </form>
                 </div>
 
                 <hr class="product-divider mb-3">

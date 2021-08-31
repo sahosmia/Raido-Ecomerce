@@ -17,12 +17,13 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\Contact_informationController;
 
 use App\Http\Controllers\BlankController;
-
+use App\Http\Controllers\CartController;
 
 // Frontend page
 Route::get('/', [FrontendController::class, 'index'])->name('front');
@@ -30,11 +31,24 @@ Route::get('front/contact_us', [FrontendController::class, 'contact_us'])->name(
 Route::get('front/category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct']);
 Route::get('front/product/{id}', [FrontendController::class, 'product_view_single']);
 
-
-// WishlistController page
+// Wishlist Controller page
 Route::get('front/wishlist', [WishlistController::class, 'wishlist'])->name('wishlist');
 Route::get('front/wishlist/product_id/{id}', [WishlistController::class, 'wishlistadd']);
 Route::get('front/wishlist/delete/product_id/{id}', [WishlistController::class, 'wishlistdelete']);
+
+// Cart Controller page
+Route::get('front/cart', [CartController::class, 'cart'])->name('cart');
+Route::get('front/cart/{coupon}', [CartController::class, 'cart'])->name('cart');
+Route::get('front/cart/product/{id}', [CartController::class, 'cartadd']);
+Route::post('front/cart/product/multiple/add', [CartController::class, 'cartaddmultiple'])->name('cartaddmultiple');
+Route::get('front/cart/delete/product_id/{id}', [CartController::class, 'cartdelete']);
+Route::post('front/cart/update', [CartController::class, 'update_cart'])->name('update_cart');
+
+
+// checkout Controller page
+Route::get('front/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::get('front/checkout/product_id/{id}', [CheckoutController::class, 'checkoutadd']);
+Route::get('front/checkout/delete/product_id/{id}', [CheckoutController::class, 'checkoutdelete']);
 
 // ProfileController
 Route::get('front/profile', [ProfileController::class, 'front_profile'])->name('front_profile');
@@ -231,61 +245,5 @@ Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
 
 
-
 // Testimonial
 Route::get('order', [OrdermonialController::class, 'index'])->name('order');
-
-
-
-
-// Setting
-Route::get('setting', [SettingController::class, 'index'])->name('setting');
-
-// Store
-Route::get('store', [StoreController::class, 'index'])->name('store');
-
-// Team
-Route::get('team', [TeamController::class, 'index'])->name('team');
-
-// Contact_information
-Route::get('contact_information', [Contact_informationController::class, 'index'])->name('contact_information');
-
-// Route::get('shop_page', [FrontendController::class, 'shop_page'])->name('shop_page');
-// Route::get('shop_category/{category_id}', [FrontendController::class, 'shop_category']);
-// Route::get('product/details/{product_id}', [FrontendController::class, 'product_details']);
-// Route::get('serch', [FrontendController::class, 'serch'])->name('serch');
-
-
-
-// // Add to Cart
-// Route::get('cart', [AddtocartController::class, 'cart_view'])->name('cart_view');
-// Route::get('add_to_cart_delete/{id}', [AddtocartController::class, 'add_to_cart_delete']);
-// Route::get('cart/{cupon_code}', [AddtocartController::class, 'cart_view'])->name('cart_view');
-// Route::post('cart.update', [AddtocartController::class, 'cart_update'])->name('cart_update');
-// Route::post('add_to_cart', [AddtocartController::class, 'add_to_cart']);
-
-
-// checkout page
-Route::get('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-Route::post('checkout.insert', [CheckoutController::class, 'checkout_insert']);
-Route::post('getcitylist', [CheckoutController::class, 'getcitylist']);
-
-
-
-// home page
-
-Route::get('home/invoice/{order_id}', [HomeController::class, 'pdf_download']);
-
-
-// SSLCOMMERZ Start
-Route::get('/online/payment', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
-
-Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
-Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
-
-Route::post('/success', [SslCommerzPaymentController::class, 'success']);
-Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
-Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
-
-Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
-//SSLCOMMERZ END

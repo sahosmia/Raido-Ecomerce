@@ -12,6 +12,26 @@
 
 <div class="page-content pt-10 pb-10 mb-2">
     <div class="container">
+         @if(session()->has('success_with_btn'))
+        <div class="alert alert-success alert-simple alert-btn">
+            <a href="{{ route('cart') }}" class="btn btn-success btn-md btn-rounded">view Cart</a>
+            {{ session()->get('success_with_btn') }}
+            <button type="button" class="btn btn-link btn-close">
+                <i class="d-icon-times"></i>
+            </button>
+        </div>
+        @endif
+
+         @if(session()->has('error'))
+        <div class="alert alert-light alert-warning alert-icon alert-inline mb-4">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h4 class="alert-title">Out of Stock!</h4>
+            {{ session()->get('error') }}
+            <button type="button" class="btn btn-link btn-close">
+                <i class="d-icon-times"></i>
+            </button>
+        </div>
+        @endif
         <table class="shop-table wishlist-table mt-2 mb-4">
             <thead>
                 <tr>
@@ -25,8 +45,6 @@
             </thead>
             <tbody class="wishlist-items-wrapper">
                 @foreach ($wishlists as $item)
-
-
                 <tr>
                     <td class="product-thumbnail">
                         <a href="product-simple.html">
@@ -37,7 +55,7 @@
                         </a>
                     </td>
                     <td class="product-name">
-                        <a href="product-simple.html">{{ App\Models\Product::find($item->product_id)->name }}</a>
+                        <a href="{{ url('front/product') }}/{{ $item->product_id }}">{{ App\Models\Product::find($item->product_id)->name }}</a>
                     </td>
                     <td class="product-price">
                         <span class="amount">${{ App\Models\Product::find($item->product_id)->price }}</span>
@@ -50,7 +68,7 @@
                         @endif
                     </td>
                     <td class="product-add-to-cart">
-                        <a href="product.html" class="btn-product btn-primary"><span>Add to Cart</span></a>
+                        <a href="{{ url('front/cart/product') }}/{{ $item->product_id }}" class="btn-product btn-primary"><span>Add to Cart</span></a>
                     </td>
                     <td class="product-remove">
                         <div>

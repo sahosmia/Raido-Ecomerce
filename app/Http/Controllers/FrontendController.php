@@ -32,6 +32,14 @@ class FrontendController extends Controller
 
     public function allproduct($category, $subcategory)
     {
+        if ($category == 'all') {
+            return view('frontend.shop', [
+                'show_status' => "all",
+                'categories' => Category::all(),
+                'subcategories' => Subcategory::all(),
+                'products' => Product::all(),
+            ]);
+        }
         if ($subcategory == "null") {
             return view('frontend.shop', [
                 'show_status' => "only_category",

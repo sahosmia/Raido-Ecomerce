@@ -334,12 +334,12 @@
             @endif
         </div>
          <div class="product-action-vertical">
-                                            <a href="#" class="btn-product-icon btn-cart" data-toggle="modal"
-                                                data-target="#addCartModal" title="Add to cart"><i
-                                                    class="d-icon-bag"></i></a>
-                                            <a href="{{ url('front') }}" class="btn-product-icon btn-wishlist" title="Add to wishlist"><i
-                                                    class="d-icon-heart"></i></a>
-                                        </div>
+            <a href="#" class="btn-product-icon btn-cart" data-toggle="modal"
+                data-target="#addCartModal" title="Add to cart"><i
+                    class="d-icon-bag"></i></a>
+            <a href="{{ url('front') }}" class="btn-product-icon btn-wishlist" title="Add to wishlist"><i
+                    class="d-icon-heart"></i></a>
+        </div>
       </figure>
       <div class="product-details">
         <div class="product-cat">
@@ -375,7 +375,7 @@
           <a class="rating-reviews">( {{  $reviews_count }} reviews )</a>
         </div>
         <div class="product-action">
-          <a href="{{ url('home') }}" class="btn-cart" ><i class="d-icon-bag"></i><span>Add to cart</span></a>
+          <a href="{{ url('front/wishlist/product_id') }}/{{ $item->id }}" class="btn-cart" ><i class="d-icon-bag"></i><span>Add to cart</span></a>
           <a href="{{ url('front/wishlist/product_id') }}/{{ $item->id }}" class="btn-product-icon " title="Add to wishlist"><i class="d-icon-heart"></i></a>
         </div>
       </div>

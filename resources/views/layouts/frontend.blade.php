@@ -2,10 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
     <title>Riode - Ultimate eCommerce Template</title>
 
     <meta name="keywords" content="HTML5 Template" />
@@ -37,8 +34,8 @@
     @yield('exta_css')
     <!-- Main CSS File -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/demo1.min.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.min.css') }}"/>
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/demo1.min.css') }}"/> --}}
+    {{-- <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.min.css') }}"/> --}}
   </head>
 
   <body class="home">
@@ -49,11 +46,11 @@
 
 
       <main class="main">
-        <div class="page-content">
+
 
     @yield('content')
 
-   </div>
+
       </main>
 
       <!-- End of Main -->

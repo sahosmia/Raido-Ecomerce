@@ -62,9 +62,14 @@ class CartController extends Controller
                 return back()->with('success_with_btn', 'you are success');
             }
         } else {
-            echo "return message page";
+            return view('include.frontend.login_message_page');
         }
     }
+
+
+
+
+
     // multiple cart item add
     public function cartaddmultiple(Request $req)
     {
@@ -109,10 +114,7 @@ class CartController extends Controller
     // cart item delete
     public function update_cart(Request $req)
     {
-        print_r($req->all());
         foreach ($req->quantity as $id => $item_quantity) {
-            echo $id;
-            echo $item_quantity;
             Cart::find($id)->update([
                 'quantity' => $item_quantity,
             ]);

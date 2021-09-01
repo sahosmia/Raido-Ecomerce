@@ -55,80 +55,89 @@
 @section('content')
 
 <div class="step-by pr-4 pl-4">
-    <h3 class="title title-simple title-step active"><a href="cart.html">1. Shopping Cart</a></h3>
-    <h3 class="title title-simple title-step"><a href="checkout.html">2. Checkout</a></h3>
+    <h3 class="title title-simple title-step active"><a href="{{ route('cart') }}">1. Shopping Cart</a></h3>
+    <h3 class="title title-simple title-step"><a href="{{ route('checkout') }}">2. Checkout</a></h3>
     <h3 class="title title-simple title-step"><a href="order.html">3. Order Complete</a></h3>
 </div>
 <div class="container mt-7 mb-2">
     <div class="row">
         <div class="col-lg-8 col-md-12 pr-lg-4">
-            <table class="shop-table cart-table cart-wrap">
-                <thead>
-                    <tr>
-                        <th><span>Product</span></th>
-                        <th></th>
-                        <th><span>Price</span></th>
-                        <th><span>quantitya</span></th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <form action="{{ route('update_cart') }}" method="post">
+                <table class="shop-table cart-table cart-wrap">
+                    <thead>
+                        <tr>
+                            <th><span>Product</span></th>
+                            <th></th>
+                            <th><span>Price</span></th>
+                            <th><span>quantitya</span></th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <form action="{{ route('update_cart') }}" method="post">
-                    @csrf
-                    @php
-                    use App\Models\Product;
-                        $total = 0;
-                        $status = true;
-                    @endphp
-                    @foreach ($cart_items as $item)
-                    @php
-                        $total +=  Product::find($item->product)->price*$item->quantity;
-                    @endphp
 
-                    <tr>
-                        <td class="product-thumbnail">
-                            <figure>
-                                <a href="product-simple.html">
-                                    <img src="{{ asset('upload/product') }}/{{ Product::find($item->product)->img }}" width="100" height="100"
-                                        alt="product">
+                        @csrf
+                        @php
+                        use App\Models\Product;
+                            $total = 0;
+                            $status = true;
+                        @endphp
+                        @foreach ($cart_items as $item)
+                        @php
+                        if (Product::find($item->product)->discount) {
+                            $price = Product::find($item->product)->price-Product::find($item->product)->discount*Product::find($item->product)->price/100;
+
+                        }
+                        else {
+                            $price = Product::find($item->product)->price;
+                        }
+
+                            $total +=  $price*$item->quantity;
+                        @endphp
+
+                        <tr>
+                            <td class="product-thumbnail">
+                                <figure>
+                                    <a href="product-simple.html">
+                                        <img src="{{ asset('upload/product') }}/{{ Product::find($item->product)->img }}" width="100" height="100"
+                                            alt="product">
+                                    </a>
+                                </figure>
+                            </td>
+                            <td class="product-name">
+                                <div class="product-name-section">
+                                    <a href="{{ url('front/product') }}/{{ $item->product }}">{{ Product::find($item->product)->name }}</a>
+                                    @if ($item->quantity > Product::find($item->product)->quantity)
+                                        <span class="tip tip-hot">stok out</span>
+                                        @php
+                                            $status = false;
+                                        @endphp
+                                        @endif
+                                    </div>
+                            </td>
+                            <td class="product-subtotal">
+                                <span class="amount">${{ $price }}</span>
+                            </td>
+                            <td class="quantitya cart-plus-minus">
+                            <input type="number" value="{{ $item->quantity }}" name="quantity[{{ $item->id }}]" class="product_quantity"/>
+                        </td>
+                            <td class="product-price">
+                                <span class="amount">${{ $price*$item->quantity }}</span>
+                            </td>
+                            <td class="product-close">
+                                <a href="{{ url('front/cart/delete/product_id') }}/{{ $item->product }}" class="product-remove" title="Remove this product">
+                                    <i class="fas fa-times"></i>
                                 </a>
-                            </figure>
-                        </td>
-                        <td class="product-name">
-                            <div class="product-name-section">
-                                <a href="{{ url('front/product') }}/{{ $item->product }}">{{ Product::find($item->product)->name }}</a>
-                                @if ($item->quantity > Product::find($item->product)->quantity)
-                                    <span class="tip tip-hot">stok out</span>
-                                    @php
-                                        $status = false;
-                                    @endphp
-                                    @endif
-                                </div>
-                        </td>
-                        <td class="product-subtotal">
-                            <span class="amount">${{ Product::find($item->product)->price }}</span>
-                        </td>
-                        <td class="quantitya cart-plus-minus">
-                        <input type="number" value="{{ $item->quantity }}" name="quantity[{{ $item->id }}]" class="product_quantity"/>
-                    </td>
-                        <td class="product-price">
-                            <span class="amount">${{ Product::find($item->product)->price*$item->quantity }}</span>
-                        </td>
-                        <td class="product-close">
-                            <a href="{{ url('front/cart/delete/product_id') }}/{{ $item->product }}" class="product-remove" title="Remove this product">
-                                <i class="fas fa-times"></i>
-                            </a>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="cart-actions mb-6 pt-4">
-                <a href="{{ url('front/category/subcategory') }}/{{ 'all' }}/{{ 'all' }}" class="btn btn-dark btn-md btn-rounded btn-icon-left mr-4 mb-4"><i class="d-icon-arrow-left"></i>Continue Shopping</a>
-                <button type="submit" class="btn btn-outline btn-dark btn-md btn-rounded update_cart btn-disabled">Update Cart</button>
-            </div>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="cart-actions mb-6 pt-4">
+                    <a href="{{ url('front/category/subcategory') }}/{{ 'all' }}/{{ 'all' }}" class="btn btn-dark btn-md btn-rounded btn-icon-left mr-4 mb-4"><i class="d-icon-arrow-left"></i>Continue Shopping</a>
+                    <button type="submit" class="btn btn-outline btn-dark btn-md btn-rounded update_cart btn-disabled">Update Cart</button>
+                </div>
             </form>
 
             <div class="cart-coupon-box mb-8">

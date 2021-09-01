@@ -47,7 +47,7 @@
 
     <div class="card text-center border border-primary p-3">
         <form action="{{ route('product_form_action') }}" method="POST">
-@csrf
+        @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
                 <a class="nav-link btn btn-primary mr-2" href="{{ route('addproduct') }}">Add New</a>

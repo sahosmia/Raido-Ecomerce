@@ -38,7 +38,7 @@ Route::get('front/wishlist/delete/product_id/{id}', [WishlistController::class, 
 
 // Cart Controller page
 Route::get('front/cart', [CartController::class, 'cart'])->name('cart');
-Route::get('front/cart/{coupon}', [CartController::class, 'cart'])->name('cart');
+Route::get('front/cart/{coupon}', [CartController::class, 'cart']);
 Route::get('front/cart/product/{id}', [CartController::class, 'cartadd']);
 Route::post('front/cart/product/multiple/add', [CartController::class, 'cartaddmultiple'])->name('cartaddmultiple');
 Route::get('front/cart/delete/product_id/{id}', [CartController::class, 'cartdelete']);

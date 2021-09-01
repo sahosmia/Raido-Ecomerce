@@ -44,24 +44,39 @@
                 </tr>
             </thead>
             <tbody class="wishlist-items-wrapper">
+            @php
+                use App\Models\Product;
+            @endphp
                 @foreach ($wishlists as $item)
+                @php
+                     if (Product::find($item->product_id)->discount) {
+                        $price = Product::find($item->product_id)->price-Product::find($item->product_id)->discount*Product::find($item->product_id)->price/100;
+
+                    }
+                    else {
+                        $price = Product::find($item->product_id)->price;
+                    }
+
+
+                @endphp
                 <tr>
                     <td class="product-thumbnail">
                         <a href="product-simple.html">
                             <figure>
-                                <img src="{{ asset('upload/product') }}/{{ App\Models\Product::find($item->product_id)->img }}" width="100" height="100"
+                                <img src="{{ asset('upload/product') }}/{{ Product::find($item->product_id)->img }}" width="100" height="100"
                                     alt="product">
                             </figure>
                         </a>
                     </td>
                     <td class="product-name">
-                        <a href="{{ url('front/product') }}/{{ $item->product_id }}">{{ App\Models\Product::find($item->product_id)->name }}</a>
+                        <a href="{{ url('front/product') }}/{{ $item->product_id }}">{{ Product::find($item->product_id)->name }}</a>
                     </td>
                     <td class="product-price">
-                        <span class="amount">${{ App\Models\Product::find($item->product_id)->price }}</span>
+                        <span class="amount">${{ $price }}</span>
                     </td>
+
                     <td class="product-stock-status">
-                        @if (App\Models\Product::find($item->product_id)->quantity == 0)
+                        @if (Product::find($item->product_id)->quantity == 0)
                         <span class="wishlist-out-stock">Out Stock</span>
                         @else
                         <span class="wishlist-in-stock">In Stock</span>

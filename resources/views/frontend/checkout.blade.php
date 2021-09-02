@@ -15,65 +15,49 @@
                     <h3 class="title title-simple title-step"><a href="order.html">3. Order Complete</a></h3>
 				</div>
 				<div class="container mt-7">
-					<form action="#" class="form">
+					<form action="{{ route('order_submit') }}" class="form" method="POST">
+                        @csrf
 						<div class="row">
 							<div class="col-lg-7 mb-6 mb-lg-0 pr-lg-4">
 								<h3 class="title title-simple text-left text-uppercase">Billing Details</h3>
-								<div class="row">
-									<div class="col-xs-6">
-										<label>First Name *</label>
-										<input type="text" class="form-control" name="first-name" required="" />
-									</div>
-									<div class="col-xs-6">
-										<label>Last Name *</label>
-										<input type="text" class="form-control" name="last-name" required="" />
-									</div>
-								</div>
+                                <input type="hidden" name="cupon" value="{{ session('coupon_form_cart') }}">
+
+                                <label>Name *</label>
+                                <input type="text" class="form-control" name="name"/>
+
+                                <label>Email Address *</label>
+								<input type="text" class="form-control" name="email"/>
                                 <div class="row">
 									<div class="col-xs-6">
-										<label>Country / Region *</label>
-                                        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
+										<label>Division</label>
+                                        <select id="division_name" class="form-select form-select-lg mb-3" name="division" aria-label=".form-select-lg example">
+                                            <option value="" selected>select</option>
+                                            @foreach ($divisions as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
                                         </select>
 									</div>
 									<div class="col-xs-6">
-										<label>Country / Region *</label>
-                                        <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
+										<label>District</label>
+                                        <select id="district_name" class="form-select form-select-lg mb-3" name="district" aria-label=".form-select-lg example">
+
                                         </select>
 									</div>
 								</div>
-								<label>Street Address *</label>
-								<input type="text" class="form-control" name="address1" required=""
-									placeholder="House number and street name" />
-								<div class="row">
-									<div class="col-xs-6">
-										<label>Town / City *</label>
-										<input type="text" class="form-control" name="city" required="" />
-									</div>
-									<div class="col-xs-6">
-										<label>State *</label>
-										<input type="text" class="form-control" name="state" required="" />
-									</div>
-								</div>
+								<label>Address *</label>
+								<input type="text" class="form-control" name="address" 	placeholder="House number and street name" />
+
 								<div class="row">
 									<div class="col-xs-6">
 										<label>ZIP *</label>
-										<input type="text" class="form-control" name="zip" required="" />
+										<input type="text" class="form-control" name="zip"/>
 									</div>
 									<div class="col-xs-6">
 										<label>Phone *</label>
-										<input type="text" class="form-control" name="phone" required="" />
+										<input type="text" class="form-control" name="phone"/>
 									</div>
 								</div>
-								<label>Email Address *</label>
-								<input type="text" class="form-control" name="email-address" required="" />
+
 							</div>
 							<aside class="col-lg-5 sticky-sidebar-wrapper">
 								<div class="sticky-sidebar mt-1" data-sticky-options="{'bottom': 50}">
@@ -143,37 +127,28 @@
 													</td>
 													<td class=" pt-0 pb-0">
 														<p class="summary-total-price ls-s text-primary">${{ $total-$discount*$total/100 }}</p>
+                                                        <input type="hidden" value="{{ $total-$discount*$total/100 }}" name="total">
 													</td>
 												</tr>
-                                                <tr class="sumnary-shipping shipping-row-last">
+                                              			<tr class="sumnary-shipping shipping-row-last">
 													<td colspan="2">
-														<h4 class="summary-subtitle">Calculate Shipping</h4>
+														<h4 class="summary-subtitle">Payment Method</h4>
 														<ul>
 															<li>
 																<div class="custom-radio">
 																	<input type="radio" id="flat_rate"
-																		name="shipping" class="custom-control-input" checked>
+																		name="payment_method" class="custom-control-input" value="1" checked>
 																	<label class="custom-control-label"
-																		for="flat_rate">Flat rate</label>
+																		for="flat_rate">Cash on Dalivary</label>
 																</div>
 															</li>
 
 															<li>
 																<div class="custom-radio">
 																	<input type="radio" id="free-shipping"
-																		name="shipping" class="custom-control-input">
+																		name="payment_method" class="custom-control-input" value="2">
 																	<label class="custom-control-label"
-																		for="free-shipping">Free
-																		shipping</label>
-																</div>
-															</li>
-
-															<li>
-																<div class="custom-radio">
-																	<input type="radio" id="local_pickup"
-																		name="shipping" class="custom-control-input">
-																	<label class="custom-control-label"
-																		for="local_pickup">Local pickup</label>
+																		for="free-shipping">Online Tranjection</label>
 																</div>
 															</li>
 														</ul>
@@ -184,6 +159,12 @@
 
 
 										<button type="submit" class="btn btn-dark btn-rounded btn-order">Place Order</button>
+                                        {{-- <button class="your-button-class" id="sslczPayBtn"
+                                            token="if you have any token validation"
+                                            postdata="your javascript arrays or objects which requires in backend"
+                                            order="If you already have the transaction generated for current order"
+                                            endpoint="/pay-via-ajax"> Pay Now
+                                    </button> --}}
 									</div>
 								</div>
 							</aside>
@@ -199,6 +180,44 @@
     <script src="{{ asset('frontend/vendor/sticky/sticky.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+    <script>
+$(document).ready(function(){
+        $('#division_name').change(function(){
+            var id = $('#division_name').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type : 'POST',
+            url : '/front/getdistrictname',
+            data : {id:id},
+            success : function(data){
+                $('#district_name').html(data);
+            }
+        });
+        });
+
+    });
+
+    </script>
+
+
+
+
+{{-- <script>
+    (function (window, document) {
+        var loader = function () {
+            var script = document.createElement("script"), tag = document.getElementsByTagName("script")[0];
+            script.src = "https://sandbox.sslcommerz.com/embed.min.js?" + Math.random().toString(36).substring(7);
+            tag.parentNode.insertBefore(script, tag);
+        };
+
+        window.addEventListener ? window.addEventListener("load", loader, false) : window.attachEvent("onload", loader);
+    })(window, document);
+</script> --}}
 @endsection
 
 

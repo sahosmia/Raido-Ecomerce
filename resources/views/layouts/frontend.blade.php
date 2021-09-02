@@ -6,6 +6,7 @@
     <title>Riode - Ultimate eCommerce Template</title>
 
     <meta name="keywords" content="HTML5 Template" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Riode - Ultimate eCommerce Template" />
     <meta name="author" content="D-THEMES" />
 

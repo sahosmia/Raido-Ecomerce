@@ -82,7 +82,7 @@
                             $total = 0;
                             $status = true;
                         @endphp
-                        @foreach ($cart_items as $item)
+                        @forelse ($cart_items as $item)
                         @php
                         if (Product::find($item->product)->discount) {
                             $price = Product::find($item->product)->price-Product::find($item->product)->discount*Product::find($item->product)->price/100;
@@ -131,8 +131,9 @@
                             </td>
                         </tr>
 
-                        @endforeach
-                    </tbody>
+                        @empty
+                        you have no cart item
+                        @endforelse
                 </table>
                 <div class="cart-actions mb-6 pt-4">
                     <a href="{{ url('front/category/subcategory') }}/{{ 'all' }}/{{ 'all' }}" class="btn btn-dark btn-md btn-rounded btn-icon-left mr-4 mb-4"><i class="d-icon-arrow-left"></i>Continue Shopping</a>

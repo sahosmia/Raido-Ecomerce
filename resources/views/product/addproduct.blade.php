@@ -49,7 +49,7 @@
                 <div class="form-row">
                 <div class="form-group col-md-6">
                      <label>Select Category</label>
-                     <select class="select2-example @error('category') is-invalid @enderror" name="category" >
+                     <select id="category" class="select2-example @error('category') is-invalid @enderror" name="category" >
                         <option value="">Select</option>
                          @foreach ($categories as $item)
                         <option {{ old('category') == $item->id ? "selected" : "" }} value="{{ $item->id }}">{{ $item->name }}</option>
@@ -63,11 +63,8 @@
                 {{-- subcategory option  --}}
                 <div class="form-group col-md-6">
                      <label>Select Subcategory</label>
-                     <select class="select2-example @error('subcategory') is-invalid @enderror" name="subcategory">
-                        <option value="">Select</option>
-                         @foreach ($subcategories as $item)
-                        <option {{ old('subcategory') == $item->id ? "selected" : "" }} value="{{ $item->id }}">{{ $item->name }} --- {{ $categories->find($item->category)->name }}</option>
-                        @endforeach
+                     <select id="subcategory" class="select2-example @error('subcategory') is-invalid @enderror" name="subcategory">
+
                     </select>
                     @error('subcategory')
                         <small class="text-danger">{{ $message }}</small>
@@ -167,5 +164,27 @@
         $('.select2-example').select2({
             placeholder: 'Select'
         });
+        $('#category').change(function(){
+            var id = $('#category').val();
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type : 'POST',
+                    url : '/addproduct/getsubcategory',
+                    data : {id:id},
+                    success : function(data){
+                        $('#subcategory').html(data);
+
+                    }
+                });
+            });
+
+
+
     </script>
 @endsection

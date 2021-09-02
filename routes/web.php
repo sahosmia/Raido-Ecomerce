@@ -5,25 +5,27 @@ use Illuminate\Support\Facades\Auth;
 
 // Controllers
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\CuponController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Contact_informationController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SubcategoryController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\StoreController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\BrandController;
-use App\Http\Controllers\CuponController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\MessageController;
-use App\Http\Controllers\FrontendController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\TestimonialController;
-use App\Http\Controllers\SubcategoryController;
-use App\Http\Controllers\Contact_informationController;
+use App\Http\Controllers\SslCommerzPaymentController;
 
 use App\Http\Controllers\BlankController;
-use App\Http\Controllers\CartController;
 
 // Frontend page
 Route::get('/', [FrontendController::class, 'index'])->name('front');
@@ -49,6 +51,11 @@ Route::post('front/cart/update', [CartController::class, 'update_cart'])->name('
 Route::get('front/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::get('front/checkout/product_id/{id}', [CheckoutController::class, 'checkoutadd']);
 Route::get('front/checkout/delete/product_id/{id}', [CheckoutController::class, 'checkoutdelete']);
+Route::post('/front/getdistrictname', [CheckoutController::class, 'getdistrictname']);
+
+
+// order Controller page
+Route::post('/front/order_submit', [OrderController::class, 'order_submit'])->name('order_submit');
 
 // ProfileController
 Route::get('front/profile', [ProfileController::class, 'front_profile'])->name('front_profile');
@@ -108,6 +115,7 @@ Route::get('product/addproduct', [ProductController::class, 'addproduct'])->name
 Route::post('product/addproductinsert', [ProductController::class, 'addproductinsert'])->name('addproductinsert');
 Route::get('product/recyclebin', [ProductController::class, 'recyclebin'])->name('recyclebin_product');
 Route::post('product/update', [ProductController::class, 'update'])->name('product_update');
+Route::post('addproduct/getsubcategory', [ProductController::class, 'getsubcategory']);
 Route::post('product/form_action', [ProductController::class, 'form_action'])->name('product_form_action');
 Route::get('product/view/{id}', [ProductController::class, 'view_product']);
 Route::get('product/update/{id}', [ProductController::class, 'update_product']);
@@ -247,3 +255,23 @@ Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
 // Testimonial
 Route::get('order', [OrdermonialController::class, 'index'])->name('order');
+
+
+
+
+
+
+
+// SSLCOMMERZ Start
+Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
+
+Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
+//SSLCOMMERZ END

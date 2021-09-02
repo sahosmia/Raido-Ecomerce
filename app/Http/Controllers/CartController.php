@@ -15,17 +15,23 @@ class CartController extends Controller
 {
     public function cart($coupon = "")
     {
-        if ($coupon == "") {
-            $discount = 0;
-        } else {
-            if (Cupon::where('code', $coupon)->exists()) {
-                $discount = Cupon::where('code', $coupon)->first()->discount;
-            } else {
-                $discount = 0;
-                back()->with('error', 'this is not valid coupon');
-            }
-        }
+        if (Cart::where('cookie', Cookie::get('cart'))->exists()) {
 
+            if ($coupon == "") {
+                $discount = 0;
+            } else {
+                if (Cupon::where('code', $coupon)->exists()) {
+                    $discount = Cupon::where('code', $coupon)->first()->discount;
+                } else {
+                    $discount = 0;
+                    back()->with('error', 'this is not valid coupon');
+                }
+            }
+        } else {
+            return view('include.frontend.login_message_page', [
+                'message' => 'checkout_message',
+            ]);
+        }
 
 
         // die();

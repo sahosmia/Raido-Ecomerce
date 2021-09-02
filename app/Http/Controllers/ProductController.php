@@ -46,6 +46,19 @@ class ProductController extends Controller
         ]);
     }
 
+
+
+    public function getsubcategory(Request $req)
+    {
+
+        $subcategories = Subcategory::where('category', $req->id)->get();
+        $data = "<option value=''>Select</option>";
+        foreach ($subcategories as $item) {
+            $data .= "<option value='$item->id'>$item->name</option>";
+        }
+        return $data;
+    }
+
     // insert item
     public function addproductinsert(Request $req)
     {

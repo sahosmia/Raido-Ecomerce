@@ -29,6 +29,7 @@ use App\Http\Controllers\BlankController;
 
 // Frontend page
 Route::get('/', [FrontendController::class, 'index'])->name('front');
+Route::get('about', [FrontendController::class, 'about'])->name('about');
 Route::get('front/contact_us', [FrontendController::class, 'contact_us'])->name('front_contact_us');
 Route::get('front/category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct']);
 Route::get('front/product/{id}', [FrontendController::class, 'product_view_single']);
@@ -56,11 +57,11 @@ Route::post('/front/getdistrictname', [CheckoutController::class, 'getdistrictna
 
 // order Controller page
 Route::post('/front/order_submit', [OrderController::class, 'order_submit'])->name('order_submit');
+Route::get('/front/order', [OrderController::class, 'index'])->name('order');
 
 // ProfileController
 Route::get('front/profile', [ProfileController::class, 'front_profile'])->name('front_profile');
 Route::post('profile.update', [ProfileController::class, 'profile_update'])->name('profile_update');
-Route::get('front/dashboard', [ProfileController::class, 'front_dashboard'])->name('front_dashboard');
 
 // Home
 Auth::routes();
@@ -254,7 +255,7 @@ Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
 
 // Testimonial
-Route::get('order', [OrdermonialController::class, 'index'])->name('order');
+
 
 
 

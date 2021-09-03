@@ -24,16 +24,14 @@
 							<li class="nav-item">
 								<a class="nav-link active" href="#profile">Acount</a>
 							</li>
-							<li class="nav-item">
-								<a class="nav-link " href="#dashboard">Dashboard</a>
-							</li>
+
 							<li class="nav-item">
 								<a class="nav-link" href="#orders">Orders</a>
 							</li>
 
 
 							<li class="nav-item">
-								<a class="nav-link" href="#account">Account details</a>
+								<a class="nav-link" href="#account">Account update</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="{{ route('logout') }}" data-sidebar-target="#settings" onclick="event.preventDefault();
@@ -44,7 +42,7 @@
 							</li>
 						</ul>
 						<div class="tab-content col-lg-9 col-md-8">
-                            <div class="tab-pane " id="address">
+                            <div class="tab-pane active" id="profile">
 								<p class="mb-2">The following addresses will be used on the checkout page by default.
 								</p>
 								<div class="row">
@@ -72,18 +70,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane" id="dashboard">
-								<p class="mb-0">
-									Hello <span>User</span> (not <span>User</span>? <a href="#"
-										class="text-primary">Log out</a>)
-								</p>
-								<p class="mb-8">
-									From your account dashboard you can view your <a href="#orders"
-										class="link-to-tab text-primary">recent orders</a>, manage your shipping and billing
-										addresses,<br>and edit your password and account details</a>.
-								</p>
-								<a href="shop.html" class="btn btn-dark btn-rounded">Go To Shop<i class="d-icon-arrow-right"></i></a>
-							</div>
+
 							<div class="tab-pane " id="orders">
                                 <table class="order-table">
                                     <thead>
@@ -96,70 +83,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($order_details as $item)
                                         <tr>
-                                            <td class="order-number"><a href="#">#3596</a></td>
-                                            <td class="order-date"><time>February 24, 2021</time></td>
+                                            <td class="order-number"><a href="#">#{{ $item->id }}</a></td>
+                                            <td class="order-date"><time>{{ $item->created_at }}</time></td>
                                             <td class="order-status"><span>On hold</span></td>
-                                            <td class="order-total"><span>$900.00 for 5 items</span></td>
-                                            <td class="order-action"><a href="#" class="btn btn-primary btn-link btn-underline">View</a></td>
+                                            <td class="order-total"><span>${{ $item->total }} for {{ App\Models\Order::where('cookie', $item->cookie)->count()}} items</span></td>
+                                            <td class="order-action"><a href="{{ url('front/order/view') }}/{{ $item->cookie }}" class="btn btn-primary btn-link btn-underline">View</a></td>
                                         </tr>
-                                        <tr>
-                                            <td class="order-number"><a href="#">#3593</a></td>
-                                            <td class="order-date"><time>February 21, 2021</time></td>
-                                            <td class="order-status"><span>On hold</span></td>
-                                            <td class="order-total"><span>$290.00 for 2 items</span></td>
-                                            <td class="order-action"><a href="#" class="btn btn-primary btn-link btn-underline">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="order-number"><a href="#">#2547</a></td>
-                                            <td class="order-date"><time>January 4, 2021</time></td>
-                                            <td class="order-status"><span>On hold</span></td>
-                                            <td class="order-total"><span>$480.00 for 8 items</span></td>
-                                            <td class="order-action"><a href="#" class="btn btn-primary btn-link btn-underline">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="order-number"><a href="#">#2549</a></td>
-                                            <td class="order-date"><time>January 19, 2021</time></td>
-                                            <td class="order-status"><span>On hold</span></td>
-                                            <td class="order-total"><span>$680.00 for 5 items</span></td>
-                                            <td class="order-action"><a href="#" class="btn btn-primary btn-link btn-underline">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="order-number"><a href="#">#4523</a></td>
-                                            <td class="order-date"><time>Jun 6, 2021</time></td>
-                                            <td class="order-status"><span>On hold</span></td>
-                                            <td class="order-total"><span>$564.00 for 3 items</span></td>
-                                            <td class="order-action"><a href="#" class="btn btn-primary btn-link btn-underline">View</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="order-number"><a href="#">#4526</a></td>
-                                            <td class="order-date"><time>Jun 19, 2021</time></td>
-                                            <td class="order-status"><span>On hold</span></td>
-                                            <td class="order-total"><span>$123.00 for 8 items</span></td>
-                                            <td class="order-action"><a href="#" class="btn btn-primary btn-link btn-underline">View</a></td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
 							</div>
-
-
-							<div class="tab-pane active" id="account">
+							<div class="tab-pane" id="account">
 								<form action="{{ route('profile_update') }}" method="post" class="form" enctype="multipart/form-data">
                                     @csrf
-
-
-
-
-                            @if(session()->has('success'))
-                                <div class="alert alert-success alert-dark alert-round alert-inline">
-                                    <i class="fas fa-check"></i>
-                                    {{ session()->get('success') }}
-                                    <button type="button" class="btn btn-link btn-close">
-                                        <i class="d-icon-times"></i>
-                                    </button>
-                                </div>
-                            @endif
-
+                                @if(session()->has('success'))
+                                    <div class="alert alert-success alert-dark alert-round alert-inline">
+                                        <i class="fas fa-check"></i>
+                                        {{ session()->get('success') }}
+                                        <button type="button" class="btn btn-link btn-close">
+                                            <i class="d-icon-times"></i>
+                                        </button>
+                                    </div>
+                                @endif
                                     <fieldset>
                                         <legend>Profile Update</legend>
                                         <label>Update Profile Image</label>

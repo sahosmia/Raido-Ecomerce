@@ -5,8 +5,7 @@
 
 @endsection
 @section('content')
-{{-- @include('include.frontend.page_header') --}}
-			<!-- End PageHeader -->
+<main class="main mt-8 single-product">
 <div class="page-content mb-10 pb-6">
     <div class="container">
         <div class="product product-single row mb-8">
@@ -110,16 +109,17 @@
                     </div>
 
                     <hr class="product-divider mb-3">
+                    {{ url()->full }}
 
                     <div class="product-footer">
                         <div class="social-links mr-4">
-                            <a href="#" class="social-link social-facebook fab fa-facebook-f"></a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->full }}" class="social-link social-facebook fab fa-facebook-f"></a>
                             <a href="#" class="social-link social-twitter fab fa-twitter"></a>
                             <a href="#" class="social-link social-pinterest fab fa-pinterest-p"></a>
                         </div>
                         <span class="divider d-lg-show"></span>
                         <div class="product-action">
-                            <a href="#" class="btn-product btn-wishlist mr-6"><i class="d-icon-heart"></i>Add to
+                            <a href="{{ url('front/wishlist/product_id') }}/{{ $item->id }}" class=" btn-wishlist mr-6"><i class="d-icon-heart"></i>Add to
                                 wishlist</a>
 
                         </div>

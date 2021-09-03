@@ -12,9 +12,31 @@ use App\Models\Subcategory;
 
 class FrontendController extends Controller
 {
+    # front
     public function index()
     {
+        // $products = Product::where('action', 1)->get();
+        // foreach ($products as $product) {
+        //     echo $product;
+        //     echo "<br>";
+        // }
+        // die();
         return view('frontend.index', [
+            'brands' => Brand::where('action', 1)->get(),
+            'categories' => Category::where('action', 1)->get(),
+            'best_seller' => Product::where('action', 1)->get(),
+            'products' => Product::where('action', 1)->get(),
+
+        ]);
+    }
+
+    # about
+    public function about()
+    {
+
+
+
+        return view('frontend.about', [
             'brands' => Brand::where('action', 1)->get(),
             'categories' => Category::where('action', 1)->get(),
             'products' => Product::where('action', 1)->get(),

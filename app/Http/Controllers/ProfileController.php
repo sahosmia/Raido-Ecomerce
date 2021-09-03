@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order_detail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Hash;
 use Auth;
 use Image;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 class ProfileController extends Controller
 {
@@ -104,18 +106,13 @@ class ProfileController extends Controller
         }
     }
 
-
-
-
     // front_profile
     public function front_profile()
     {
-        return view('frontend.profile.profile');
+        return view('frontend.profile.profile', [
+            'order_details' => Order_detail::where('user_id', Auth::id())->latest()->get(),
+        ]);
     }
 
-    // front_dashboard
-    public function front_dashboard()
-    {
-        echo "bangladesh";
-    }
+
 }

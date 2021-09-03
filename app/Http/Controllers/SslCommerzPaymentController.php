@@ -6,6 +6,16 @@ use DB;
 use Illuminate\Http\Request;
 use App\Library\SslCommerz\SslCommerzNotification;
 
+use App\Models\Cart;
+use App\Models\Cupon;
+use App\Models\Order;
+use App\Models\Order_billing_detail;
+use App\Models\Order_detail;
+use App\Models\Product;
+use Carbon\Carbon;
+use Cookie;
+use Auth;
+
 class SslCommerzPaymentController extends Controller
 {
 
@@ -24,66 +34,154 @@ class SslCommerzPaymentController extends Controller
         # Here you have to receive all the order data to initate the payment.
         # Let's say, your oder transaction informations are saving in a table called "orders"
         # In "orders" table, order unique identity is "transaction_id". "status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
+        $cupon = $request->cupon;
 
-        $post_data = array();
-        $post_data['total_amount'] = '10'; # You cant not pay less than 10
-        $post_data['currency'] = "BDT";
-        $post_data['tran_id'] = uniqid(); // tran_id must be unique
+        if (Cupon::where('code', $cupon)->exists()) {
+            $cupon = Cupon::where('code', $cupon)->first()->id;
+        } else {
+            $cupon = 0;
+        }
+        $cookie = Cookie::get('cart');
+        session(['cookie' => $cookie]);
+        $name = $request->name;
+        $email = $request->email;
+        $total = $request->total;
+        $division = $request->division;
+        $district = $request->district;
+        $address = $request->address;
+        $zip = $request->zip;
+        $phone = $request->phone;
+        $payment_method = $request->payment_method;
 
-        # CUSTOMER INFORMATION
-        $post_data['cus_name'] = 'Customer Name';
-        $post_data['cus_email'] = 'customer@mail.com';
-        $post_data['cus_add1'] = 'Customer Address';
-        $post_data['cus_add2'] = "";
-        $post_data['cus_city'] = "";
-        $post_data['cus_state'] = "";
-        $post_data['cus_postcode'] = "";
-        $post_data['cus_country'] = "Bangladesh";
-        $post_data['cus_phone'] = '8801XXXXXXXXX';
-        $post_data['cus_fax'] = "";
 
-        # SHIPMENT INFORMATION
-        $post_data['ship_name'] = "Store Test";
-        $post_data['ship_add1'] = "Dhaka";
-        $post_data['ship_add2'] = "Dhaka";
-        $post_data['ship_city'] = "Dhaka";
-        $post_data['ship_state'] = "Dhaka";
-        $post_data['ship_postcode'] = "1000";
-        $post_data['ship_phone'] = "";
-        $post_data['ship_country'] = "Bangladesh";
+        if ($payment_method == 1) {
 
-        $post_data['shipping_method'] = "NO";
-        $post_data['product_name'] = "Computer";
-        $post_data['product_category'] = "Goods";
-        $post_data['product_profile'] = "physical-goods";
-
-        # OPTIONAL PARAMETERS
-        $post_data['value_a'] = "ref001";
-        $post_data['value_b'] = "ref002";
-        $post_data['value_c'] = "ref003";
-        $post_data['value_d'] = "ref004";
-
-        #Before  going to initiate the payment order status need to insert or update as Pending.
-        $update_product = DB::table('sslorders')
-            ->where('transaction_id', $post_data['tran_id'])
-            ->updateOrInsert([
-                'name' => $post_data['cus_name'],
-                'email' => $post_data['cus_email'],
-                'phone' => $post_data['cus_phone'],
-                'amount' => $post_data['total_amount'],
-                'status' => 'Pending',
-                'address' => $post_data['cus_add1'],
-                'transaction_id' => $post_data['tran_id'],
-                'currency' => $post_data['currency']
+            Order_billing_detail::insert([
+                'name' => $name,
+                'email' => $email,
+                'division' => $division,
+                'district' => $district,
+                'address' => $address,
+                'zip_code' => $zip,
+                'phone' => $phone,
+                'cookie' => $cookie,
             ]);
 
-        $sslc = new SslCommerzNotification();
-        # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
-        $payment_options = $sslc->makePayment($post_data, 'hosted');
+            Order_detail::insert([
+                'payment_method' => $payment_method,
+                'user_id' => Auth::id(),
+                'total' => $total,
+                'cupon_id' => $cupon,
+                'cookie' => $cookie,
+                'created_at' => Carbon::now(),
+            ]);
+            $cart_item = Cart::where('cookie', Cookie::get('cart'))->get();
+            foreach ($cart_item as $item) {
+                Order::insert([
+                    'product_id' => $item->product,
+                    'quantity' => $item->quantity,
+                    'cookie' => $item->cookie,
+                ]);
+                Product::find($item->product)->increment('best_sell', $item->quantity);
 
-        if (!is_array($payment_options)) {
-            print_r($payment_options);
-            $payment_options = array();
+                Cart::find($item->id)->forceDelete();
+            }
+            Cookie::queue(Cookie::forget('cart'));
+            return redirect('/front/order');
+        } else {
+            $post_data = array();
+            $post_data['total_amount'] = $total; # You cant not pay less than 10
+            $post_data['currency'] = "BDT";
+            $post_data['tran_id'] = uniqid(); // tran_id must be unique
+
+            # CUSTOMER INFORMATION
+            $post_data['cus_name'] = $name;
+            $post_data['cus_email'] = $email;
+            $post_data['cus_add1'] = $address;
+            $post_data['cus_add2'] = "";
+            $post_data['cus_city'] = "";
+            $post_data['cus_state'] = "";
+            $post_data['cus_postcode'] = $zip;
+            $post_data['cus_country'] = "Bangladesh";
+            $post_data['cus_phone'] = $phone;
+            $post_data['cus_fax'] = "";
+
+            # SHIPMENT INFORMATION
+            $post_data['ship_name'] = "Store Test";
+            $post_data['ship_add1'] = "Dhaka";
+            $post_data['ship_add2'] = "Dhaka";
+            $post_data['ship_city'] = "Dhaka";
+            $post_data['ship_state'] = "Dhaka";
+            $post_data['ship_postcode'] = "1000";
+            $post_data['ship_phone'] = "";
+            $post_data['ship_country'] = "Bangladesh";
+
+            $post_data['shipping_method'] = "NO";
+            $post_data['product_name'] = "Computer";
+            $post_data['product_category'] = "Goods";
+            $post_data['product_profile'] = "physical-goods";
+
+            # OPTIONAL PARAMETERS
+            $post_data['value_a'] = "ref001";
+            $post_data['value_b'] = "ref002";
+            $post_data['value_c'] = "ref003";
+            $post_data['value_d'] = "ref004";
+
+            Order_billing_detail::insert([
+                'name' => $name,
+                'email' => $email,
+                'division' => $division,
+                'district' => $district,
+                'address' => $address,
+                'zip_code' => $zip,
+                'phone' => $phone,
+                'cookie' => $cookie,
+            ]);
+
+            Order_detail::insert([
+                'payment_method' => $payment_method,
+                'user_id' => Auth::id(),
+                'total' => $total,
+                'cupon_id' => $cupon,
+                'cookie' => $cookie,
+                'created_at' => Carbon::now(),
+            ]);
+            $cart_item = Cart::where('cookie', Cookie::get('cart'))->get();
+            foreach ($cart_item as $item) {
+                Product::find($item->product)->increment('best_sell', $item->quantity);
+
+                Order::insert([
+                    'product_id' => $item->product,
+                    'quantity' => $item->quantity,
+                    'cookie' => $item->cookie,
+                ]);
+                Cart::find($item->id)->forceDelete();
+            }
+
+
+            #Before  going to initiate the payment order status need to insert or update as Pending.
+            $update_product = DB::table('sslorders')
+                ->where('transaction_id', $post_data['tran_id'])
+                ->updateOrInsert([
+                    'name' => $post_data['cus_name'],
+                    'email' => $post_data['cus_email'],
+                    'phone' => $post_data['cus_phone'],
+                    'amount' => $post_data['total_amount'],
+                    'status' => 'Pending',
+                    'address' => $post_data['cus_add1'],
+                    'transaction_id' => $post_data['tran_id'],
+                    'currency' => $post_data['currency']
+                ]);
+
+            $sslc = new SslCommerzNotification();
+            # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
+            $payment_options = $sslc->makePayment($post_data, 'hosted');
+
+            if (!is_array($payment_options)) {
+                print_r($payment_options);
+                $payment_options = array();
+            }
+            Cookie::queue(Cookie::forget('cart'));
         }
     }
 

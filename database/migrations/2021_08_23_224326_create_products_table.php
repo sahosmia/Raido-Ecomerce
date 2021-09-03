@@ -23,6 +23,7 @@ class CreateProductsTable extends Migration
             $table->integer('category');
             $table->integer('subcategory');
             $table->integer('added_by');
+            $table->integer('best_sell')->default(0);
             $table->integer('action')->default(1);
             $table->integer('discount')->default(0);
             $table->integer('notification_quantity')->default(0);

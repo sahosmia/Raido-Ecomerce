@@ -18,5 +18,6 @@ class Product extends Model
         'discount',
         'notification_quantity',
         'action',
+        'best_sell',
     ];
 }

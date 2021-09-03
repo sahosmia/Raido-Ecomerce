@@ -68,7 +68,9 @@ class CartController extends Controller
                 return back()->with('success_with_btn', 'you are success');
             }
         } else {
-            return view('include.frontend.login_message_page');
+            return view('include.frontend.login_message_page', [
+                'message' => 'login first',
+            ]);
         }
     }
 

@@ -16,7 +16,6 @@ use App\Models\Order_detail;
 use Carbon\Carbon;
 use Cookie;
 use Auth;
-use Illuminate\Support\Facades\Session;
 
 
 
@@ -85,7 +84,7 @@ class OrderController extends Controller
         } else {
 
 
-            $all_data = (object) [
+            $all_data = array(
                 "name" => $name,
                 "email" => $email,
                 "division" => $division,
@@ -96,11 +95,16 @@ class OrderController extends Controller
                 "payment_method" => $payment_method,
                 "cookie" => $cookie,
                 "cupon" => $cupon,
-            ];
+            );
 
-
-            $all_data = Session::get('all_data');
-            echo $all_data->name;
+            session([
+                'all_data' => $all_data
+            ]);
+            return redirect('/pay');
         }
+    }
+    public function index()
+    {
+        return view('frontend.order');
     }
 }

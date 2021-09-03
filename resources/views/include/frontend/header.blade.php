@@ -1,6 +1,6 @@
 <h1 class="d-none">Riode - Responsive eCommerce HTML Template</h1>
 
-  <header class="header">
+  <header class="header header-border">
     <div class="header-top">
         <div class="container">
         <div class="header-left">
@@ -22,8 +22,13 @@
                                 <a href="{{ route('front_profile') }}">View Profile</a>
                             </li>
                             <li>
-                                <a href="{{ route('front_dashboard') }}">Dashboard</a>
+                                <a href="{{ route('wishlist') }}">Wishlist</a>
                             </li>
+                            <li>
+                                <a href="{{ route('cart') }}">Cart</a>
+                            </li>
+
+
                             @if (Auth::user()->role != 1)
                             <li>
                                 <a href="{{ route('home') }}">Site Dashboard</a>
@@ -181,82 +186,23 @@
             <nav class="main-nav">
             <ul class="menu">
                 <li class="active">
-                <a href="{{ route('front') }}">Home</a>
+                    <a href="{{ route('front') }}">Home</a>
                 </li>
                 <li>
-                <a href="product.html">Products</a>
-                <div class="megamenu">
-                    <div class="row">
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-4">
-                        <h4 class="menu-title">Product Pages</h4>
-                        <ul>
-                        <li>
-                            <a href="product-sticky-cart.html">Add Cart Sticky<span class="tip tip-hot">Hot</span></a>
-                        </li>
-                        <li>
-                            <a href="product-tabinside.html">Tab Inside</a>
-                        </li>
-                        </ul>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-3 col-lg-4">
-                        <h4 class="menu-title">Product Layouts</h4>
-                        <ul>
-                        <li>
-                            <a href="product-grid.html"
-                            >Grid Images<span class="tip tip-new"
-                                >New</span
-                            ></a
-                            >
-                        </li>
-                        <li><a href="product-masonry.html">Masonry</a></li>
-
-
-
-                        </ul>
-                    </div>
-                    <div
-                        class="
-                        col-6 col-sm-4 col-md-3 col-lg-4
-                        menu-banner menu-banner2
-                        banner banner-fixed
-                        "
-                    >
-                        <figure>
-                        <img
-                            src="{{ asset('frontend/images/menu/banner-2.jpg')}}"
-                            alt="Menu banner"
-                            width="221"
-                            height="330"
-                        />
-                        </figure>
-                        <div class="banner-content x-50 text-center">
-                        <h3 class="banner-title text-white text-uppercase">
-                            Sunglasses
-                        </h3>
-                        <h4
-                            class="
-                            banner-subtitle
-                            font-weight-bold
-                            text-white
-                            mb-0
-                            "
-                        >
-                            $23.00 - $120.00
-                        </h4>
-                        </div>
-                    </div>
-                    <!-- End MegaMenu -->
-                    </div>
-                </div>
+                    <a href="{{ url('front/category/subcategory') }}/{{ 'all' }}/{{ 'all' }}">Products</a>
                 </li>
                 <li>
-                <a href="#">Pages</a>
+                <a href="#">Category</a>
                 <ul>
-                    <li><a href="about-us.html">About</a></li>
-                    <li><a href="contact-us.html">Contact Us</a></li>
-
+                    @foreach (App\Models\Category::all() as $item)
+                    <li><a href="{{ url('front/category/subcategory') }}/{{ $item->id }}/{{ 'null' }}">{{ $item->name }}</a></li>
+                    @endforeach
                 </ul>
                 </li>
+                <li>
+                    <a href="{{ route('about') }}">About US</a>
+                </li>
+
             </ul>
             </nav>
         </div>

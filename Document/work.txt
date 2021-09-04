@@ -1,0 +1,10 @@
+*middileware user role
+*email varify
+*facebook login
+*pdf
+*footer
+*about
+*
+*
+*
+*

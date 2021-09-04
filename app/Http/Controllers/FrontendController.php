@@ -25,7 +25,7 @@ class FrontendController extends Controller
             'brands' => Brand::where('action', 1)->get(),
             'categories' => Category::where('action', 1)->get(),
             'best_seller' => Product::where('action', 1)->get(),
-            'products' => Product::where('action', 1)->get(),
+            'products' => Product::where('action', 1)->orderBy('best_sell', 'desc')->get(),
 
         ]);
     }

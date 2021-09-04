@@ -35,6 +35,18 @@ class SslCommerzPaymentController extends Controller
         # Let's say, your oder transaction informations are saving in a table called "orders"
         # In "orders" table, order unique identity is "transaction_id". "status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
         $cupon = $request->cupon;
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'division' => 'required',
+            'district' => 'required',
+            'address' => 'required',
+            'zip' => 'required',
+            'phone' => 'required',
+        ]);
+
+
+
 
         if (Cupon::where('code', $cupon)->exists()) {
             $cupon = Cupon::where('code', $cupon)->first()->id;

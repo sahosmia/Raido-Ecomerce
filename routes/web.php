@@ -30,6 +30,7 @@ use App\Http\Controllers\BlankController;
 // Frontend page
 Route::get('/', [FrontendController::class, 'index'])->name('front');
 Route::get('about', [FrontendController::class, 'about'])->name('about');
+Route::get('front_search', [FrontendController::class, 'search']);
 Route::get('front/contact_us', [FrontendController::class, 'contact_us'])->name('front_contact_us');
 Route::get('front/category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct']);
 Route::get('front/product/{id}', [FrontendController::class, 'product_view_single']);
@@ -47,29 +48,28 @@ Route::post('front/cart/product/multiple/add', [CartController::class, 'cartaddm
 Route::get('front/cart/delete/product_id/{id}', [CartController::class, 'cartdelete']);
 Route::post('front/cart/update', [CartController::class, 'update_cart'])->name('update_cart');
 
-
 // checkout Controller page
 Route::get('front/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::get('front/checkout/product_id/{id}', [CheckoutController::class, 'checkoutadd']);
 Route::get('front/checkout/delete/product_id/{id}', [CheckoutController::class, 'checkoutdelete']);
 Route::post('/front/getdistrictname', [CheckoutController::class, 'getdistrictname']);
 
-
 // order Controller page
 Route::post('/front/order_submit', [OrderController::class, 'order_submit'])->name('order_submit');
 Route::get('/front/order', [OrderController::class, 'index'])->name('order');
+Route::get('/order', [OrderController::class, 'order_backend'])->name('order_backend');
 
 // ProfileController
 Route::get('front/profile', [ProfileController::class, 'front_profile'])->name('front_profile');
 Route::post('profile.update', [ProfileController::class, 'profile_update'])->name('profile_update');
+Route::get('profile/adduser', [ProfileController::class, 'adduser'])->name('adduser');
+Route::post('profile/adduserinsert', [ProfileController::class, 'adduserinsert'])->name('adduserinsert');
 
 // Home
 Auth::routes();
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
-
 // black page
-
 Route::get('blank', [BlankController::class, 'index'])->name('blank');
 Route::get('blank_form', [BlankController::class, 'blank_form'])->name('blank_form');
 Route::post('blank_form_submit', [BlankController::class, 'blank_form_submit'])->name('blank_form_submit');
@@ -108,7 +108,6 @@ Route::get('subcategory/action/{id}', [SubcategoryController::class, 'action']);
 Route::get('subcategory_soft_delete_all', [SubcategoryController::class, 'soft_delete_all'])->name('subcategory_soft_delete_all');
 Route::get('subcategory_p_delete_all', [SubcategoryController::class, 'p_delete_all'])->name('subcategory_p_delete_all');
 Route::get('subcategory_restore_all', [SubcategoryController::class, 'restore_all'])->name('subcategory_restore_all');
-
 
 // Product
 Route::get('product', [ProductController::class, 'index'])->name('product');

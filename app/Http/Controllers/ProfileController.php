@@ -113,6 +113,28 @@ class ProfileController extends Controller
             'order_details' => Order_detail::where('user_id', Auth::id())->latest()->get(),
         ]);
     }
+    // front_profile
+    public function adduser()
+    {
+        return view('frontend.profile.profileadd', [
+            'order_details' => Order_detail::where('user_id', Auth::id())->latest()->get(),
+        ]);
+    }
 
-
+    // front_profile
+    public function adduserinsert(Request $req)
+    {
+        print_r($req->all());
+        $name = $req->name;
+        $email = $req->email;
+        $password = $req->password;
+        $role = $req->role;
+        User::insert([
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+            'role' => $role,
+        ]);
+        return back()->with('success', 'you are success');
+    }
 }

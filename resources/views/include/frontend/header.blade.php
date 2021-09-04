@@ -10,11 +10,8 @@
         </div>
         <div class="header-right">
             <a href="{{ route('front_contact_us') }}" class="contact d-lg-show"><i class="d-icon-map"></i>Contact</a>
-            <a href="#" class="help d-lg-show"><i class="d-icon-info"></i> Need Help</a>
-
             @if (Route::has('login'))
                 @auth
-
                 <div class="dropdown ml-5">
                         <a class="login-link" href="{{ route('front_profile') }}" ><i class="d-icon-user"></i>{{ Auth::user()->name }}</a>
                         <ul class="dropdown-box">
@@ -27,8 +24,6 @@
                             <li>
                                 <a href="{{ route('cart') }}">Cart</a>
                             </li>
-
-
                             @if (Auth::user()->role != 1)
                             <li>
                                 <a href="{{ route('home') }}">Site Dashboard</a>
@@ -65,9 +60,9 @@
                 <!-- End Logo -->
 
                 <div class="header-search hs-simple">
-                    <form action="#" class="input-wrapper">
-                        <input type="text" class="form-control" name="search" autocomplete="off" placeholder="Search..." />
-                        <button class="btn btn-search" type="submit"><i class="d-icon-search"></i></button>
+                    <form action="{{ url('front_search') }}" method="GET" class="input-wrapper">
+                        <input type="text" class="form-control" name="search" value="{{ old('search') }}" placeholder="Search..." />
+                        <button class="btn btn-search" ><i class="d-icon-search"></i></button>
                     </form>
                 </div>
                 <!-- End Header Search -->

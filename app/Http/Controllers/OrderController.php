@@ -23,8 +23,6 @@ use Auth;
 
 
 
-
-
 class OrderController extends Controller
 {
     public function order_submit(Request $req)
@@ -106,5 +104,18 @@ class OrderController extends Controller
     public function index()
     {
         return view('frontend.order');
+    }
+
+
+    #order_backend
+    public function order_backend()
+    {
+        // echo "ho";
+        return view('order.order', [
+            'order_details' => Order_detail::latest()->paginate(10),
+            'order_details_count' => Order_detail::count(),
+            'orders' => Order::all(),
+
+        ]);
     }
 }

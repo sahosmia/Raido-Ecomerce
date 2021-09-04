@@ -75,6 +75,8 @@ class SslCommerzPaymentController extends Controller
                 'cookie' => $cookie,
                 'created_at' => Carbon::now(),
             ]);
+
+
             $cart_item = Cart::where('cookie', Cookie::get('cart'))->get();
             foreach ($cart_item as $item) {
                 Order::insert([
@@ -140,6 +142,7 @@ class SslCommerzPaymentController extends Controller
 
             Order_detail::insert([
                 'payment_method' => $payment_method,
+                'payment_status' => 2,
                 'user_id' => Auth::id(),
                 'total' => $total,
                 'cupon_id' => $cupon,

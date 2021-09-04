@@ -37,9 +37,7 @@
 {{-- @include('include.backend.preloader') --}}
 <!-- ./ Preloader -->
 
-<!-- Sidebar group -->
-@include('include.backend.sidebar')
-<!-- ./ Sidebar group -->
+
 
 <!-- Layout wrapper -->
 <div class="layout-wrapper">

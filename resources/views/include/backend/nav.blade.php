@@ -41,7 +41,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="@yield('order')" href="{{ route('order') }}">
+                        <a class="@yield('order')" href="{{ route('order_backend') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>
                             </span>
@@ -78,8 +78,8 @@
                         <i data-feather="message-circle"></i>
                     </span>
                             <span>Chat</span>
-                            @if ($message_count != 0)
-                            <span class="badge badge-danger">{{ $message_count }}</span>
+                            @if (App\Models\Message::where('action', 1)->count() != 0)
+                            <span class="badge badge-danger">{{ App\Models\Message::where('action', 1)->count() }}</span>
                             @endif
                         </a>
                     </li>

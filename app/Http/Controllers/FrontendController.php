@@ -33,14 +33,21 @@ class FrontendController extends Controller
     # about
     public function about()
     {
-
-
-
         return view('frontend.about', [
             'brands' => Brand::where('action', 1)->get(),
             'categories' => Category::where('action', 1)->get(),
             'products' => Product::where('action', 1)->get(),
+        ]);
+    }
 
+    # search
+    public function search()
+    {
+        $serch = $_GET['search'];
+
+        return view('frontend.search', [
+
+            'products' => Product::where('name', 'like', '%' . $serch . '%')->get(),
         ]);
     }
 

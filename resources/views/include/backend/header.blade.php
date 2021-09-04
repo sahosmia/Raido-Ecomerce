@@ -40,8 +40,13 @@
                         <li class="nav-item dropdown d-none d-md-block">
                             <a href="#" class="nav-link" title="Actions" data-toggle="dropdown">Create</a>
                             <div class="dropdown-menu">
-                                <a href="#" class="dropdown-item">Add Products</a>
-                                <a href="#" class="dropdown-item">Add Category</a>
+                                <a href="{{ route('addproduct') }}" class="dropdown-item">Add Products</a>
+                                <a href="{{ route('addcategory') }}" class="dropdown-item">Add Category</a>
+                                <a href="{{ route('addsubcategory') }}" class="dropdown-item">Add Subcategory</a>
+                                <a href="{{ route('adduser') }}" class="dropdown-item">Add User</a>
+                                <a href="{{ route('addcupon') }}" class="dropdown-item">Add Cupon</a>
+                                <a href="{{ route('addbrand') }}" class="dropdown-item">Add Brand</a>
+
                                 <a href="#" class="dropdown-item">Add Report</a>
                                 <div class="dropdown-divider"></div>
                                 <a href="#" class="dropdown-item">Reports</a>
@@ -66,12 +71,71 @@
                             </a>
                         </li>
 
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link {{ $message_count == 0 ? "" : "nav-link-notify" }}" title="Chats" data-sidebar-target="#chat-list">
-                                <i data-feather="message-circle"></i>
-                            </a>
-                        </li>
 
+
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link {{ App\Models\Message::where('action', 1)->count() == 0 ? "" : "nav-link-notify" }}" title="Chats" data-toggle="dropdown"><i data-feather="message-circle"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-big">
+                                <div
+                                    class="border-bottom px-4 py-3 text-center d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Messages</h5>
+                                    @php
+                                        $count = App\Models\Message::where('action', 1)->count();
+                                    @endphp
+                                    <small class="opacity-7">{{ $count == 0 ? "All Read" : "$count unread notifications" }}</small>
+                                </div>
+                                <div class="dropdown-scroll">
+                                    <ul class="list-group list-group-flush">
+                                         @foreach (App\Models\Message::latest()->get() as $item)
+                                         @php
+                                            $name = $item->name;
+                                            $first_latter = strtoupper(substr($name, 0,1));
+                                            if($first_latter == "A" || $first_latter == "G" || $first_latter == "M" || $first_latter == "S" || $first_latter == "Y"){
+                                                $color = "primary";
+                                            }
+                                            elseif($first_latter == "B" || $first_latter == "H" || $first_latter == "N" || $first_latter == "T" || $first_latter == "Z"){
+                                                $color = "secondary";
+                                            }
+                                            elseif($first_latter == "C" || $first_latter == "I" || $first_latter == "O" || $first_latter == "U"){
+                                                $color = "success";
+                                            }
+                                            elseif($first_latter == "D" || $first_latter == "J" || $first_latter == "P" || $first_latter == "V"){
+                                                $color = "danger";
+                                            }
+                                            elseif($first_latter == "E" || $first_latter == "K" || $first_latter == "Q" || $first_latter == "W"){
+                                                $color = "warning";
+                                            }
+                                            elseif($first_latter == "F" || $first_latter == "L" || $first_latter == "R" || $first_latter == "X"){
+                                                $color = "info";
+                                            }
+
+                                        @endphp
+                                        <li class="px-4 py-3 list-group-item">
+                                            <a href="{{ url('message/view') }}/{{ $item->id }}" class="d-flex align-items-center hide-show-toggler">
+                                                <div class="flex-shrink-0">
+                                                    <figure class="avatar mr-3">
+                                                        <span class="avatar-title bg-{{ $color }} rounded-circle">{{ $first_latter }}</span>
+                                                    </figure>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <p class="mb-0 line-height-20 d-flex justify-content-between">{{ $item->name }}</p>
+                                                    <span class="small text-muted">
+                                                    @if ($item->created_at->diffInDays() >= 30)
+                                                        {{ $item->created_at->format('d M, Y') }}
+                                                    @elseif ($item->created_at->diffInDays() >= 2)
+                                                        {{ $item->created_at->diffForHumans() }}
+                                                    @else
+                                                        {{ $item->created_at->diffForHumans() }}
+                                                    @endif
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </li>
+                                         @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link nav-link-notify" title="Notifications" data-toggle="dropdown">
                                 <i data-feather="bell"></i>
@@ -195,109 +259,7 @@
                             </div>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="#" title="Cart" class="nav-link" data-toggle="dropdown">
-                                <i data-feather="shopping-bag"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-big">
-                                <div
-                                    class="border-bottom px-4 py-3 text-center d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Cart</h5>
-                                    <small class="opacity-7">4 products</small>
-                                </div>
-                                <div class="dropdown-scroll">
-                                    <div class="list-group list-group-flush">
-                                        <a href="#" class="px-4 py-3 list-group-item d-flex">
-                                            <div class="flex-shrink-0">
-                                                <figure class="avatar mr-3">
-                                                    <img class="rounded" src="{{ asset('backend/assets/media/image/products/product6.png') }}"
-                                                         alt="Canon 4000D 18-55 MM">
-                                                </figure>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                                    Canon 4000D 18-55 MM
-                                                    <i title="Close" data-toggle="tooltip"
-                                                       class="hide-show-toggler-item small ti-close"></i>
-                                                </p>
-                                                <span class="text-muted small">X $1,200</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="px-4 py-3 list-group-item d-flex">
-                                            <div class="flex-shrink-0">
-                                                <figure class="avatar mr-3">
-                                                    <img class="rounded" src="{{ asset('backend/assets/media/image/products/product3.png') }}"
-                                                         alt="pineapple">
-                                                </figure>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                                    Snopy SN-BT96 Pretty
-                                                    <i title="Close" data-toggle="tooltip"
-                                                       class="hide-show-toggler-item small ti-close"></i>
-                                                </p>
-                                                <span class="text-muted small">X $250</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="px-4 py-3 list-group-item d-flex">
-                                            <div class="flex-shrink-0">
-                                                <figure class="avatar mr-3">
-                                                    <img src="{{ asset('backend/assets/media/image/products/product7.png') }}"
-                                                         class="rounded" alt="pineapple">
-                                                </figure>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                                    Lenovo Tab E10 TB-X104F 32GB
-                                                    <i title="Close" data-toggle="tooltip"
-                                                       class="hide-show-toggler-item small ti-close"></i>
-                                                </p>
-                                                <span class="text-muted small">X $100</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="px-4 py-3 list-group-item d-flex">
-                                            <div class="flex-shrink-0">
-                                                <figure class="avatar mr-3">
-                                                    <img class="rounded" src="{{ asset('backend/assets/media/image/products/product6.png') }}"
-                                                         alt="Canon 4000D 18-55 MM">
-                                                </figure>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                                    Canon 4000D 18-55 MM
-                                                    <i title="Close" data-toggle="tooltip"
-                                                       class="hide-show-toggler-item small ti-close"></i>
-                                                </p>
-                                                <span class="text-muted small">X $1,200</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="px-4 py-3 border-top text-right small">
-                                    <p class="d-flex justify-content-between align-items-center mb-1">
-                                        <span>Sub Total</span>
-                                        <span>$1,650</span>
-                                    </p>
-                                    <p class="d-flex justify-content-between align-items-center mb-1">
-                                        <span>Taxes</span>
-                                        <span>$15</span>
-                                    </p>
-                                    <p class="d-flex justify-content-between align-items-center mb-1 font-weight-bold">
-                                        <span>Total</span>
-                                        <span>$1,665</span>
-                                    </p>
-                                    <button class="btn btn-primary btn-block mt-2">
-                                        Order and Payment <i class="ti-arrow-right ml-2"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </li>
 
-                        <li class="nav-item dropdown">
-                            <a href="#" class="nav-link" title="Settings" data-sidebar-target="#settings">
-                                <i data-feather="settings"></i>
-                            </a>
-                        </li>
 
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" title="User menu" data-toggle="dropdown">

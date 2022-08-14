@@ -1,15 +1,10 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('category')
-    active
-@endsection
+<!-- Nav active satatus -->
+@section('category', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Category
-@endsection
-
+<!-- title name -->
+@section('page_title', 'Category')
 
 
 
@@ -47,10 +42,10 @@
 
     <div class="card text-center border border-primary p-3">
         <form action="{{ route('category_form_action') }}" method="POST">
-@csrf
+            @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('addcategory') }}">Add New</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.categories.create') }}">Add New</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link btn btn-dark mr-2" href="{{ route('recyclebin_category') }}">Recycle Bin</a>
@@ -100,12 +95,6 @@
                                 <figure class="avatar">
                                     <img src="{{ asset('upload/category') }}/{{ $item->img }}" alt="avatar">
                                 </figure>
-                                {{-- <figure class="avatar">
-                                    <img class="rounded" src="{{ asset('backend/assets/media/image/photo2.jpg') }}" alt="avatar">
-                                </figure>
-                                <figure class="avatar">
-                                    <img class="rounded-circle" src="{{ asset('backend/assets/media/image/photo2.jpg') }}" alt="avatar">
-                                </figure> --}}
                             </td>
                             <td>
                                 <ul>
@@ -153,8 +142,7 @@
                                         <i class="ti-more-alt"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="{{ url('category/view') }}/{{ $item->id }}" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('category/update') }}/{{ $item->id }}" class="dropdown-item text-info">Update</a>
+                                        <a href="{{ route('admin.categories.edit', $item->id) }}" class="dropdown-item text-info">Update</a>
                                         <a href="{{ url('category/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
                                         <a href="{{ url('category/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
                                         @if ($item->action == 1)
@@ -176,7 +164,7 @@
         </div>
 
         <div class="card-footer bg-primary ">
-            <h5>Total Catagory: {{ $categories_count }}</h5>
+            <h5>Total Catagory: {{ $categories->count()}}</h5>
         </div>
     </div>
 @endsection

@@ -75,15 +75,8 @@ Route::get('blank_form', [BlankController::class, 'blank_form'])->name('blank_fo
 Route::post('blank_form_submit', [BlankController::class, 'blank_form_submit'])->name('blank_form_submit');
 
 // Category page
-Route::get('category', [CategoryController::class, 'index'])->name('category');
-Route::get('category/addcategory', [CategoryController::class, 'addcategory'])->name('addcategory');
-Route::post('category/addcategoryinsert', [CategoryController::class, 'addcategoryinsert'])->name('addcategoryinsert');
 Route::get('category/recyclebin', [CategoryController::class, 'recyclebin'])->name('recyclebin_category');
-Route::post('category/update', [CategoryController::class, 'update'])->name('category_update');
-Route::post('category/img_update', [CategoryController::class, 'img_update'])->name('category_img_update');
 Route::post('category/form_action', [CategoryController::class, 'form_action'])->name('category_form_action');
-Route::get('category/view/{id}', [CategoryController::class, 'view_category']);
-Route::get('category/update/{id}', [CategoryController::class, 'update_category']);
 Route::get('category/soft_delete/{id}', [CategoryController::class, 'soft_delete']);
 Route::get('category/p_delete/{id}', [CategoryController::class, 'p_delete']);
 Route::get('category/restore/{id}', [CategoryController::class, 'restore']);
@@ -256,12 +249,6 @@ Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 // Testimonial
 
 
-
-
-
-
-
-
 // SSLCOMMERZ Start
 Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
 Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
@@ -275,3 +262,25 @@ Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
 
 Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
 //SSLCOMMERZ END
+
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+
+    Route::resource('categories', CategoryController::class);
+
+    Route::get('category/recyclebin', [CategoryController::class, 'recyclebin'])->name('recyclebin_category');
+    Route::post('category/form_action', [CategoryController::class, 'form_action'])->name('category_form_action');
+    Route::get('category/soft_delete/{id}', [CategoryController::class, 'soft_delete']);
+    Route::get('category/p_delete/{id}', [CategoryController::class, 'p_delete']);
+    Route::get('category/restore/{id}', [CategoryController::class, 'restore']);
+    Route::get('category/action/{id}', [CategoryController::class, 'action']);
+    Route::get('category_soft_delete_all', [CategoryController::class, 'soft_delete_all'])->name('category_soft_delete_all');
+    Route::get('category_p_delete_all', [CategoryController::class, 'p_delete_all'])->name('category_p_delete_all');
+    Route::get('category_restore_all', [CategoryController::class, 'restore_all'])->name('category_restore_all');
+
+});
+
+
+

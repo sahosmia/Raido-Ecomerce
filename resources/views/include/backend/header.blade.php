@@ -41,7 +41,7 @@
                             <a href="#" class="nav-link" title="Actions" data-toggle="dropdown">Create</a>
                             <div class="dropdown-menu">
                                 <a href="{{ route('addproduct') }}" class="dropdown-item">Add Products</a>
-                                <a href="{{ route('addcategory') }}" class="dropdown-item">Add Category</a>
+                                <a href="{{ route('admin.categories.create') }}" class="dropdown-item">Add Category</a>
                                 <a href="{{ route('addsubcategory') }}" class="dropdown-item">Add Subcategory</a>
                                 <a href="{{ route('adduser') }}" class="dropdown-item">Add User</a>
                                 <a href="{{ route('addcupon') }}" class="dropdown-item">Add Cupon</a>

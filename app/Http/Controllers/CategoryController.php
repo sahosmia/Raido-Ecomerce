@@ -18,23 +18,19 @@ class CategoryController extends Controller
         // $this->middleware('checkauth');
     }
 
-    // category page view
     public function index()
     {
         return view('category.category', [
             'categories' => Category::latest()->paginate(10),
-            'categories_count' => Category::count(),
         ]);
     }
 
-    // insert page view
-    public function addcategory()
+    public function create()
     {
         return view('category.addcategory');
     }
 
-    // insert item
-    public function addcategoryinsert(Request $req)
+     public function store(Request $req)
     {
         $req->validate([
             'name' => 'required|unique:categories,name',
@@ -60,8 +56,48 @@ class CategoryController extends Controller
             "img" => $img_name,
         ]);
 
-        return redirect('category')->with('success', 'You are success to add a new category');
+        return redirect()->route('admin.categories.index')->with('success', 'You are success to add a new category');
     }
+
+    public function edit($id)
+    {
+        return view('category.update_category', [
+            'item' => Category::find($id),
+        ]);
+    }
+
+    public function update(Request $request,$id)
+    {
+
+        $this->validate($request,[
+            'name' => 'required',
+        ]);
+
+        $inputs = $request->only('name');
+
+        if($request->hasFile('img'))
+        {
+
+            $this->validate($request,[
+                'images'=>'image|mimes:jpeg,png,jpg|max:1024|dimensions:min_width=1000,min_height=350,max_width=1200,max_height=390',
+            ]);
+
+            $old_img = Category::find($id)->img;
+            unlink('upload/category/' . $old_img);
+
+            $image = $request->file('img');
+            $filename = time().'.'.$image->getClientOriginalExtension();
+            $location = public_path('upload/category/'.$filename);
+            Image::make($image)->save($location);
+            $inputs['img'] =  $filename;
+        }
+
+        Category::where(['id'=>$id])->update($inputs);
+        return back()->with('success', 'You are success to update your category item.');
+
+    }
+
+
 
     // recyclebin page view
     public function recyclebin()
@@ -73,47 +109,9 @@ class CategoryController extends Controller
     }
 
     // update view
-    public function update(Request $req)
-    {
-        $req->validate([
-            'name' => 'required|unique:categories,name',
-        ]);
 
-        $name = $req->name;
-        $id = $req->id;
 
-        Category::find($id)->update([
-            "name" => $name,
-        ]);
-        return back()->with('success', 'You are success to add a new category');
-    }
 
-    // img update
-    public function img_update(Request $req)
-    {
-
-        $req->validate([
-            'img' => 'required',
-        ]);
-
-        $id = $req->id;
-        $old_img = Category::find($id)->img;
-        unlink('upload/category/' . $old_img);
-
-        $img = $req->file('img');
-        $img_extention = $img->getClientOriginalExtension();
-        $img_name = $id . rand(1, 9999) . "." . $img_extention;
-        Image::make($img)->save(base_path('public/upload/category/' . $img_name));
-
-        Category::find($id)->update([
-            "img" => $img_name,
-        ]);
-
-        Category::find($id)->update([
-            "img" => $img_name,
-        ]);
-        return back()->with('success', 'You are success to add a new category');
-    }
 
     // form_action
     public function form_action(Request $req)
@@ -165,13 +163,7 @@ class CategoryController extends Controller
 view id page
 */
 
-    // update_category page view
-    public function update_category($id)
-    {
-        return view('category.update_category', [
-            'item' => Category::find($id),
-        ]);
-    }
+
 
     // soft_delete single
     public function soft_delete($id)

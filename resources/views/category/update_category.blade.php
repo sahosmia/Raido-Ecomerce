@@ -23,7 +23,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('category') }}">Category</a>
+                        <a href="{{ route('admin.categories.index') }}">Category</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Update Category Page</li>
@@ -50,38 +50,25 @@
     </div>
 @endif
 
-<div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
+<div class="col-md-6 col-sm-8 col-lg-5 col-xl-6 m-auto">
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">Image</div>
         <div class="card-body">
-            <form action="{{ route('category_img_update') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.categories.update', $item->id) }}" method="post" enctype="multipart/form-data">
                 @csrf
-                    <input name="id" type="hidden" value="{{ $item->id }}">
-                 <figure class="avatar avatar-xl">
-                    <img class="rounded" src="{{ asset('upload/category') }}/{{ $item->img }}" alt="avatar">
-                 </figure>
-                <!-- File input -->
+                @method('PUT')
+
+                <figure class="avatar avatar-xl">
+                <img class="rounded" src="{{ asset('upload/category') }}/{{ $item->img }}" alt="avatar">
+                </figure>
+
                 <div class="form-group">
                     <label>Select Category Image</label>
                     <input name="img" value="{{ old('img') }}" type="file" class="form-control-file">
                     @error('img')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </form>
-        </div>
-    </div>
-</div>
-<div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
-    <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">All Update</div>
-        <div class="card-body">
-            <form action="{{ route('category_update') }}" method="post">
-                @csrf
-                                    <input name="id" type="hidden" value="{{ $item->id }}">
-
 
                 <div class="form-group">
                      <label>New Category Name</label>

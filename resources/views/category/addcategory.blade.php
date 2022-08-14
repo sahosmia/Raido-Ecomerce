@@ -30,7 +30,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('category') }}">Category</a>
+                        <a href="{{ route('admin.categories.index') }}">Category</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Add Category Page</li>
@@ -44,7 +44,7 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">Category Add++</div>
         <div class="card-body">
-            <form action="{{ route('addcategoryinsert') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.categories.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <!-- File input -->
                 <div class="form-group">

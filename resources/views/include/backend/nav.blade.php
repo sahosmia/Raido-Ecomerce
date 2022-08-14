@@ -17,7 +17,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="@yield('category')" href="{{ route('category') }}">
+                        <a class="@yield('category')" href="{{ route('admin.categories.index') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>
                             </span>

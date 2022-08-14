@@ -20,7 +20,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('category') }}">Category</a>
+                        <a href="{{ route('admin.categories.index') }}">Category</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Recyclebin</li>
@@ -50,7 +50,7 @@
 @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('category') }}">Back Category</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.categories.index') }}">Back Category</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger mr-2" href="{{ route('category_p_delete_all') }}">All P. Delete</a>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Auth;
 use Carbon\Carbon;
+use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use Image;
 
 
@@ -30,13 +32,8 @@ class CategoryController extends Controller
         return view('category.addcategory');
     }
 
-     public function store(Request $req)
+     public function store(CategoryStoreRequest $req)
     {
-        $req->validate([
-            'name' => 'required|unique:categories,name',
-            'img' => 'required',
-        ]);
-
         $name = $req->name;
         $added_by = Auth::id();
         $created_at = Carbon::now();
@@ -66,22 +63,12 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function update(Request $request,$id)
+    public function update(CategoryUpdateRequest $request,$id)
     {
-
-        $this->validate($request,[
-            'name' => 'required',
-        ]);
-
         $inputs = $request->only('name');
 
         if($request->hasFile('img'))
         {
-
-            $this->validate($request,[
-                'images'=>'image|mimes:jpeg,png,jpg|max:1024|dimensions:min_width=1000,min_height=350,max_width=1200,max_height=390',
-            ]);
-
             $old_img = Category::find($id)->img;
             unlink('upload/category/' . $old_img);
 
@@ -94,7 +81,6 @@ class CategoryController extends Controller
 
         Category::where(['id'=>$id])->update($inputs);
         return back()->with('success', 'You are success to update your category item.');
-
     }
 
 

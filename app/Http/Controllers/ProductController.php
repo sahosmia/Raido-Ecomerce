@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Requests\ProductImageUpdateRequest;
+use App\Http\Requests\ProductPhotoInsertRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Product_photo;
@@ -148,12 +150,8 @@ class ProductController extends Controller
         return back()->with('success', 'You are success to add a new product');
     }
     // img update
-    public function img_update(Request $req)
+    public function img_update(ProductImageUpdateRequest $req)
     {
-        $req->validate([
-            'img' => 'required',
-        ]);
-
         $id = $req->id;
         $old_img = Product::find($id)->img;
         unlink('upload/product/' . $old_img);
@@ -346,12 +344,8 @@ class ProductController extends Controller
 
 
     // insert item
-    public function addproductphotoinsert(Request $req)
+    public function addproductphotoinsert(ProductPhotoInsertRequest $req)
     {
-        $req->validate([
-            'img_multiple' => 'required',
-        ]);
-
         $id = $req->product_id;
         $img_multiple = $req->file('img_multiple');
         $added_by = Auth::id();

@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Subcategory;
 use Auth;
 use Carbon\Carbon;
+use App\Http\Requests\SubcategoryStoreRequest;
+use App\Http\Requests\SubcategoryUpdateRequest;
 use Image;
 
 
@@ -37,28 +39,20 @@ class SubcategoryController extends Controller
     }
 
     // insert item
-    public function addsubcategoryinsert(Request $req)
+    public function addsubcategoryinsert(SubcategoryStoreRequest $req)
     {
         $name = $req->name;
         $category = $req->category_id;
         $added_by = Auth::id();
         $created_at = Carbon::now();
 
-        $req->validate([
-            'name' => 'required|unique:categories,name',
-            'category_id' => 'required',
+        Subcategory::insert([
+            "name" => $name,
+            "category" => $category,
+            "added_by" => $added_by,
+            "created_at" => $created_at,
         ]);
-        if (Subcategory::where('category', $req->category_id)->where('name', $req->name)->exists()) {
-            return back()->with('error_status', 'This subcategory already exists');
-        } else {
-            Subcategory::insert([
-                "name" => $name,
-                "category" => $category,
-                "added_by" => $added_by,
-                "created_at" => $created_at,
-            ]);
-            return redirect('subcategory')->with('success', 'You are success to add a new subcategory');
-        }
+        return redirect('subcategory')->with('success', 'You are success to add a new subcategory');
     }
 
     // recyclebin page view
@@ -71,26 +65,17 @@ class SubcategoryController extends Controller
     }
 
     // update view
-    public function update(Request $req)
+    public function update(SubcategoryUpdateRequest $req)
     {
-        $req->validate([
-            'name' => 'required|unique:categories,name',
-            'category_id' => 'required',
-        ]);
-
         $name = $req->name;
         $category = $req->category_id;
         $id = $req->id;
 
-        if (Subcategory::where('category', $req->category_id)->where('name', $req->name)->exists()) {
-            return back()->with('error_status', 'This subcategory already exists');
-        } else {
-            Subcategory::find($id)->update([
-                "name" => $name,
-                "category" => $category,
-            ]);
-            return back()->with('success', 'You are success to add a new subcategory');
-        }
+        Subcategory::find($id)->update([
+            "name" => $name,
+            "category" => $category,
+        ]);
+        return back()->with('success', 'You are success to add a new subcategory');
     }
 
 

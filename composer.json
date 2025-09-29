@@ -2,25 +2,28 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "intervention/image": "^2.6",
-        "laravel/framework": "^8.40",
-        "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.3"
+        "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.2",
+        "intervention/image-laravel": "^1.0",
+        "laravel/framework": "^12.0",
+        "laravel/sanctum": "4.x-dev",
+        "laravel/tinker": "2.x-dev",
+        "laravel/ui": "4.x-dev"
     },
     "require-dev": {
-        "facade/ignition": "^2.5",
-        "fakerphp/faker": "^1.9.1",
-        "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "fakerphp/faker": "^1.23",
+        "laravel/pint": "dev-main",
+        "laravel/sail": "1.x-dev",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.1",
+        "phpunit/phpunit": "^11.0",
+        "spatie/laravel-ignition": "dev-main"
     },
     "autoload": {
         "psr-4": {
@@ -40,7 +43,7 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -57,7 +60,11 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

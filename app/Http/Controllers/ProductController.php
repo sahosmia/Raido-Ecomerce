@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Product_photo;
@@ -54,7 +56,7 @@ class ProductController extends Controller
     }
 
     // insert item
-    public function addproductinsert(Request $req)
+    public function addproductinsert(ProductStoreRequest $req)
     {
         $name = $req->name;
         $img = $req->file('img');
@@ -68,28 +70,6 @@ class ProductController extends Controller
         $des = $req->des;
         $added_by = Auth::id();
         $created_at = Carbon::now();
-
-        $req->validate([
-            'name' => 'required|string|min:3|max:40',
-            'img' => 'required|file|image|mimes:jpeg,jpg,png',
-            'img_multiple' => 'required',
-            'price' => 'required|numeric|min:1',
-            'quantity' => 'required|numeric|min:1',
-            'category' => 'required',
-            'subcategory' => 'required',
-            'des' => 'required|string|min:12',
-        ]);
-        if ($notification_quantity) {
-            $req->validate([
-                'notification_quantity' => 'numeric|min:1',
-            ]);
-        }
-
-        if ($discount) {
-            $req->validate([
-                'discount' => 'numeric|min:5|max:70',
-            ]);
-        }
 
 
         $id = Product::insertGetId([
@@ -162,64 +142,9 @@ class ProductController extends Controller
         ]);
     }
     // update view
-    public function update(Request $req)
+    public function update(ProductUpdateRequest $req)
     {
-        $id = $req->id;
-        $name = $req->name;
-        $price = $req->price;
-        $quantity = $req->quantity;
-        $notification_quantity = $req->notification_quantity;
-        $discount = $req->discount;
-        $category = $req->category;
-        $subcategory = $req->subcategory;
-        $des = $req->des;
-
-
-        $req->validate([
-            'name' => 'required|string|min:3|max:40',
-            'price' => 'required|numeric|min:1',
-            'quantity' => 'required|numeric|min:1',
-            'category' => 'required',
-            'subcategory' => 'required',
-            'des' => 'required|string|min:12',
-
-        ]);
-
-        if ($notification_quantity != 0) {
-            $req->validate([
-                'notification_quantity' => 'numeric|min:1',
-            ]);
-        }
-
-        if ($discount != 0) {
-            $req->validate([
-                'discount' => 'numeric|min:5|max:70',
-            ]);
-        }
-
-
-        if ($notification_quantity != 0) {
-            Product::find($id)->update([
-                "notification_quantity" => $notification_quantity,
-            ]);
-        }
-
-        if ($discount != 0) {
-            Product::find($id)->update([
-                "discount" => $discount,
-            ]);
-        }
-
-        Product::find($id)->update([
-            "name" => $name,
-            "price" => $price,
-            "quantity" => $quantity,
-            "category" => $category,
-            "subcategory" => $subcategory,
-            "des" => $des,
-            "discount" => $discount,
-            "notification_quantity" => $notification_quantity,
-        ]);
+        Product::find($req->id)->update($req->validated());
         return back()->with('success', 'You are success to add a new product');
     }
     // img update

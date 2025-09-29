@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BrandImageUpdateRequest;
+use App\Http\Requests\BrandStoreRequest;
+use App\Http\Requests\BrandUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Brand;
 use Auth;
@@ -32,14 +35,8 @@ class BrandController extends Controller
     }
 
     // insert item
-    public function addbrandinsert(Request $req)
+    public function addbrandinsert(BrandStoreRequest $req)
     {
-
-        $req->validate([
-            'name' => 'required|unique:brands,name',
-            'img' => 'required',
-        ]);
-
         $name = $req->name;
         $added_by = Auth::id();
         $created_at = Carbon::now();
@@ -72,12 +69,8 @@ class BrandController extends Controller
     }
 
     // update view
-    public function update(Request $req)
+    public function update(BrandUpdateRequest $req)
     {
-        $req->validate([
-            'name' => 'required',
-        ]);
-
         $name = $req->name;
         $id = $req->id;
 
@@ -87,13 +80,8 @@ class BrandController extends Controller
         return back()->with('success', 'You are success to add a new brand');
     }
     // img update
-    public function img_update(Request $req)
+    public function img_update(BrandImageUpdateRequest $req)
     {
-
-        $req->validate([
-            'img' => 'required',
-        ]);
-
         $id = $req->id;
         $old_img = Brand::find($id)->img;
         unlink('upload/brand/' . $old_img);

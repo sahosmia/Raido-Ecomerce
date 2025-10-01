@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CuponStoreRequest;
+use App\Http\Requests\CuponUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Cupon;
 use Auth;
@@ -33,7 +35,7 @@ class CuponController extends Controller
     }
 
     // insert item
-    public function addcuponinsert(Request $req)
+    public function addcuponinsert(CuponStoreRequest $req)
     {
 
         $name = $req->name;
@@ -42,15 +44,6 @@ class CuponController extends Controller
         $end_cupon  = $req->date;
         $created_at = Carbon::now();
         $added_by = Auth::id();
-
-
-        $req->validate([
-            'name' => 'required|unique:cupons,name',
-            'code' => 'required|unique:cupons,code',
-            'discount' => 'required|numeric|min:5|max:50',
-            'date' => 'date|after:tomorrow',
-        ]);
-        // die();
 
         Cupon::insert([
             "name" => $name,
@@ -74,15 +67,8 @@ class CuponController extends Controller
     }
 
     // update view
-    public function update(Request $req)
+    public function update(CuponUpdateRequest $req)
     {
-        $req->validate([
-            'name' => 'required',
-            'code' => 'required',
-            'discount' => 'required|numeric|min:5|max:50',
-            'date' => 'date|after:tomorrow',
-        ]);
-
         $name = $req->name;
         $code = $req->code;
         $discount = $req->discount;

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TestimonialImageUpdateRequest;
+use App\Http\Requests\TestimonialStoreRequest;
+use App\Http\Requests\TestimonialUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Testimonial;
 use App\Models\Message;
@@ -9,7 +12,7 @@ use Auth;
 use Carbon\Carbon;
 use Image;
 
-class testimonialController extends Controller
+class TestimonialController extends Controller
 {
     public function __construct()
     {
@@ -21,8 +24,8 @@ class testimonialController extends Controller
     public function index()
     {
         return view('testimonial.testimonial', [
-            'testimonials' => testimonial::latest()->paginate(10),
-            'testimonials_count' => testimonial::count(),
+            'testimonials' => Testimonial::latest()->paginate(10),
+            'testimonials_count' => Testimonial::count(),
             'messages' => Message::latest()->get(),
             'message_count' => Message::where('action', 1)->count(),
         ]);
@@ -39,7 +42,7 @@ class testimonialController extends Controller
     }
 
     // insert item
-    public function addtestimonialinsert(Request $req)
+    public function addtestimonialinsert(TestimonialStoreRequest $req)
     {
         $name = $req->name;
         $img = $req->file('img');
@@ -48,16 +51,7 @@ class testimonialController extends Controller
         $added_by = Auth::id();
         $created_at = Carbon::now();
 
-        $req->validate([
-            'name' => 'required|unique:testimonials,name',
-            'title' => 'required',
-            'des' => 'required',
-            'img' => 'required',
-        ]);
-
-
-
-        $id = testimonial::insertGetId([
+        $id = Testimonial::insertGetId([
             "name" => $name,
             "title" => $title,
             "des" => $des,
@@ -70,7 +64,7 @@ class testimonialController extends Controller
         $img_name = $id . "testimonial" . rand(1, 9999) . "." . $img_extention;
         Image::make($img)->save(base_path('public/upload/testimonial/' . $img_name));
 
-        testimonial::find($id)->update([
+        Testimonial::find($id)->update([
             "img" => $img_name,
         ]);
 
@@ -81,23 +75,17 @@ class testimonialController extends Controller
     public function recyclebin()
     {
         return view('testimonial.recyclebin_testimonial', [
-            'testimonials' => testimonial::onlyTrashed()->paginate(10),
-            'testimonials_count' => testimonial::onlyTrashed()->count(),
+            'testimonials' => Testimonial::onlyTrashed()->paginate(10),
+            'testimonials_count' => Testimonial::onlyTrashed()->count(),
             'messages' => Message::latest()->get(),
             'message_count' => Message::where('action', 1)->count(),
         ]);
     }
 
-    // update 
-    public function update(Request $req)
+    // update
+    public function update(TestimonialUpdateRequest $req)
     {
-        $req->validate([
-            'name' => 'required',
-            'title' => 'required',
-            'des' => 'required',
-        ]);
-
-        testimonial::find($req->id)->update([
+        Testimonial::find($req->id)->update([
             "name" => $req->name,
             "title" => $req->title,
             "des" => $req->des,
@@ -105,15 +93,10 @@ class testimonialController extends Controller
         return back()->with('success', 'You are success to add a new testimonial');
     }
     // img update
-    public function img_update(Request $req)
+    public function img_update(TestimonialImageUpdateRequest $req)
     {
-
-        $req->validate([
-            'img' => 'required',
-        ]);
-
         $id = $req->id;
-        $old_img = testimonial::find($id)->img;
+        $old_img = Testimonial::find($id)->img;
         unlink('upload/testimonial/' . $old_img);
 
         $img = $req->file('img');
@@ -121,11 +104,7 @@ class testimonialController extends Controller
         $img_name = $id . rand(1, 9999) . "." . $img_extention;
         Image::make($img)->save(base_path('public/upload/testimonial/' . $img_name));
 
-        testimonial::find($id)->update([
-            "img" => $img_name,
-        ]);
-
-        testimonial::find($id)->update([
+        Testimonial::find($id)->update([
             "img" => $img_name,
         ]);
         return back()->with('success', 'You are success to add a new testimonial');
@@ -140,23 +119,23 @@ class testimonialController extends Controller
         switch ($req->action) {
             case "mark_p_delete":
                 foreach ($select_item as $item) {
-                    $img = testimonial::withTrashed()->find($item)->img;
+                    $img = Testimonial::withTrashed()->find($item)->img;
                     unlink('upload/testimonial/' . $img);
-                    testimonial::withTrashed()->find($item)->forceDelete();
+                    Testimonial::withTrashed()->find($item)->forceDelete();
                 }
                 return back()->with('error', 'You all selected item permanent delete');
 
                 break;
             case "mark_s_delete":
                 foreach ($select_item as $item) {
-                    testimonial::withTrashed()->find($item)->delete();
+                    Testimonial::withTrashed()->find($item)->delete();
                 }
                 return back()->with('warning', 'You all selected item soft delete');
 
                 break;
             case "mark_restore":
                 foreach ($select_item as $item) {
-                    testimonial::withTrashed()->find($item)->restore();
+                    Testimonial::withTrashed()->find($item)->restore();
                 }
                 return back()->with('success', 'You all selected item Restore');
 
@@ -168,7 +147,7 @@ class testimonialController extends Controller
     public function update_testimonial($id)
     {
         return view('testimonial.update_testimonial', [
-            'item' => testimonial::find($id),
+            'item' => Testimonial::find($id),
             'messages' => Message::latest()->get(),
             'message_count' => Message::where('action', 1)->count(),
         ]);
@@ -177,36 +156,36 @@ class testimonialController extends Controller
     // soft_delete single
     public function soft_delete($id)
     {
-        testimonial::withTrashed()->find($id)->delete();
+        Testimonial::withTrashed()->find($id)->delete();
         return back()->with('error', 'You are soft all delete your testimonial');
     }
 
     // p_delete single
     public function p_delete($id)
     {
-        $img = testimonial::withTrashed()->find($id)->img;
+        $img = Testimonial::withTrashed()->find($id)->img;
         unlink('upload/testimonial/' . $img);
-        testimonial::withTrashed()->find($id)->forceDelete();
+        Testimonial::withTrashed()->find($id)->forceDelete();
         return back()->with('error', 'You are soft all delete your testimonial');
     }
 
     // restore single
     public function restore($id)
     {
-        testimonial::onlyTrashed()->find($id)->restore();
+        Testimonial::onlyTrashed()->find($id)->restore();
         return back()->with('success', 'You are success to restore your testimonial');
     }
 
     // action active deactive
     public function action($id)
     {
-        if (testimonial::find($id)->action == 1) {
-            testimonial::find($id)->update([
+        if (Testimonial::find($id)->action == 1) {
+            Testimonial::find($id)->update([
                 "action" => 2,
             ]);
             return back()->with('warning', 'You are success to deactive your testimonial');
         } else {
-            testimonial::find($id)->update([
+            Testimonial::find($id)->update([
                 "action" => 1,
             ]);
             return back()->with('success', 'You are success to active your testimonial');
@@ -216,7 +195,7 @@ class testimonialController extends Controller
     // soft_delete all
     public function soft_delete_all()
     {
-        testimonial::whereNotNull('id')->delete();
+        Testimonial::whereNotNull('id')->delete();
         // Category::truncate();
         return back()->with('error', 'You are soft all delete your testimonial');
     }
@@ -224,18 +203,18 @@ class testimonialController extends Controller
     // p_delete all
     public function p_delete_all()
     {
-        $items = testimonial::withTrashed()->get();
+        $items = Testimonial::withTrashed()->get();
         foreach ($items as $item) {
             unlink('upload/testimonial/' . $item->img);
         }
-        testimonial::truncate();
+        Testimonial::truncate();
         return back()->with('error', 'You are permanent all delete your testimonial');
     }
 
     // restore all
     public function restore_all()
     {
-        testimonial::onlyTrashed()->restore();
+        Testimonial::onlyTrashed()->restore();
         return back()->with('success', 'You are success to restore your testimonial');
     }
 }

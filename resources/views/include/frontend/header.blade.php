@@ -9,20 +9,20 @@
             </p>
         </div>
         <div class="header-right">
-            <a href="{{ route('front_contact_us') }}" class="contact d-lg-show"><i class="d-icon-map"></i>Contact</a>
+            <a href="{{ route('front.contact_us') }}" class="contact d-lg-show"><i class="d-icon-map"></i>Contact</a>
             @if (Route::has('login'))
                 @auth
                 <div class="dropdown ml-5">
-                        <a class="login-link" href="{{ route('front_profile') }}" ><i class="d-icon-user"></i>{{ Auth::user()->name }}</a>
+                        <a class="login-link" href="{{ route('front.profile.index') }}" ><i class="d-icon-user"></i>{{ Auth::user()->name }}</a>
                         <ul class="dropdown-box">
                             <li>
-                                <a href="{{ route('front_profile') }}">View Profile</a>
+                                <a href="{{ route('front.profile.index') }}">View Profile</a>
                             </li>
                             <li>
-                                <a href="{{ route('wishlist') }}">Wishlist</a>
+                                <a href="{{ route('front.wishlist.index') }}">Wishlist</a>
                             </li>
                             <li>
-                                <a href="{{ route('cart') }}">Cart</a>
+                                <a href="{{ route('front.cart.index') }}">Cart</a>
                             </li>
                             @if (Auth::user()->role != 1)
                             <li>
@@ -56,11 +56,11 @@
         <div class="container">
             <div class="header-left">
                 <a href="#" class="mobile-menu-toggle"><i class="d-icon-bars2"></i></a>
-                <a href="{{ route('front') }}" class="logo"><img src="{{ asset('frontend/images/logo.png')}}" alt="logo" width="153" height="44" /></a>
+                <a href="{{ route('front.index') }}" class="logo"><img src="{{ asset('frontend/images/logo.png')}}" alt="logo" width="153" height="44" /></a>
                 <!-- End Logo -->
 
                 <div class="header-search hs-simple">
-                    <form action="{{ url('front_search') }}" method="GET" class="input-wrapper">
+                    <form action="{{ route('front.search') }}" method="GET" class="input-wrapper">
                         <input type="text" class="form-control" name="search" value="{{ old('search') }}" placeholder="Search..." />
                         <button class="btn btn-search" ><i class="d-icon-search"></i></button>
                     </form>
@@ -78,7 +78,7 @@
                     </div>
                 </a>
                 <span class="divider"></span>
-                <a href="{{ route('wishlist') }}" class="wishlist"><i class="d-icon-heart"></i></a>
+                <a href="{{ route('front.wishlist.index') }}" class="wishlist"><i class="d-icon-heart"></i></a>
                 <span class="divider"></span>
                 <div class="dropdown cart-dropdown type2 cart-offcanvas mr-0 mr-lg-2">
                     <a href="#" class="cart-toggle label-block link">
@@ -117,13 +117,13 @@
                         <div class="products scrollable">
                             <div class="product product-cart">
                                 <figure class="product-media">
-                                <a href="{{ url('front/product') }}/{{ $item->product }}">
+                                <a href="{{ route('front.product.view_single', ['id' => $item->product]) }}">
                                     <img src="{{ asset('upload/product') }}/{{ Product::find($item->product)->img }}" alt="product" width="80" height="88"/>
                                 </a>
-                                <a href="{{ url('front/cart/delete/product_id') }}/{{ $item->product }}" class="btn btn-link btn-close"><i class="fas fa-times"></i><span class="sr-only">Close</span></a>
+                                <a href="{{ route('front.cart.delete', ['id' => $item->product]) }}" class="btn btn-link btn-close"><i class="fas fa-times"></i><span class="sr-only">Close</span></a>
                                 </figure>
                                 <div class="product-detail">
-                                    <a href="{{ url('front/product') }}/{{ $item->product }}" class="product-name">{{ Product::find($item->product)->name }}</a>
+                                    <a href="{{ route('front.product.view_single', ['id' => $item->product]) }}" class="product-name">{{ Product::find($item->product)->name }}</a>
                                     <div class="price-box">
                                         <span class="product-quantity">{{ $item->quantity }}</span>
                                         <span class="product-price">${{ Product::find($item->product)->price }}</span>
@@ -137,7 +137,7 @@
                          <div class="products scrollable">
                             <div class="product product-cart">
                                 <div class="alert alert-primary alert-simple alert-btn">
-                                    <a href="{{ url('front/category/subcategory') }}/{{ 'all' }}/{{ 'all' }}" class="btn btn-primary btn-md btn-rounded">Continue Shoping</a>
+                                    <a href="{{ route('front.category.subcategory', ['category' => 'all', 'subcategory' => 'all']) }}" class="btn btn-primary btn-md btn-rounded">Continue Shoping</a>
                                     You have no cart item
                                 </div>
                             </div>
@@ -153,8 +153,8 @@
                         <!-- End of Cart Total -->
 
                         <div class="cart-action">
-                            <a href="{{ route('cart') }}" class="btn btn-dark btn-link">View Cart</a>
-                            <a href="{{ route('checkout') }}" class="btn btn-dark"><span>Go To Checkout</span></a>
+                            <a href="{{ route('front.cart.index') }}" class="btn btn-dark btn-link">View Cart</a>
+                            <a href="{{ route('front.checkout.index') }}" class="btn btn-dark"><span>Go To Checkout</span></a>
                         </div>
                         @endif
                         <!-- End of Cart Action -->
@@ -181,21 +181,21 @@
             <nav class="main-nav">
             <ul class="menu">
                 <li class="active">
-                    <a href="{{ route('front') }}">Home</a>
+                    <a href="{{ route('front.index') }}">Home</a>
                 </li>
                 <li>
-                    <a href="{{ url('front/category/subcategory') }}/{{ 'all' }}/{{ 'all' }}">Products</a>
+                    <a href="{{ route('front.category.subcategory', ['category' => 'all', 'subcategory' => 'all']) }}">Products</a>
                 </li>
                 <li>
                 <a href="#">Category</a>
                 <ul>
                     @foreach (App\Models\Category::all() as $item)
-                    <li><a href="{{ url('front/category/subcategory') }}/{{ $item->id }}/{{ 'null' }}">{{ $item->name }}</a></li>
+                    <li><a href="{{ route('front.category.subcategory', ['category' => $item->id, 'subcategory' => 'null']) }}">{{ $item->name }}</a></li>
                     @endforeach
                 </ul>
                 </li>
                 <li>
-                    <a href="{{ route('about') }}">About US</a>
+                    <a href="{{ route('front.about') }}">About US</a>
                 </li>
 
             </ul>

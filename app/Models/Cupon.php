@@ -16,6 +16,16 @@ class Cupon extends Model
         'discount',
         'end_cupon',
         'action',
-
+        'added_by',
     ];
+
+    protected $casts = [
+        'end_cupon' => 'date',
+        'discount' => 'float',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
 }

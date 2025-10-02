@@ -15,6 +15,16 @@ class Subcategory extends Model
         'name',
         'category',
         'action',
-
+        'added_by',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
+
+    public function category_info()
+    {
+        return $this->belongsTo(Category::class, 'category');
+    }
 }

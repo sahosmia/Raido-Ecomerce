@@ -5,22 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BrandStoreRequest;
 use App\Http\Requests\BrandUpdateRequest;
 use App\Models\Brand;
-use Auth;
+use App\Services\BrandService;
 use Illuminate\Http\Request;
-use Image;
-use Illuminate\Support\Facades\File;
 
 class BrandController extends Controller
 {
-    public function __construct()
+    protected $brandService;
+
+    public function __construct(BrandService $brandService)
     {
         $this->middleware('auth');
+        $this->brandService = $brandService;
     }
 
     public function index()
     {
         return view('brand.index', [
-            'brands' => Brand::with('user')->latest()->paginate(10),
+            'brands' => $this->brandService->getAllBrands(10),
         ]);
     }
 
@@ -31,19 +32,7 @@ class BrandController extends Controller
 
     public function store(BrandStoreRequest $request)
     {
-        $inputs = $request->validated();
-        $inputs['added_by'] = Auth::id();
-
-        $brand = Brand::create($inputs);
-
-        if ($request->hasFile('img')) {
-            $image = $request->file('img');
-            $filename = $brand->id . '.' . $image->getClientOriginalExtension();
-            $location = public_path('upload/brand/' . $filename);
-            Image::make($image)->save($location);
-            $brand->update(['img' => $filename]);
-        }
-
+        $this->brandService->createBrand($request->validated(), $request->file('img'));
         return redirect()->route('admin.brands.index')->with('success', 'You have successfully added a new brand.');
     }
 
@@ -56,54 +45,32 @@ class BrandController extends Controller
 
     public function update(BrandUpdateRequest $request, Brand $brand)
     {
-        $inputs = $request->validated();
-
-        if ($request->hasFile('img')) {
-            $old_img_path = public_path('upload/brand/' . $brand->img);
-            if ($brand->img && File::exists($old_img_path)) {
-                File::delete($old_img_path);
-            }
-            $image = $request->file('img');
-            $filename = $brand->id . '.' . $image->getClientOriginalExtension();
-            $location = public_path('upload/brand/' . $filename);
-            Image::make($image)->save($location);
-            $inputs['img'] = $filename;
-        }
-
-        $brand->update($inputs);
-
+        $this->brandService->updateBrand($brand->id, $request->validated(), $request->file('img'));
         return redirect()->route('admin.brands.index')->with('success', 'You have successfully updated the brand.');
     }
 
     public function destroy(Brand $brand)
     {
-        $brand->delete();
+        $this->brandService->deleteBrand($brand->id);
         return back()->with('success', 'Brand successfully moved to trash.');
     }
 
     public function trashed()
     {
         return view('brand.trashed', [
-            'brands' => Brand::onlyTrashed()->with('user')->latest()->paginate(10),
+            'brands' => $this->brandService->getTrashedBrands(10),
         ]);
     }
 
     public function restore($id)
     {
-        Brand::withTrashed()->findOrFail($id)->restore();
+        $this->brandService->restoreBrand($id);
         return back()->with('success', 'You have successfully restored the brand.');
     }
 
     public function forceDelete($id)
     {
-        $brand = Brand::withTrashed()->findOrFail($id);
-
-        $img_path = public_path('upload/brand/' . $brand->img);
-        if ($brand->img && File::exists($img_path)) {
-            File::delete($img_path);
-        }
-
-        $brand->forceDelete();
+        $this->brandService->forceDeleteBrand($id);
         return back()->with('success', 'You have permanently deleted the brand.');
     }
 }

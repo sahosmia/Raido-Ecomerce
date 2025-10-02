@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use Auth;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
-use Image;
+use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
-    public function __construct()
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService)
     {
         $this->middleware('auth');
+        $this->categoryService = $categoryService;
     }
 
     public function index()
     {
         return view('category.index', [
-            'categories' => Category::with('user')->latest()->paginate(10),
+            'categories' => $this->categoryService->getAllCategories(10),
         ]);
     }
 
@@ -31,19 +32,7 @@ class CategoryController extends Controller
 
     public function store(CategoryStoreRequest $request)
     {
-        $inputs = $request->validated();
-        $inputs['added_by'] = Auth::id();
-
-        $category = Category::create($inputs);
-
-        if ($request->hasFile('img')) {
-            $image = $request->file('img');
-            $filename = $category->id . '_category_' . time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('upload/category/' . $filename);
-            Image::make($image)->save($location);
-            $category->update(['img' => $filename]);
-        }
-
+        $this->categoryService->createCategory($request->validated(), $request->file('img'));
         return redirect()->route('admin.categories.index')->with('success', 'Successfully added a new category.');
     }
 
@@ -56,53 +45,32 @@ class CategoryController extends Controller
 
     public function update(CategoryUpdateRequest $request, Category $category)
     {
-        $inputs = $request->validated();
-
-        if ($request->hasFile('img')) {
-            $old_img_path = public_path('upload/category/' . $category->img);
-            if ($category->img && File::exists($old_img_path)) {
-                File::delete($old_img_path);
-            }
-
-            $image = $request->file('img');
-            $filename = $category->id . '_category_' . time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('upload/category/' . $filename);
-            Image::make($image)->save($location);
-            $inputs['img'] = $filename;
-        }
-
-        $category->update($inputs);
+        $this->categoryService->updateCategory($category->id, $request->validated(), $request->file('img'));
         return back()->with('success', 'Successfully updated the category.');
     }
 
     public function destroy(Category $category)
     {
-        $category->delete(); // Soft delete
+        $this->categoryService->deleteCategory($category->id);
         return back()->with('success', 'Category successfully moved to trash.');
     }
 
     public function trashed()
     {
-        $categories = Category::onlyTrashed()->with('user')->latest()->paginate(10);
-        return view('category.trashed', compact('categories'));
+        return view('category.trashed', [
+            'categories' => $this->categoryService->getTrashedCategories(10),
+        ]);
     }
 
     public function restore($id)
     {
-        Category::withTrashed()->findOrFail($id)->restore();
+        $this->categoryService->restoreCategory($id);
         return back()->with('success', 'Successfully restored the category.');
     }
 
     public function forceDelete($id)
     {
-        $category = Category::withTrashed()->findOrFail($id);
-
-        $img_path = public_path('upload/category/' . $category->img);
-        if ($category->img && File::exists($img_path)) {
-            File::delete($img_path);
-        }
-
-        $category->forceDelete();
+        $this->categoryService->forceDeleteCategory($id);
         return back()->with('success', 'Permanently deleted the category.');
     }
 }

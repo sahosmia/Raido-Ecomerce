@@ -16,7 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('img',)->default('product.jpg');
+            $table->string('img')->nullable();
             $table->integer('price');
             $table->integer('quantity');
             $table->text('des',);
@@ -25,7 +25,7 @@ class CreateProductsTable extends Migration
             $table->integer('added_by');
             $table->integer('best_sell')->default(0);
             $table->integer('action')->default(1);
-            $table->integer('discount')->default(0);
+            $table->float('discount')->default(0);
             $table->integer('notification_quantity')->default(0);
             $table->softDeletes();
             $table->timestamps();

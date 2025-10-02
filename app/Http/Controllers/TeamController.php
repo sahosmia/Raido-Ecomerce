@@ -18,14 +18,14 @@ class TeamController extends Controller
 
     public function index()
     {
-        return view('team.team', [
+        return view('team.index', [
             'teams' => Team::latest()->paginate(10),
         ]);
     }
 
     public function create()
     {
-        return view('team.addteam');
+        return view('team.create');
     }
 
     public function store(TeamStoreRequest $request)
@@ -48,7 +48,7 @@ class TeamController extends Controller
 
     public function edit(Team $team)
     {
-        return view('team.update_team', [
+        return view('team.edit', [
             'item' => $team,
         ]);
     }
@@ -82,7 +82,7 @@ class TeamController extends Controller
 
     public function trashed()
     {
-        return view('team.recyclebin_team', [
+        return view('team.trashed', [
             'teams' => Team::onlyTrashed()->paginate(10),
         ]);
     }

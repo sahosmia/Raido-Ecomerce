@@ -19,14 +19,14 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return view('category.category', [
+        return view('category.index', [
             'categories' => Category::latest()->paginate(10),
         ]);
     }
 
     public function create()
     {
-        return view('category.addcategory');
+        return view('category.create');
     }
 
      public function store(CategoryStoreRequest $req)
@@ -53,20 +53,20 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')->with('success', 'You are success to add a new category');
     }
 
-    public function edit($id)
+    public function edit(Category $category)
     {
-        return view('category.update_category', [
-            'item' => Category::find($id),
+        return view('category.edit', [
+            'item' => $category,
         ]);
     }
 
-    public function update(CategoryUpdateRequest $request, $id)
+    public function update(CategoryUpdateRequest $request, Category $category)
     {
         $inputs = $request->only('name');
 
         if($request->hasFile('img'))
         {
-            $old_img = Category::find($id)->img;
+            $old_img = $category->img;
             if ($old_img && file_exists(public_path('upload/category/' . $old_img))) {
                 unlink(public_path('upload/category/' . $old_img));
             }
@@ -78,19 +78,19 @@ class CategoryController extends Controller
             $inputs['img'] =  $filename;
         }
 
-        Category::where(['id'=>$id])->update($inputs);
+        $category->update($inputs);
         return back()->with('success', 'You are success to update your category item.');
     }
 
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        Category::find($id)->delete(); // Soft delete
+        $category->delete(); // Soft delete
         return back()->with('success', 'Category successfully moved to trash.');
     }
 
     public function trashed()
     {
-        return view('category.recyclebin_category', [
+        return view('category.trashed', [
             'categories' => Category::onlyTrashed()->paginate(10),
             'categories_count' => Category::onlyTrashed()->count(),
         ]);

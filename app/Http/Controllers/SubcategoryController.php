@@ -18,14 +18,14 @@ class SubcategoryController extends Controller
 
     public function index()
     {
-        return view('subcategory.subcategory', [
+        return view('subcategory.index', [
             'subcategories' => Subcategory::with('category_info')->latest()->paginate(10),
         ]);
     }
 
     public function create()
     {
-        return view('subcategory.addsubcategory', [
+        return view('subcategory.create', [
             'categories' => Category::all(),
         ]);
     }
@@ -42,7 +42,7 @@ class SubcategoryController extends Controller
 
     public function edit(Subcategory $subcategory)
     {
-        return view('subcategory.update_subcategory', [
+        return view('subcategory.edit', [
             'item' => $subcategory,
             'categories' => Category::all(),
         ]);
@@ -65,7 +65,7 @@ class SubcategoryController extends Controller
 
     public function trashed()
     {
-        return view('subcategory.recyclebin_subcategory', [
+        return view('subcategory.trashed', [
             'subcategories' => Subcategory::onlyTrashed()->with('category_info')->paginate(10),
         ]);
     }

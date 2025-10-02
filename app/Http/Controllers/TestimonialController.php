@@ -18,14 +18,14 @@ class TestimonialController extends Controller
 
     public function index()
     {
-        return view('testimonial.testimonial', [
+        return view('testimonial.index', [
             'testimonials' => Testimonial::latest()->paginate(10),
         ]);
     }
 
     public function create()
     {
-        return view('testimonial.addtestimonial');
+        return view('testimonial.create');
     }
 
     public function store(TestimonialStoreRequest $request)
@@ -48,7 +48,7 @@ class TestimonialController extends Controller
 
     public function edit(Testimonial $testimonial)
     {
-        return view('testimonial.update_testimonial', [
+        return view('testimonial.edit', [
             'item' => $testimonial,
         ]);
     }
@@ -82,7 +82,7 @@ class TestimonialController extends Controller
 
     public function trashed()
     {
-        return view('testimonial.recyclebin_testimonial', [
+        return view('testimonial.trashed', [
             'testimonials' => Testimonial::onlyTrashed()->paginate(10),
         ]);
     }

@@ -1,54 +1,54 @@
 @extends('layouts.backend')
 
 {{-- nav active satatus --}}
-@section('product')
+@section('team')
     active
 @endsection
 
 {{-- title name --}}
 @section('page_title')
-    Product Photos
+    Team
 @endsection
 
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Product Photos for "{{ $product->name }}"</h3>
+            <h3>Team Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.products.index') }}">Product</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Product Photos</li>
+                    <li class="breadcrumb-item active" aria-current="page">Team Page</li>
                 </ol>
             </nav>
         </div>
     </div>
- @if(session()->has('success'))
+    @if(session()->has('success'))
     <div class="alert alert-success d-flex align-items-center" role="alert">
         <i class="ti-check mr-2"></i> {{ session()->get('success') }}
     </div>
-@endif
- @if(session()->has('error'))
+    @endif
+    @if(session()->has('error'))
     <div class="alert alert-danger d-flex align-items-center" role="alert">
         <i class="ti-close mr-2"></i> {{ session()->get('error') }}
     </div>
-@endif
+    @endif
 
     <div class="card text-center border border-primary p-3">
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.products.photos.create', $product->id) }}">Add New Photos</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.teams.create') }}">Add New</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-dark mr-2" href="{{ route('admin.teams.trashed') }}">Recycle Bin</a>
             </li>
         </ul>
     </div>
 
     <div class="card text-center border border-primary">
         <div class="card-header bg-primary">
-            <h5>Product Photo Items</h5>
+            <h5>Team Members</h5>
         </div>
         <div class="card-body border-primary">
             <div class="table-responsive">
@@ -56,18 +56,22 @@
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">No</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Title</th>
                             <th scope="col">Image</th>
                             <th scope="col">Details</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @forelse ($product_photos as $key => $item)
+                    @forelse ($teams as $key => $item)
                         <tr>
-                            <th scope="row">{{ $product_photos->firstItem() + $key }}</th>
+                            <th>{{ $teams->firstItem() + $key }}</th>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->title }}</td>
                             <td>
                                 <figure class="avatar">
-                                    <img src="{{ asset('upload/product_photo') }}/{{ $item->img }}" alt="avatar">
+                                    <img src="{{ asset('upload/team') }}/{{ $item->img }}" alt="avatar">
                                 </figure>
                             </td>
                             <td>
@@ -77,27 +81,28 @@
                                 </ul>
                             </td>
                             <td>
-                                <form action="{{ route('admin.products.photos.destroy', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="ti-trash"></i> Delete
-                                    </button>
-                                </form>
+                                <div class="d-flex justify-content-center">
+                                    <a href="{{ route('admin.teams.edit', $item->id) }}" class="btn btn-info btn-sm mr-2">Edit</a>
+                                    <form action="{{ route('admin.teams.destroy', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-warning btn-sm">Delete</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-danger">No Data to Show</td>
+                            <td colspan="6" class="text-center text-danger">No Data to Show</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
             </div>
-            {{ $product_photos->links() }}
+            {{ $teams->links() }}
         </div>
         <div class="card-footer bg-primary ">
-            <h5>Total Photos: {{ $product_photos->total() }}</h5>
+            <h5>Total Team Members: {{ $teams->total() }}</h5>
         </div>
     </div>
 @endsection

@@ -7,23 +7,22 @@
 
 {{-- title name --}}
 @section('page_title')
-    product
+    Product Recycle Bin
 @endsection
 
 @section('content')
     <div class="page-header">
         <div>
-            <h3>product Page</h3>
+            <h3>Product Recycle Bin</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('product') }}">product</a>
+                        <a href="{{ route('admin.products.index') }}">Product</a>
                     </li>
-
-                    <li class="breadcrumb-item active" aria-current="page">Recyclebin</li>
+                    <li class="breadcrumb-item active" aria-current="page">Recycle Bin</li>
                 </ol>
             </nav>
         </div>
@@ -46,45 +45,22 @@
 @endif
 
     <div class="card text-center border border-primary p-3">
-        <form action="{{ route('product_form_action') }}" method="POST">
-@csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('product') }}">Back product</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.products.index') }}">Back to Products</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $products_count == 0 ? "disabled" : "" }}" href="#">All P. Delete</a>
-            </li>
-            <li class="nav-item">
-                 <button class="nav-link btn btn-secondary mr-1 {{ $products_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2 {{ $products_count == 0 ? "disabled" : "" }}" href="{{ route('product_restore_all') }}">All Restore</a>
-            </li>
-
-            <li class="nav-item">
-                <button class="nav-link btn btn-warning mr-1 {{ $products_count == 0 ? "disabled" : "" }}" type="submit" name="action" value="mark_restore">Mark Restore</button>
-            </li>
-    <!-- fields -->
-
-
         </ul>
-
     </div>
-
-
-
 
     <div class="card text-center border border-primary">
         <div class="card-header bg-primary">
-            <h5>product Item</h5>
+            <h5>Trashed Product Items</h5>
         </div>
         <div class="card-body border-primary">
             <div class="table-responsive">
                 <table class="table table-hover table-bordered">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Mark</th>
                             <th scope="col">No</th>
                             <th scope="col">Name</th>
                             <th scope="col">Price</th>
@@ -96,7 +72,6 @@
                     <tbody>
                     @forelse ($products as $key => $item)
                         <tr>
-                          <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
                             <th>{{ $products->firstItem() + $key }}</th>
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->price }}</td>
@@ -104,95 +79,48 @@
                                 <figure class="avatar">
                                     <img src="{{ asset('upload/product') }}/{{ $item->img }}" alt="avatar">
                                 </figure>
-
                             </td>
-
                             <td>
                                 <ul>
                                     @if ($item->discount != null)
-                                    <li>Discount :
-                                        {{ $item->discount }}%
-                                    </li>
+                                    <li>Discount : {{ $item->discount }}%</li>
                                     @endif
-                                    <li>Subcategory :
-                                        {{ App\Models\Subcategory::find($item->subcategory)->name }}
-                                    </li>
-                                    <li>Category :
-                                        {{ App\Models\Category::find($item->category)->name }}
-                                    </li>
-                                    <li>Quantity :
-                                        {{ $item->quantity }}
-                                    </li>
-
-
+                                    <li>Subcategory : {{ $item->subcategory_info->name ?? 'N/A' }}</li>
+                                    <li>Category : {{ $item->category_info->name ?? 'N/A' }}</li>
+                                    <li>Quantity : {{ $item->quantity }}</li>
                                     @if ($item->notification_quantity != null)
-                                    <li>Notification Quantity :
-                                        {{ $item->notification_quantity }}
-                                    </li>
+                                    <li>Notification Quantity : {{ $item->notification_quantity }}</li>
                                     @endif
-
-                                    <li>Added By :
-                                        {{ App\Models\User::find($item->added_by)->name }}
-                                    </li>
-                                    <li>Active Status :
-                                        @if ($item->action == 1)
-                                            <span class="badge badge-success">Active</span>
-                                        @else
-                                            <span class="badge badge-warning">Deactive</span>
-                                        @endif
-                                    </li>
-
-                                    <li>Created At :
-
-                                        @if ($item->created_at->diffInDays() >= 30)
-                                        <span class="badge badge-dark">
-                                            {{ $item->created_at->format('d M, Y') }}
-                                        </span>
-                                        @elseif ($item->created_at->diffInDays() >= 2)
-                                        <span class="badge badge-info">
-                                            {{ $item->created_at->diffForHumans() }}
-                                        </span>
-                                        @else
-                                            <span class="badge badge-danger">
-                                                {{ $item->created_at->diffForHumans() }}
-                                            </span>
-                                        @endif
-                                        @if ($item->created_at->diffInDays() <= 2)
-                                            <span class="badge badge-primary">new</span>
-                                        @endif
-
-                                    </li>
+                                    <li>Added By : {{ $item->user->name ?? 'N/A' }}</li>
+                                    <li>Deleted At : {{ $item->deleted_at->diffForHumans() }}</li>
                                 </ul>
                             </td>
                             <td>
-                                <div class="dropdown">
-                                    <a href="#" data-toggle="dropdown"
-                                        class="btn btn-floating"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="ti-more-alt"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('product/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">P. Delete</a>
-                                        <a href="{{ url('product/restore') }}/{{ $item->id }}" class="dropdown-item text-primary">Resotor</a>
-                                    </div>
+                                <div class="d-flex justify-content-center">
+                                    <form action="{{ route('admin.products.restore', $item->id) }}" method="POST" class="mr-2">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                    </form>
+                                    <form action="{{ route('admin.products.forceDelete', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete Permanently</button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
                     @empty
-                        <tr colspan="50">
-                            <td colspan="15" class="text-danger">No Data to Show</td>
+                        <tr>
+                            <td colspan="6" class="text-center">No trashed products found.</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
-                </form>
             </div>
             {{ $products->links() }}
         </div>
-
         <div class="card-footer bg-primary ">
-            <h5>Total product: {{ $products_count }}</h5>
+            <h5>Total Trashed Products: {{ $products->total() }}</h5>
         </div>
     </div>
 @endsection

@@ -7,48 +7,38 @@
 
 {{-- title name --}}
 @section('page_title')
-    subcategory Update
+    Subcategory Update
 @endsection
 
 {{-- exta css  --}}
 @section('exta_css')
-
 <!-- Style -->
 <link rel="stylesheet" href="{{ asset('backend/vendors/select2/css/select2.min.css') }}" type="text/css">
-
 @endsection
 
 {{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add subcategory Page</h3>
+            <h3>Update Subcategory Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('subcategory') }}">subcategory</a>
+                        <a href="{{ route('admin.subcategories.index') }}">Subcategory</a>
                     </li>
-
-                    <li class="breadcrumb-item active" aria-current="page">Update subcategory Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Update Subcategory Page</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-
     @if(session()->has('success'))
     <div class="alert alert-success d-flex align-items-center" role="alert">
         <i class="ti-check mr-2"></i> {{ session()->get('success') }}
     </div>
-    @endif
-
-    @if(session()->has('warning'))
-        <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <i class="ti-help mr-2"></i> {{ session()->get('warning') }}
-        </div>
     @endif
     @if(session()->has('error'))
         <div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -56,14 +46,13 @@
         </div>
     @endif
 
-
 <div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
     <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">All Update</div>
+        <div class="card-header bg-primary">Update Subcategory</div>
         <div class="card-body">
-            <form action="{{ route('subcategory_update') }}" method="post">
+            <form action="{{ route('admin.subcategories.update', $item->id) }}" method="post">
                 @csrf
-                <input name="id" type="hidden" value="{{ $item->id }}">
+                @method('PUT')
 
                 {{-- select option  --}}
                 <div class="form-group">
@@ -80,36 +69,25 @@
                 </div>
 
                 <div class="form-group">
-                     <label>New subcategory Name</label>
-                    <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New subcategory Name">
+                     <label>Subcategory Name</label>
+                    <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter Subcategory Name">
                     @error('name')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
-                     @if(session()->has('error_status'))
-                        <small class="text-danger">
-                            {{ session()->get('error_status') }}
-                        </small>
-                    @endif
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
             </form>
         </div>
     </div>
 </div>
 @endsection
 
-
-
 {{-- exta js  --}}
 @section('exta_js')
-
-
     <!-- select -->
     <script src="{{ asset('backend/vendors/select2/js/select2.min.js') }}"></script>
-
     <script>
-
         // select2
         $('.select2-example').select2({
             placeholder: 'Select'

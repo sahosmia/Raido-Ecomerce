@@ -7,7 +7,7 @@
 
 {{-- title name --}}
 @section('page_title')
-    product Add
+    Product Add
 @endsection
 
 {{-- exta css  --}}
@@ -22,28 +22,27 @@
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add product Page</h3>
+            <h3>Add Product Page</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('product') }}">product</a>
+                        <a href="{{ route('admin.products.index') }}">Product</a>
                     </li>
-
-                    <li class="breadcrumb-item active" aria-current="page">Add product Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Product Page</li>
                 </ol>
             </nav>
         </div>
     </div>
 
 
-<div class="col-md-6 col-sm-8 col-lg-5 col-xl-6 m-auto">
+<div class="col-md-8 col-sm-10 col-lg-8 col-xl-8 m-auto">
     <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">product Add++</div>
+        <div class="card-header bg-primary">Product Add++</div>
         <div class="card-body">
-            <form action="{{ route('addproductinsert') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.products.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 {{-- category option  --}}
                 <div class="form-row">
@@ -175,7 +174,7 @@
 
                 $.ajax({
                     type : 'POST',
-                    url : '/addproduct/getsubcategory',
+                    url : '{{ route("admin.products.getSubcategories") }}',
                     data : {id:id},
                     success : function(data){
                         $('#subcategory').html(data);

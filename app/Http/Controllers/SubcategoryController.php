@@ -5,12 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Subcategory;
 use Auth;
-use Carbon\Carbon;
 use App\Http\Requests\SubcategoryStoreRequest;
 use App\Http\Requests\SubcategoryUpdateRequest;
-use Image;
-
-
 use Illuminate\Http\Request;
 
 class SubcategoryController extends Controller
@@ -18,181 +14,71 @@ class SubcategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('checkauth');
     }
 
-    // subcategory page view
     public function index()
     {
         return view('subcategory.subcategory', [
-            'subcategories' => Subcategory::latest()->paginate(10),
-            'subcategories_count' => Subcategory::count(),
+            'subcategories' => Subcategory::with('category_info')->latest()->paginate(10),
         ]);
     }
 
-    // insert page view
-    public function addsubcategory()
+    public function create()
     {
         return view('subcategory.addsubcategory', [
             'categories' => Category::all(),
         ]);
     }
 
-    // insert item
-    public function addsubcategoryinsert(SubcategoryStoreRequest $req)
+    public function store(SubcategoryStoreRequest $request)
     {
-        $name = $req->name;
-        $category = $req->category_id;
-        $added_by = Auth::id();
-        $created_at = Carbon::now();
-
-        Subcategory::insert([
-            "name" => $name,
-            "category" => $category,
-            "added_by" => $added_by,
-            "created_at" => $created_at,
+        Subcategory::create([
+            'name' => $request->name,
+            'category' => $request->category_id,
+            'added_by' => Auth::id(),
         ]);
-        return redirect('subcategory')->with('success', 'You are success to add a new subcategory');
+        return redirect()->route('admin.subcategories.index')->with('success', 'You have successfully added a new subcategory.');
     }
 
-    // recyclebin page view
-    public function recyclebin()
-    {
-        return view('subcategory.recyclebin_subcategory', [
-            'subcategories' => Subcategory::onlyTrashed()->paginate(10),
-            'subcategories_count' => Subcategory::onlyTrashed()->count(),
-        ]);
-    }
-
-    // update view
-    public function update(SubcategoryUpdateRequest $req)
-    {
-        $name = $req->name;
-        $category = $req->category_id;
-        $id = $req->id;
-
-        Subcategory::find($id)->update([
-            "name" => $name,
-            "category" => $category,
-        ]);
-        return back()->with('success', 'You are success to add a new subcategory');
-    }
-
-
-
-    // form_action
-    public function form_action(Request $req)
-    {
-
-        $select_item = $req->check;
-        switch ($req->action) {
-            case "mark_p_delete":
-                foreach ($select_item as $item) {
-                    Subcategory::withTrashed()->find($item)->forceDelete();
-                }
-                return back()->with('error', 'You all selected item permanent delete');
-
-                break;
-            case "mark_s_delete":
-                foreach ($select_item as $item) {
-                    Subcategory::withTrashed()->find($item)->delete();
-                }
-                return back()->with('warning', 'You all selected item soft delete');
-
-                break;
-            case "mark_restore":
-                foreach ($select_item as $item) {
-                    Subcategory::withTrashed()->find($item)->restore();
-                }
-                return back()->with('success', 'You all selected item Restore');
-
-                break;
-        }
-    }
-
-
-
-
-    /* view id page
-.
-.
-.
-.
-.
-.
-.view id page
-.
-.
-.
-.
-view id page
-*/
-
-    // update_subcategory page view
-    public function update_subcategory($id)
+    public function edit(Subcategory $subcategory)
     {
         return view('subcategory.update_subcategory', [
-            'item' => Subcategory::find($id),
+            'item' => $subcategory,
             'categories' => Category::all(),
         ]);
     }
 
-    // soft_delete single
-    public function soft_delete($id)
+    public function update(SubcategoryUpdateRequest $request, Subcategory $subcategory)
     {
-        Subcategory::withTrashed()->find($id)->delete();
-        return back()->with('error', 'You are soft all delete your subcategory');
+        $subcategory->update([
+            'name' => $request->name,
+            'category' => $request->category_id,
+        ]);
+        return redirect()->route('admin.subcategories.index')->with('success', 'You have successfully updated the subcategory.');
     }
 
-    // p_delete single
-    public function p_delete($id)
+    public function destroy(Subcategory $subcategory)
     {
-        Subcategory::withTrashed()->find($id)->forceDelete();
-        return back()->with('error', 'You are soft all delete your subcategory');
+        $subcategory->delete();
+        return back()->with('success', 'Subcategory successfully moved to trash.');
     }
 
-    // restore single
+    public function trashed()
+    {
+        return view('subcategory.recyclebin_subcategory', [
+            'subcategories' => Subcategory::onlyTrashed()->with('category_info')->paginate(10),
+        ]);
+    }
+
     public function restore($id)
     {
-        Subcategory::onlyTrashed()->find($id)->restore();
-        return back()->with('success', 'You are success to restore your subcategory');
+        Subcategory::withTrashed()->find($id)->restore();
+        return back()->with('success', 'You have successfully restored the subcategory.');
     }
 
-    // action active deactive
-    public function action($id)
+    public function forceDelete($id)
     {
-        if (Subcategory::find($id)->action == 1) {
-            Subcategory::find($id)->update([
-                "action" => 2,
-            ]);
-            return back()->with('warning', 'You are success to deactive your subcategory');
-        } else {
-            Subcategory::find($id)->update([
-                "action" => 1,
-            ]);
-            return back()->with('success', 'You are success to active your subcategory');
-        }
-    }
-
-    // soft_delete all
-    public function soft_delete_all()
-    {
-        Subcategory::whereNotNull('id')->delete();
-        // Category::truncate();
-        return back()->with('error', 'You are soft all delete your subcategory');
-    }
-
-    // p_delete all
-    public function p_delete_all()
-    {
-        Subcategory::truncate();
-        return back()->with('error', 'You are permanent all delete your subcategory');
-    }
-
-    // restore all
-    public function restore_all()
-    {
-        Subcategory::onlyTrashed()->restore();
-        return back()->with('success', 'You are success to restore your subcategory');
+        Subcategory::withTrashed()->find($id)->forceDelete();
+        return back()->with('success', 'You have permanently deleted the subcategory.');
     }
 }

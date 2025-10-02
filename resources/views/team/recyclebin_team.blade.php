@@ -1,28 +1,28 @@
 @extends('layouts.backend')
 
 {{-- nav active satatus --}}
-@section('product')
+@section('team')
     active
 @endsection
 
 {{-- title name --}}
 @section('page_title')
-    Product Photos
+    Team Recycle Bin
 @endsection
 
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Product Photos for "{{ $product->name }}"</h3>
+            <h3>Team Recycle Bin</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.products.index') }}">Product</a>
+                        <a href="{{ route('admin.teams.index') }}">Team</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Product Photos</li>
+                    <li class="breadcrumb-item active" aria-current="page">Recycle Bin</li>
                 </ol>
             </nav>
         </div>
@@ -41,14 +41,14 @@
     <div class="card text-center border border-primary p-3">
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.products.photos.create', $product->id) }}">Add New Photos</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.teams.index') }}">Back to Team</a>
             </li>
         </ul>
     </div>
 
     <div class="card text-center border border-primary">
         <div class="card-header bg-primary">
-            <h5>Product Photo Items</h5>
+            <h5>Trashed Team Members</h5>
         </div>
         <div class="card-body border-primary">
             <div class="table-responsive">
@@ -56,48 +56,56 @@
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">No</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Title</th>
                             <th scope="col">Image</th>
                             <th scope="col">Details</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @forelse ($product_photos as $key => $item)
+                    @forelse ($teams as $key => $item)
                         <tr>
-                            <th scope="row">{{ $product_photos->firstItem() + $key }}</th>
+                            <th>{{ $teams->firstItem() + $key }}</th>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->title }}</td>
                             <td>
                                 <figure class="avatar">
-                                    <img src="{{ asset('upload/product_photo') }}/{{ $item->img }}" alt="avatar">
+                                    <img src="{{ asset('upload/team') }}/{{ $item->img }}" alt="avatar">
                                 </figure>
                             </td>
                             <td>
                                 <ul>
                                     <li>Added By : {{ $item->user->name ?? 'N/A' }}</li>
-                                    <li>Created At : {{ $item->created_at->diffForHumans() }}</li>
+                                    <li>Deleted At : {{ $item->deleted_at->diffForHumans() }}</li>
                                 </ul>
                             </td>
                             <td>
-                                <form action="{{ route('admin.products.photos.destroy', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="ti-trash"></i> Delete
-                                    </button>
-                                </form>
+                                <div class="d-flex justify-content-center">
+                                    <form action="{{ route('admin.teams.restore', $item->id) }}" method="POST" class="mr-2">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                                    </form>
+                                    <form action="{{ route('admin.teams.forceDelete', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete Permanently</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-danger">No Data to Show</td>
+                            <td colspan="6" class="text-center">No trashed team members found.</td>
                         </tr>
                     @endforelse
                     </tbody>
                 </table>
             </div>
-            {{ $product_photos->links() }}
+            {{ $teams->links() }}
         </div>
         <div class="card-footer bg-primary ">
-            <h5>Total Photos: {{ $product_photos->total() }}</h5>
+            <h5>Total Trashed Team Members: {{ $teams->total() }}</h5>
         </div>
     </div>
 @endsection

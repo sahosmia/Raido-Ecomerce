@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Product extends Model
 {
@@ -23,6 +24,20 @@ class Product extends Model
         'subcategory',
         'added_by',
     ];
+
+    protected $casts = [
+        'price' => 'float',
+        'quantity' => 'integer',
+        'discount' => 'float',
+        'best_sell' => 'boolean',
+    ];
+
+    protected function img(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('upload/product/' . $value) : 'https://placehold.co/600x400?text=No+Image',
+        );
+    }
 
     public function category_info()
     {

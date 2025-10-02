@@ -16,7 +16,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->string('img', 100)->default('category.jpg');
+            $table->string('img', 100)->nullable();
             $table->integer('action')->default(1);
             $table->integer('added_by');
             $table->softDeletes();

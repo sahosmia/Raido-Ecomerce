@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 class Brand extends Model
 {
     use SoftDeletes;
@@ -15,6 +17,18 @@ class Brand extends Model
         'name',
         'img',
         'action',
-
+        'added_by',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
+
+    protected function img(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset('upload/brand/' . $value) : 'https://placehold.co/600x400?text=No+Image',
+        );
+    }
 }

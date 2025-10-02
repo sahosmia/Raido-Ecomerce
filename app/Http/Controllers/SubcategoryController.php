@@ -2,41 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Subcategory;
-use Auth;
 use App\Http\Requests\SubcategoryStoreRequest;
 use App\Http\Requests\SubcategoryUpdateRequest;
+use App\Models\Subcategory;
+use App\Services\SubcategoryService;
 use Illuminate\Http\Request;
 
 class SubcategoryController extends Controller
 {
-    public function __construct()
+    protected $subcategoryService;
+
+    public function __construct(SubcategoryService $subcategoryService)
     {
         $this->middleware('auth');
+        $this->subcategoryService = $subcategoryService;
     }
 
     public function index()
     {
         return view('subcategory.index', [
-            'subcategories' => Subcategory::with('category_info', 'user')->latest()->paginate(10),
+            'subcategories' => $this->subcategoryService->getAllSubcategories(10),
         ]);
     }
 
     public function create()
     {
         return view('subcategory.create', [
-            'categories' => Category::latest()->get(),
+            'categories' => $this->subcategoryService->getAllCategories(),
         ]);
     }
 
     public function store(SubcategoryStoreRequest $request)
     {
-        $inputs = $request->validated();
-        $inputs['added_by'] = Auth::id();
-        $inputs['category'] = $request->category_id;
-
-        Subcategory::create($inputs);
+        $this->subcategoryService->createSubcategory($request->validated());
         return redirect()->route('admin.subcategories.index')->with('success', 'Successfully added a new subcategory.');
     }
 
@@ -44,41 +42,38 @@ class SubcategoryController extends Controller
     {
         return view('subcategory.edit', [
             'item' => $subcategory,
-            'categories' => Category::latest()->get(),
+            'categories' => $this->subcategoryService->getAllCategories(),
         ]);
     }
 
     public function update(SubcategoryUpdateRequest $request, Subcategory $subcategory)
     {
-        $inputs = $request->validated();
-        $inputs['category'] = $request->category_id;
-
-        $subcategory->update($inputs);
+        $this->subcategoryService->updateSubcategory($subcategory->id, $request->validated());
         return redirect()->route('admin.subcategories.index')->with('success', 'Successfully updated the subcategory.');
     }
 
     public function destroy(Subcategory $subcategory)
     {
-        $subcategory->delete();
+        $this->subcategoryService->deleteSubcategory($subcategory->id);
         return back()->with('success', 'Subcategory successfully moved to trash.');
     }
 
     public function trashed()
     {
         return view('subcategory.trashed', [
-            'subcategories' => Subcategory::onlyTrashed()->with('category_info', 'user')->latest()->paginate(10),
+            'subcategories' => $this->subcategoryService->getTrashedSubcategories(10),
         ]);
     }
 
     public function restore($id)
     {
-        Subcategory::withTrashed()->findOrFail($id)->restore();
+        $this->subcategoryService->restoreSubcategory($id);
         return back()->with('success', 'Successfully restored the subcategory.');
     }
 
     public function forceDelete($id)
     {
-        Subcategory::withTrashed()->findOrFail($id)->forceDelete();
+        $this->subcategoryService->forceDeleteSubcategory($id);
         return back()->with('success', 'Permanently deleted the subcategory.');
     }
 }

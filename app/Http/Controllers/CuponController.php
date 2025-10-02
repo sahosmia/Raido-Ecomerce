@@ -5,20 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CuponStoreRequest;
 use App\Http\Requests\CuponUpdateRequest;
 use App\Models\Cupon;
-use Auth;
+use App\Services\CuponService;
 use Illuminate\Http\Request;
 
 class CuponController extends Controller
 {
-    public function __construct()
+    protected $cuponService;
+
+    public function __construct(CuponService $cuponService)
     {
         $this->middleware('auth');
+        $this->cuponService = $cuponService;
     }
 
     public function index()
     {
         return view('cupon.index', [
-            'cupons' => Cupon::latest()->paginate(10),
+            'cupons' => $this->cuponService->getAllCupons(10),
         ]);
     }
 
@@ -29,14 +32,7 @@ class CuponController extends Controller
 
     public function store(CuponStoreRequest $request)
     {
-        Cupon::create([
-            'name' => $request->name,
-            'code' => $request->code,
-            'discount' => $request->discount,
-            'end_cupon' => $request->date,
-            'added_by' => Auth::id(),
-        ]);
-
+        $this->cuponService->createCupon($request->validated());
         return redirect()->route('admin.cupons.index')->with('success', 'You have successfully added a new cupon.');
     }
 
@@ -49,38 +45,32 @@ class CuponController extends Controller
 
     public function update(CuponUpdateRequest $request, Cupon $cupon)
     {
-        $cupon->update([
-            'name' => $request->name,
-            'code' => $request->code,
-            'discount' => $request->discount,
-            'end_cupon' => $request->date,
-        ]);
-
+        $this->cuponService->updateCupon($cupon->id, $request->validated());
         return redirect()->route('admin.cupons.index')->with('success', 'You have successfully updated the cupon.');
     }
 
     public function destroy(Cupon $cupon)
     {
-        $cupon->delete();
+        $this->cuponService->deleteCupon($cupon->id);
         return back()->with('success', 'Cupon successfully moved to trash.');
     }
 
     public function trashed()
     {
         return view('cupon.trashed', [
-            'cupons' => Cupon::onlyTrashed()->paginate(10),
+            'cupons' => $this->cuponService->getTrashedCupons(10),
         ]);
     }
 
     public function restore($id)
     {
-        Cupon::withTrashed()->find($id)->restore();
+        $this->cuponService->restoreCupon($id);
         return back()->with('success', 'You have successfully restored the cupon.');
     }
 
     public function forceDelete($id)
     {
-        Cupon::withTrashed()->find($id)->forceDelete();
+        $this->cuponService->forceDeleteCupon($id);
         return back()->with('success', 'You have permanently deleted the cupon.');
     }
 }

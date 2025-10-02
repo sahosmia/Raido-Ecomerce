@@ -5,15 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
-use App\Http\Requests\ProductImageUpdateRequest;
 use App\Http\Requests\ProductPhotoInsertRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Product_photo;
 use App\Models\Subcategory;
-use App\Models\Message;
 use Auth;
-use Carbon\Carbon;
 use Image;
 
 class ProductController extends Controller
@@ -21,35 +18,135 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('checkauth');
     }
 
-    // product page view
     public function index()
     {
         return view('product.product', [
-            'products' => Product::latest()->paginate(10),
-            'products_count' => Product::count(),
-            'product_photos' => Product_photo::all(),
-            'product_photos_count' => Product_photo::count(),
+            'products' => Product::with('category_info', 'subcategory_info', 'user', 'photos')->latest()->paginate(10),
         ]);
     }
 
-    // insert page view
-    public function addproduct()
+    public function create()
     {
         return view('product.addproduct', [
             'categories' => Category::all(),
-            'subcategories' => Subcategory::all(),
         ]);
     }
 
-
-
-    public function getsubcategory(Request $req)
+    public function store(ProductStoreRequest $request)
     {
+        $inputs = $request->validated();
+        $inputs['added_by'] = Auth::id();
 
-        $subcategories = Subcategory::where('category', $req->id)->get();
+        $product = Product::create($inputs);
+
+        if ($request->hasFile('img')) {
+            $image = $request->file('img');
+            $filename = $product->id . '.' . $image->getClientOriginalExtension();
+            $location = public_path('upload/product/' . $filename);
+            Image::make($image)->save($location);
+            $product->update(['img' => $filename]);
+        }
+
+        if ($request->hasFile('img_multiple')) {
+            foreach ($request->file('img_multiple') as $product_photo) {
+                $img_extention = $product_photo->getClientOriginalExtension();
+                $img_name = $product->id . "_product_photo_" . rand(1, 9999) . "." . $img_extention;
+                Image::make($product_photo)->save(base_path('public/upload/product_photo/' . $img_name));
+
+                Product_photo::create([
+                    "img" => $img_name,
+                    "product" => $product->id,
+                    "added_by" => Auth::id(),
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.products.index')->with('success', 'You have successfully added a new product.');
+    }
+
+    public function show(Product $product)
+    {
+        return view('product.view_product', [
+            'item' => $product,
+            'product_photos' => $product->photos,
+        ]);
+    }
+
+    public function edit(Product $product)
+    {
+        return view('product.update_product', [
+            'item' => $product,
+            'categories' => Category::all(),
+            'subcategories' => Subcategory::where('category', $product->category)->get(),
+        ]);
+    }
+
+    public function update(ProductUpdateRequest $request, Product $product)
+    {
+        $inputs = $request->validated();
+
+        if ($request->hasFile('img')) {
+            $old_img = $product->img;
+            if ($old_img && file_exists(public_path('upload/product/' . $old_img))) {
+                unlink(public_path('upload/product/' . $old_img));
+            }
+            $image = $request->file('img');
+            $filename = $product->id . '.' . $image->getClientOriginalExtension();
+            $location = public_path('upload/product/' . $filename);
+            Image::make($image)->save($location);
+            $inputs['img'] = $filename;
+        }
+
+        $product->update($inputs);
+
+        return redirect()->route('admin.products.index')->with('success', 'You have successfully updated the product.');
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+        return back()->with('success', 'Product successfully moved to trash.');
+    }
+
+    public function trashed()
+    {
+        return view('product.recyclebin_product', [
+            'products' => Product::onlyTrashed()->with('category_info', 'subcategory_info', 'user')->paginate(10),
+        ]);
+    }
+
+    public function restore($id)
+    {
+        Product::withTrashed()->find($id)->restore();
+        return back()->with('success', 'You have successfully restored the product.');
+    }
+
+    public function forceDelete($id)
+    {
+        $product = Product::withTrashed()->find($id);
+
+        $img = $product->img;
+        if ($img && file_exists(public_path('upload/product/' . $img))) {
+            unlink(public_path('upload/product/' . $img));
+        }
+
+        foreach ($product->photos as $photo) {
+            $photo_img = $photo->img;
+            if ($photo_img && file_exists(public_path('upload/product_photo/' . $photo_img))) {
+                unlink(public_path('upload/product_photo/' . $photo_img));
+            }
+            $photo->delete();
+        }
+
+        $product->forceDelete();
+        return back()->with('success', 'You have permanently deleted the product.');
+    }
+
+    public function getSubcategories(Request $request)
+    {
+        $subcategories = Subcategory::where('category', $request->id)->get();
         $data = "<option value=''>Select</option>";
         foreach ($subcategories as $item) {
             $data .= "<option value='$item->id'>$item->name</option>";
@@ -57,316 +154,44 @@ class ProductController extends Controller
         return $data;
     }
 
-    // insert item
-    public function addproductinsert(ProductStoreRequest $req)
+    public function view_product_photo(Product $product)
     {
-        $name = $req->name;
-        $img = $req->file('img');
-        $img_multiple = $req->file('img_multiple');
-        $price = $req->price;
-        $quantity = $req->quantity;
-        $notification_quantity = $req->notification_quantity;
-        $discount = $req->discount;
-        $category = $req->category;
-        $subcategory = $req->subcategory;
-        $des = $req->des;
-        $added_by = Auth::id();
-        $created_at = Carbon::now();
-
-
-        $id = Product::insertGetId([
-            "name" => $name,
-            "price" => $price,
-            "quantity" => $quantity,
-            "category" => $category,
-            "subcategory" => $subcategory,
-            "des" => $des,
-            "added_by" => $added_by,
-            "created_at" => $created_at,
-        ]);
-
-        $img = $req->file('img');
-        $img_extention = $img->getClientOriginalExtension();
-        $img_name = $id . "product" . rand(1, 9999) . "." . $img_extention;
-        Image::make($img)->save(base_path('public/upload/product/' . $img_name));
-
-        Product::find($id)->update([
-            "img" => $img_name,
-        ]);
-
-        if ($notification_quantity) {
-            Product::find($id)->update([
-                "notification_quantity" => $notification_quantity,
-            ]);
-        }
-
-        if ($discount) {
-            Product::find($id)->update([
-                "discount" => $discount,
-            ]);
-        }
-
-        foreach ($img_multiple as $product_photo) {
-            $product_photo;
-            $img_extention = $product_photo->getClientOriginalExtension();
-            $img_name = $id . "product_photo" . rand(1, 9999) . "." . $img_extention;
-            Image::make($product_photo)->save(base_path('public/upload/product_photo/' . $img_name));
-
-            Product_photo::insert([
-                "img" => $img_name,
-                "product" => $id,
-                "added_by" => $added_by,
-                "created_at" => $created_at,
-            ]);
-        }
-
-        return redirect('product')->with('success', 'You are success to add a new product');
-    }
-
-    // recyclebin page view
-    public function recyclebin()
-    {
-        return view('product.recyclebin_product', [
-            'products' => Product::onlyTrashed()->paginate(10),
-            'products_count' => Product::onlyTrashed()->count(),
-        ]);
-    }
-
-
-    // update_product page view
-    public function update_product($id)
-    {
-
-        return view('product.update_product', [
-            'item' => Product::find($id),
-            'categories' => Category::all(),
-            'subcategories' => Subcategory::all(),
-        ]);
-    }
-    // update view
-    public function update(ProductUpdateRequest $req)
-    {
-        Product::find($req->id)->update($req->validated());
-        return back()->with('success', 'You are success to add a new product');
-    }
-    // img update
-    public function img_update(ProductImageUpdateRequest $req)
-    {
-        $id = $req->id;
-        $old_img = Product::find($id)->img;
-        unlink('upload/product/' . $old_img);
-
-        $img = $req->file('img');
-        $img_extention = $img->getClientOriginalExtension();
-        $img_name = $id . "product" . rand(1, 9999) . "." . $img_extention;
-        Image::make($img)->save(base_path('public/upload/product/' . $img_name));
-
-        Product::find($id)->update([
-            "img" => $img_name,
-        ]);
-        return back()->with('success', 'You are success to add a new product');
-    }
-
-
-    // form_action
-    public function form_action(Request $req)
-    {
-
-        $select_item = $req->check;
-        switch ($req->action) {
-            case "mark_p_delete":
-                foreach ($select_item as $item) {
-                    $img = Product::withTrashed()->find($item)->img;
-                    unlink('upload/product/' . $img);
-                    Product::withTrashed()->find($item)->forceDelete();
-                }
-                return back()->with('error', 'You all selected item permanent delete');
-
-                break;
-            case "mark_s_delete":
-                foreach ($select_item as $item) {
-                    Product::withTrashed()->find($item)->delete();
-                }
-                return back()->with('warning', 'You all selected item soft delete');
-
-                break;
-            case "mark_restore":
-                foreach ($select_item as $item) {
-                    Product::withTrashed()->find($item)->restore();
-                }
-                return back()->with('success', 'You all selected item Restore');
-
-                break;
-        }
-    }
-
-
-    // product view
-
-    public function view_product($id)
-    {
-        return view('product.view_product', [
-            'item' => Product::find($id),
-            'product_photos' => Product_photo::where('product', $id)->get(),
-        ]);
-    }
-
-
-
-
-
-    // soft_delete single
-    public function soft_delete($id)
-    {
-        Product::withTrashed()->find($id)->delete();
-        return back()->with('error', 'You are soft all delete your product');
-    }
-
-    // p_delete single
-    public function p_delete($id)
-    {
-        $img = Product::withTrashed()->find($id)->img;
-        unlink('upload/product/' . $img);
-        Product::withTrashed()->find($id)->forceDelete();
-        return back()->with('error', 'You are soft all delete your product');
-    }
-
-    // restore single
-    public function restore($id)
-    {
-        Product::onlyTrashed()->find($id)->restore();
-        return back()->with('success', 'You are success to restore your product');
-    }
-
-    // action active deactive
-    public function action($id)
-    {
-        if (Product::find($id)->action == 1) {
-            Product::find($id)->update([
-                "action" => 2,
-            ]);
-            return back()->with('warning', 'You are success to deactive your product');
-        } else {
-            Product::find($id)->update([
-                "action" => 1,
-            ]);
-            return back()->with('success', 'You are success to active your product');
-        }
-    }
-
-    // soft_delete all
-    public function soft_delete_all()
-    {
-        Product::whereNotNull('id')->delete();
-        // Category::truncate();
-        return back()->with('error', 'You are soft all delete your product');
-    }
-
-    // p_delete all
-    public function p_delete_all()
-    {
-        $items = Product::withTrashed()->get();
-        foreach ($items as $item) {
-            unlink('upload/product/' . $item->img);
-        }
-        Product::truncate();
-        return back()->with('error', 'You are permanent all delete your product');
-    }
-
-    // restore all
-    public function restore_all()
-    {
-        Product::onlyTrashed()->restore();
-        return back()->with('success', 'You are success to restore your product');
-    }
-
-
-
-
-
-
-    // product photo view
-    public function view_product_photo($id)
-    {
-
         return view('product.view_product_photo', [
-            'id' => $id,
-            'product_photos' => Product_photo::where('product', $id)->paginate(10),
-            'product_photos_count' => Product_photo::where('product', $id)->count(),
+            'product' => $product,
+            'product_photos' => $product->photos()->paginate(10),
         ]);
     }
 
-    // action_product_photo active deactive
-    public function action_product_photo($id)
-    {
-        if (Product_photo::find($id)->action == 1) {
-            Product_photo::find($id)->update([
-                "action" => 2,
-            ]);
-            return back()->with('warning', 'You are success to deactive your product');
-        } else {
-            Product_photo::find($id)->update([
-                "action" => 1,
-            ]);
-            return back()->with('success', 'You are success to active your product');
-        }
-    }
-
-
-    // delete_product_photo single
-    public function delete_product_photo($id)
-    {
-        $img = Product_photo::find($id)->img;
-        unlink('upload/product_photo/' . $img);
-        Product_photo::find($id)->forceDelete();
-        return back()->with('error', 'You are soft all delete your product');
-    }
-
-    // p_delete all
-    public function product_photo_delete_all()
-    {
-        $items = Product_photo::all();
-        foreach ($items as $item) {
-            unlink('upload/product_photo/' . $item->img);
-        }
-        Product_photo::truncate();
-        return back()->with('error', 'You are permanent all delete your product');
-    }
-
-
-    // addproductphoto page view
-    public function addproductphoto($id)
+    public function addproductphoto(Product $product)
     {
         return view('product.addproductphoto', [
-            'id' => $id,
+            'product' => $product,
         ]);
     }
 
-
-    // insert item
-    public function addproductphotoinsert(ProductPhotoInsertRequest $req)
+    public function addproductphotoinsert(ProductPhotoInsertRequest $request, Product $product)
     {
-        $id = $req->product_id;
-        $img_multiple = $req->file('img_multiple');
-        $added_by = Auth::id();
-        $created_at = Carbon::now();
-
-
-
-        foreach ($img_multiple as $product_photo) {
-            $product_photo;
+        foreach ($request->file('img_multiple') as $product_photo) {
             $img_extention = $product_photo->getClientOriginalExtension();
-            $img_name = $id . "product_photo" . rand(1, 9999) . "." . $img_extention;
+            $img_name = $product->id . "_product_photo_" . rand(1, 9999) . "." . $img_extention;
             Image::make($product_photo)->save(base_path('public/upload/product_photo/' . $img_name));
 
-            Product_photo::insert([
+            Product_photo::create([
                 "img" => $img_name,
-                "product" => $id,
-                "added_by" => $added_by,
-                "created_at" => $created_at,
-
+                "product" => $product->id,
+                "added_by" => Auth::id(),
             ]);
         }
-        return redirect('product')->with('success', 'You are success to add a new product');
+        return redirect()->route('admin.products.photos.index', $product->id)->with('success', 'You have successfully added new photos.');
+    }
+
+    public function delete_product_photo(Product_photo $photo)
+    {
+        $img = $photo->img;
+        if ($img && file_exists(public_path('upload/product_photo/' . $img))) {
+            unlink(public_path('upload/product_photo/' . $img));
+        }
+        $photo->delete();
+        return back()->with('success', 'You have deleted the product photo.');
     }
 }

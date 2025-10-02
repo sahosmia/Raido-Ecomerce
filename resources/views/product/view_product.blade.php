@@ -29,10 +29,10 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('product') }}">product</a>
+                        <a href="{{ route('admin.products.index') }}">Product</a>
                     </li>
 
-                    <li class="breadcrumb-item active" aria-current="page">Update product Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">View Product</li>
                 </ol>
             </nav>
         </div>

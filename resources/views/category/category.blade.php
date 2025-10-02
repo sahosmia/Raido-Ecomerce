@@ -41,30 +41,14 @@
 @endif
 
     <div class="card text-center border border-primary p-3">
-        <form action="{{ route('category_form_action') }}" method="POST">
-            @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
                 <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.categories.create') }}">Add New</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-dark mr-2" href="{{ route('recyclebin_category') }}">Recycle Bin</a>
+                <a class="nav-link btn btn-dark mr-2" href="{{ route('admin.categories.trashed') }}">Recycle Bin</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-danger mr-2" href="{{ route('category_p_delete_all') }}">All P. Delete</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-info mr-2" href="{{ route('category_soft_delete_all') }}">All S. Delete</a>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link btn btn-secondary mr-1" type="submit" name="action" value="mark_p_delete">Mark P. Delete</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link btn btn-warning mr-1" type="submit" name="action" value="mark_s_delete">Mark S. Delete</button>
-            </li>
-
         </ul>
-
     </div>
 
 
@@ -77,7 +61,6 @@
                 <table class="table table-hover table-bordered">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">Mark</th>
                             <th scope="col">No</th>
                             <th scope="col">Name</th>
                             <th scope="col">Category Image</th>
@@ -88,7 +71,6 @@
                     <tbody>
                     @foreach ($categories as $key => $item)
                         <tr>
-                            <th scope="row"><input type="checkbox" name="check[]" value="{{ $item->id }}"></th>
                             <th>{{ $categories->firstItem() + $key }}</th>
                             <td>{{ $item->name }}</td>
                             <td>
@@ -100,18 +82,9 @@
                                 <ul>
                                     <li>Added By :
                                         @php
-                                        echo App\Models\User::find($item->added_by)->name;
-
+                                        if($item->added_by) echo App\Models\User::find($item->added_by)->name;
                                         @endphp
                                     </li>
-                                    <li>Active Status :
-                                        @if ($item->action == 1)
-                                            <span class="badge badge-success">Active</span>
-                                        @else
-                                            <span class="badge badge-warning">Deactive</span>
-                                        @endif
-                                    </li>
-
                                     <li>Created At :
 
                                         @if ($item->created_at->diffInDays() >= 30)
@@ -135,36 +108,25 @@
                                 </ul>
                             </td>
                             <td>
-                                <div class="dropdown">
-                                    <a href="#" data-toggle="dropdown"
-                                        class="btn btn-floating"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="ti-more-alt"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="{{ route('admin.categories.edit', $item->id) }}" class="dropdown-item text-info">Update</a>
-                                        <a href="{{ url('category/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
-                                        <a href="{{ url('category/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
-                                        @if ($item->action == 1)
-                                        <a href="{{ url('category/action') }}/{{ $item->id }}" class="dropdown-item text-primary">Dactive</a>
-                                        @else
-
-                                        <a href="{{ url('category/action') }}/{{ $item->id }}" class="dropdown-item text-success">Active</a>
-                                        @endif
-                                    </div>
+                                <div class="d-flex justify-content-center">
+                                    <a href="{{ route('admin.categories.edit', $item->id) }}" class="btn btn-info btn-sm mr-2">Edit</a>
+                                    <form action="{{ route('admin.categories.destroy', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-warning btn-sm">Delete</button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
-            </form>
             </div>
             {{ $categories->links() }}
         </div>
 
         <div class="card-footer bg-primary ">
-            <h5>Total Catagory: {{ $categories->count()}}</h5>
+            <h5>Total Catagory: {{ $categories->total() }}</h5>
         </div>
     </div>
 @endsection

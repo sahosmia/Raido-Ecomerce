@@ -8,8 +8,6 @@ use Carbon\Carbon;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use Image;
-
-
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -17,7 +15,6 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('checkauth');
     }
 
     public function index()
@@ -63,14 +60,16 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function update(CategoryUpdateRequest $request,$id)
+    public function update(CategoryUpdateRequest $request, $id)
     {
         $inputs = $request->only('name');
 
         if($request->hasFile('img'))
         {
             $old_img = Category::find($id)->img;
-            unlink('upload/category/' . $old_img);
+            if ($old_img && file_exists(public_path('upload/category/' . $old_img))) {
+                unlink(public_path('upload/category/' . $old_img));
+            }
 
             $image = $request->file('img');
             $filename = time().'.'.$image->getClientOriginalExtension();
@@ -83,10 +82,13 @@ class CategoryController extends Controller
         return back()->with('success', 'You are success to update your category item.');
     }
 
+    public function destroy($id)
+    {
+        Category::find($id)->delete(); // Soft delete
+        return back()->with('success', 'Category successfully moved to trash.');
+    }
 
-
-    // recyclebin page view
-    public function recyclebin()
+    public function trashed()
     {
         return view('category.recyclebin_category', [
             'categories' => Category::onlyTrashed()->paginate(10),
@@ -94,126 +96,20 @@ class CategoryController extends Controller
         ]);
     }
 
-    // update view
-
-
-
-
-    // form_action
-    public function form_action(Request $req)
-    {
-
-        $select_item = $req->check;
-        switch ($req->action) {
-            case "mark_p_delete":
-                foreach ($select_item as $item) {
-                    $img = Category::withTrashed()->find($item)->img;
-                    unlink('upload/category/' . $img);
-                    Category::withTrashed()->find($item)->forceDelete();
-                }
-                return back()->with('error', 'You all selected item permanent delete');
-
-                break;
-            case "mark_s_delete":
-                foreach ($select_item as $item) {
-                    Category::withTrashed()->find($item)->delete();
-                }
-                return back()->with('warning', 'You all selected item soft delete');
-
-                break;
-            case "mark_restore":
-                foreach ($select_item as $item) {
-                    Category::withTrashed()->find($item)->restore();
-                }
-                return back()->with('success', 'You all selected item Restore');
-
-                break;
-        }
-    }
-
-
-
-
-    /* view id page
-.
-.
-.
-.
-.
-.
-.view id page
-.
-.
-.
-.
-view id page
-*/
-
-
-
-    // soft_delete single
-    public function soft_delete($id)
-    {
-        Category::withTrashed()->find($id)->delete();
-        return back()->with('error', 'You are soft all delete your category');
-    }
-
-    // p_delete single
-    public function p_delete($id)
-    {
-        // die();
-        $img = Category::withTrashed()->find($id)->img;
-        unlink('upload/category/' . $img);
-        Category::withTrashed()->find($id)->forceDelete();
-        return back()->with('error', 'You are soft all delete your category');
-    }
-
-    // restore single
     public function restore($id)
     {
-        Category::onlyTrashed()->find($id)->restore();
-        return back()->with('success', 'You are success to restore your category');
+        Category::withTrashed()->find($id)->restore();
+        return back()->with('success', 'You have successfully restored the category.');
     }
 
-    // action active deactive
-    public function action($id)
+    public function forceDelete($id)
     {
-        if (Category::find($id)->action == 1) {
-            Category::find($id)->update([
-                "action" => 2,
-            ]);
-            return back()->with('warning', 'You are success to deactive your category');
-        } else {
-            Category::find($id)->update([
-                "action" => 1,
-            ]);
-            return back()->with('success', 'You are success to active your category');
+        $category = Category::withTrashed()->find($id);
+        $img = $category->img;
+        if ($img && file_exists(public_path('upload/category/' . $img))) {
+            unlink(public_path('upload/category/' . $img));
         }
-    }
-
-    // soft_delete all
-    public function soft_delete_all()
-    {
-        Category::whereNotNull('id')->delete();
-        // Category::truncate();
-        return back()->with('error', 'You are soft all delete your category');
-    }
-
-    // p_delete all
-    public function p_delete_all()
-    {
-        $items = Category::withTrashed()->get();
-        foreach ($items as $item) {
-            unlink('upload/category/' . $item->img);
-        }
-        Category::truncate();
-        return back()->with('error', 'You are permanent all delete your category');
-    }
-
-    // restore all
-    public function restore_all()
-    {
-        Category::onlyTrashed()->restore();
-        return back()->with('success', 'You are success to restore your category');
+        $category->forceDelete();
+        return back()->with('success', 'You have permanently deleted the category.');
     }
 }

@@ -12,6 +12,7 @@ use App\Models\Product_photo;
 use App\Models\Subcategory;
 use Auth;
 use Image;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -30,7 +31,7 @@ class ProductController extends Controller
     public function create()
     {
         return view('product.create', [
-            'categories' => Category::all(),
+            'categories' => Category::latest()->get(),
         ]);
     }
 
@@ -50,17 +51,21 @@ class ProductController extends Controller
         }
 
         if ($request->hasFile('img_multiple')) {
+            $photos = [];
             foreach ($request->file('img_multiple') as $product_photo) {
                 $img_extention = $product_photo->getClientOriginalExtension();
                 $img_name = $product->id . "_product_photo_" . rand(1, 9999) . "." . $img_extention;
-                Image::make($product_photo)->save(base_path('public/upload/product_photo/' . $img_name));
+                Image::make($product_photo)->save(public_path('upload/product_photo/' . $img_name));
 
-                Product_photo::create([
+                $photos[] = [
                     "img" => $img_name,
                     "product" => $product->id,
                     "added_by" => Auth::id(),
-                ]);
+                    "created_at" => now(),
+                    "updated_at" => now(),
+                ];
             }
+            Product_photo::insert($photos);
         }
 
         return redirect()->route('admin.products.index')->with('success', 'You have successfully added a new product.');
@@ -68,6 +73,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->load('photos');
         return view('product.show', [
             'item' => $product,
             'product_photos' => $product->photos,
@@ -78,7 +84,7 @@ class ProductController extends Controller
     {
         return view('product.edit', [
             'item' => $product,
-            'categories' => Category::all(),
+            'categories' => Category::latest()->get(),
             'subcategories' => Subcategory::where('category', $product->category)->get(),
         ]);
     }
@@ -88,9 +94,9 @@ class ProductController extends Controller
         $inputs = $request->validated();
 
         if ($request->hasFile('img')) {
-            $old_img = $product->img;
-            if ($old_img && file_exists(public_path('upload/product/' . $old_img))) {
-                unlink(public_path('upload/product/' . $old_img));
+            $old_img_path = public_path('upload/product/' . $product->img);
+            if ($product->img && File::exists($old_img_path)) {
+                File::delete($old_img_path);
             }
             $image = $request->file('img');
             $filename = $product->id . '.' . $image->getClientOriginalExtension();
@@ -113,32 +119,32 @@ class ProductController extends Controller
     public function trashed()
     {
         return view('product.trashed', [
-            'products' => Product::onlyTrashed()->with('category_info', 'subcategory_info', 'user')->paginate(10),
+            'products' => Product::onlyTrashed()->with('category_info', 'subcategory_info', 'user')->latest()->paginate(10),
         ]);
     }
 
     public function restore($id)
     {
-        Product::withTrashed()->find($id)->restore();
+        Product::withTrashed()->findOrFail($id)->restore();
         return back()->with('success', 'You have successfully restored the product.');
     }
 
     public function forceDelete($id)
     {
-        $product = Product::withTrashed()->find($id);
+        $product = Product::withTrashed()->with('photos')->findOrFail($id);
 
-        $img = $product->img;
-        if ($img && file_exists(public_path('upload/product/' . $img))) {
-            unlink(public_path('upload/product/' . $img));
+        $img_path = public_path('upload/product/' . $product->img);
+        if ($product->img && File::exists($img_path)) {
+            File::delete($img_path);
         }
 
         foreach ($product->photos as $photo) {
-            $photo_img = $photo->img;
-            if ($photo_img && file_exists(public_path('upload/product_photo/' . $photo_img))) {
-                unlink(public_path('upload/product_photo/' . $photo_img));
+            $photo_img_path = public_path('upload/product_photo/' . $photo->img);
+            if ($photo->img && File::exists($photo_img_path)) {
+                File::delete($photo_img_path);
             }
-            $photo->delete();
         }
+        $product->photos()->delete();
 
         $product->forceDelete();
         return back()->with('success', 'You have permanently deleted the product.');
@@ -147,11 +153,7 @@ class ProductController extends Controller
     public function getSubcategories(Request $request)
     {
         $subcategories = Subcategory::where('category', $request->id)->get();
-        $data = "<option value=''>Select</option>";
-        foreach ($subcategories as $item) {
-            $data .= "<option value='$item->id'>$item->name</option>";
-        }
-        return $data;
+        return response()->json($subcategories);
     }
 
     public function view_product_photo(Product $product)
@@ -171,25 +173,29 @@ class ProductController extends Controller
 
     public function addproductphotoinsert(ProductPhotoInsertRequest $request, Product $product)
     {
+        $photos = [];
         foreach ($request->file('img_multiple') as $product_photo) {
             $img_extention = $product_photo->getClientOriginalExtension();
             $img_name = $product->id . "_product_photo_" . rand(1, 9999) . "." . $img_extention;
-            Image::make($product_photo)->save(base_path('public/upload/product_photo/' . $img_name));
+            Image::make($product_photo)->save(public_path('upload/product_photo/' . $img_name));
 
-            Product_photo::create([
+            $photos[] = [
                 "img" => $img_name,
                 "product" => $product->id,
                 "added_by" => Auth::id(),
-            ]);
+                "created_at" => now(),
+                "updated_at" => now(),
+            ];
         }
+        Product_photo::insert($photos);
         return redirect()->route('admin.products.photos.index', $product->id)->with('success', 'You have successfully added new photos.');
     }
 
     public function delete_product_photo(Product_photo $photo)
     {
-        $img = $photo->img;
-        if ($img && file_exists(public_path('upload/product_photo/' . $img))) {
-            unlink(public_path('upload/product_photo/' . $img));
+        $img_path = public_path('upload/product_photo/' . $photo->img);
+        if ($photo->img && File::exists($img_path)) {
+            File::delete($img_path);
         }
         $photo->delete();
         return back()->with('success', 'You have deleted the product photo.');

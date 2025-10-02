@@ -8,6 +8,7 @@ use App\Models\Brand;
 use Auth;
 use Illuminate\Http\Request;
 use Image;
+use Illuminate\Support\Facades\File;
 
 class BrandController extends Controller
 {
@@ -19,7 +20,7 @@ class BrandController extends Controller
     public function index()
     {
         return view('brand.index', [
-            'brands' => Brand::latest()->paginate(10),
+            'brands' => Brand::with('user')->latest()->paginate(10),
         ]);
     }
 
@@ -58,9 +59,9 @@ class BrandController extends Controller
         $inputs = $request->validated();
 
         if ($request->hasFile('img')) {
-            $old_img = $brand->img;
-            if ($old_img && file_exists(public_path('upload/brand/' . $old_img))) {
-                unlink(public_path('upload/brand/' . $old_img));
+            $old_img_path = public_path('upload/brand/' . $brand->img);
+            if ($brand->img && File::exists($old_img_path)) {
+                File::delete($old_img_path);
             }
             $image = $request->file('img');
             $filename = $brand->id . '.' . $image->getClientOriginalExtension();
@@ -83,23 +84,23 @@ class BrandController extends Controller
     public function trashed()
     {
         return view('brand.trashed', [
-            'brands' => Brand::onlyTrashed()->paginate(10),
+            'brands' => Brand::onlyTrashed()->with('user')->latest()->paginate(10),
         ]);
     }
 
     public function restore($id)
     {
-        Brand::withTrashed()->find($id)->restore();
+        Brand::withTrashed()->findOrFail($id)->restore();
         return back()->with('success', 'You have successfully restored the brand.');
     }
 
     public function forceDelete($id)
     {
-        $brand = Brand::withTrashed()->find($id);
+        $brand = Brand::withTrashed()->findOrFail($id);
 
-        $img = $brand->img;
-        if ($img && file_exists(public_path('upload/brand/' . $img))) {
-            unlink(public_path('upload/brand/' . $img));
+        $img_path = public_path('upload/brand/' . $brand->img);
+        if ($brand->img && File::exists($img_path)) {
+            File::delete($img_path);
         }
 
         $brand->forceDelete();

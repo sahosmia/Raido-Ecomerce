@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Cupon;
@@ -17,105 +16,85 @@ use Carbon\Carbon;
 use Cookie;
 use Auth;
 
-
-
-
-
-
-
 class OrderController extends Controller
 {
-    public function order_submit(Request $req)
+    public function order_submit(Request $request)
     {
-        $cupon = $req->cupon;
-
-        if (Cupon::where('code', $cupon)->exists()) {
-            $cupon = Cupon::where('code', $cupon)->first()->id;
-        } else {
-            $cupon = 0;
-        }
-
+        $cupon = Cupon::where('code', $request->cupon)->first();
         $cookie = Cookie::get('cart');
-        $name = $req->name;
-        $email = $req->email;
-        $total = $req->total;
-        $division = $req->division;
-        $district = $req->district;
-        $address = $req->address;
-        $zip = $req->zip;
-        $phone = $req->phone;
-        $payment_method = $req->payment_method;
 
-
-        if ($payment_method == 1) {
-
-            Order_billing_detail::insert([
-                'name' => $name,
-                'email' => $email,
-                'division' => $division,
-                'district' => $district,
-                'address' => $address,
-                'zip_code' => $zip,
-                'phone' => $phone,
-                'cookie' => $cookie,
-            ]);
-
-            Order_detail::insert([
-                'payment_method' => $payment_method,
-                'user_id' => Auth::id(),
-                'total' => $total,
-                'cupon_id' => $cupon,
-                'cookie' => $cookie,
-                'created_at' => Carbon::now(),
-            ]);
-            $cart_item = Cart::where('cookie', Cookie::get('cart'))->get();
-            foreach ($cart_item as $item) {
-                Order::insert([
-                    'product_id' => $item->product,
-                    'quantity' => $item->quantity,
-                    'cookie' => $item->cookie,
+        if ($request->payment_method == 1) { // Cash on delivery
+            DB::transaction(function () use ($request, $cookie, $cupon) {
+                Order_billing_detail::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'division' => $request->division,
+                    'district' => $request->district,
+                    'address' => $request->address,
+                    'zip_code' => $request->zip,
+                    'phone' => $request->phone,
+                    'cookie' => $cookie,
                 ]);
-                Cart::find($item->id)->forceDelete();
-            }
+
+                Order_detail::create([
+                    'payment_method' => $request->payment_method,
+                    'user_id' => Auth::id(),
+                    'total' => $request->total,
+                    'cupon_id' => $cupon->id ?? null,
+                    'cookie' => $cookie,
+                ]);
+
+                $cart_items = Cart::where('cookie', $cookie)->get();
+                $orders = [];
+                foreach ($cart_items as $item) {
+                    $orders[] = [
+                        'product_id' => $item->product,
+                        'quantity' => $item->quantity,
+                        'cookie' => $item->cookie,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+                Order::insert($orders);
+
+                Cart::where('cookie', $cookie)->forceDelete();
+            });
+
             Cookie::queue(Cookie::forget('cart'));
-            echo "done";
-        } else {
-
-
-            $all_data = array(
-                "name" => $name,
-                "email" => $email,
-                "division" => $division,
-                "district" => $district,
-                "address" => $address,
-                "zip" => $zip,
-                "phone" => $phone,
-                "payment_method" => $payment_method,
+            return response()->json(['status' => 'success', 'message' => 'Order placed successfully.']);
+        } else { // Online payment
+            $all_data = [
+                "name" => $request->name,
+                "email" => $request->email,
+                "division" => $request->division,
+                "district" => $request->district,
+                "address" => $request->address,
+                "zip" => $request->zip,
+                "phone" => $request->phone,
+                "payment_method" => $request->payment_method,
                 "cookie" => $cookie,
-                "cupon" => $cupon,
-            );
+                "cupon" => $cupon->id ?? null,
+            ];
 
-            session([
-                'all_data' => $all_data
-            ]);
+            session(['all_data' => $all_data]);
             return redirect('/pay');
         }
     }
+
     public function index()
     {
         return view('frontend.order');
     }
 
-
     #order_backend
     public function order_backend()
     {
-        // echo "ho";
-        return view('order.order', [
-            'order_details' => Order_detail::latest()->paginate(10),
-            'order_details_count' => Order_detail::count(),
-            'orders' => Order::all(),
+        $order_details = Order_detail::with('user', 'cupon', 'orders.product')
+            ->latest()
+            ->paginate(10);
 
+        return view('order.order', [
+            'order_details' => $order_details,
         ]);
     }
 }

@@ -7,127 +7,100 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\Cupon;
 use App\Models\Product;
-use Carbon\Carbon;
-use Cookie;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cookie;
 
 class CartController extends Controller
 {
-    public function cart($coupon = "")
+    public function cart($coupon_code = "")
     {
-        if (Cart::where('cookie', Cookie::get('cart'))->exists()) {
-
-            if ($coupon == "") {
-                $discount = 0;
-            } else {
-                if (Cupon::where('code', $coupon)->exists()) {
-                    $discount = Cupon::where('code', $coupon)->first()->discount;
-                } else {
-                    $discount = 0;
-                    back()->with('error', 'this is not valid coupon');
-                }
-            }
-        } else {
-            return view('include.frontend.login_message_page', [
-                'message' => 'checkout_message',
-            ]);
+        $cookie_name = Cookie::get('cart');
+        if (!$cookie_name) {
+            return view('frontend.cart', ['cart_items' => collect()]);
         }
 
+        $cart_items = Cart::with('product')->where('cookie', $cookie_name)->get();
 
-        // die();
+        if ($cart_items->isEmpty()) {
+            return view('frontend.cart', ['cart_items' => collect()]);
+        }
 
-        return view('frontend.cart', [
-            'coupon' => $coupon,
-            'discount' => $discount,
-            'cart_items' => Cart::where('cookie', Cookie::get('cart'))->get(),
-        ]);
+        $discount = 0;
+        if ($coupon_code) {
+            $coupon = Cupon::where('code', $coupon_code)->first();
+            if ($coupon) {
+                $discount = $coupon->discount;
+            } else {
+                return back()->with('error', 'Invalid coupon code.');
+            }
+        }
+
+        return view('frontend.cart', compact('cart_items', 'discount', 'coupon_code'));
     }
-    // single item add cart
+
     public function cartadd($id)
     {
-        if (Auth::check()) {
-            if (Product::find($id)->quantity == 0) {
-                return back()->with('error', 'this item is out of stok');
-            } else {
-                if (Cookie::get('cart')) {
-                    $cookie_name = Cookie::get('cart');
-                } else {
-                    $cookie_name = Str::random(5) . time();
-                    Cookie::queue(Cookie::make('cart', $cookie_name, 7200));
-                }
-                if (Cart::where('cookie', $cookie_name)->where('product', $id)->exists()) {
-                    Cart::where('cookie', $cookie_name)->where('product', $id)->increment('quantity', 1);
-                } else {
-                    Cart::insert([
-                        "cookie" => $cookie_name,
-                        "product" => $id,
-                        "quantity" => 1,
-                        "created_at" => Carbon::now(),
-                    ]);
-                }
-                return back()->with('success_with_btn', 'you are success');
-            }
-        } else {
-            return view('include.frontend.login_message_page', [
-                'message' => 'login first',
-            ]);
+        if (!Auth::check()) {
+            return view('include.frontend.login_message_page', ['message' => 'Please login to add items to your cart.']);
         }
+
+        $product = Product::findOrFail($id);
+        if ($product->quantity == 0) {
+            return back()->with('error', 'This item is out of stock.');
+        }
+
+        $cookie_name = Cookie::get('cart') ?? Str::random(5) . time();
+        Cookie::queue(Cookie::make('cart', $cookie_name, 7200));
+
+        $cart = Cart::firstOrNew(['cookie' => $cookie_name, 'product' => $id]);
+        $cart->quantity += 1;
+        $cart->save();
+
+        return back()->with('success_with_btn', 'Product added to cart successfully.');
     }
 
-
-
-
-
-    // multiple cart item add
-    public function cartaddmultiple(Request $req)
+    public function cartaddmultiple(Request $request)
     {
-        if (Auth::check()) {
-            $id = $req->id;
-            $quantity = $req->quantity;
-            if (Product::find($id)->quantity == 0) {
-                return back()->with('error', 'this item is out of stok');
-            } else {
-
-
-                if (Cookie::get('cart')) {
-                    $cookie_name = Cookie::get('cart');
-                } else {
-                    $cookie_name = Str::random(5) . time();
-                    Cookie::queue(Cookie::make('cart', $cookie_name, 7200));
-                }
-
-                if (Cart::where('cookie', $cookie_name)->where('product', $id)->exists()) {
-                    Cart::where('cookie', $cookie_name)->where('product', $id)->increment('quantity', $quantity);
-                } else {
-                    Cart::insert([
-                        "cookie" => $cookie_name,
-                        "product" => $id,
-                        "quantity" => $quantity,
-                        "created_at" => Carbon::now(),
-                    ]);
-                }
-                return back()->with('success_with_btn', 'you are success');
-            }
-        } else {
-            echo "return message page";
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
         }
+
+        $product = Product::findOrFail($request->id);
+        if ($product->quantity < $request->quantity) {
+            return back()->with('error', 'Not enough items in stock.');
+        }
+
+        $cookie_name = Cookie::get('cart') ?? Str::random(5) . time();
+        Cookie::queue(Cookie::make('cart', $cookie_name, 7200));
+
+        $cart = Cart::firstOrNew(['cookie' => $cookie_name, 'product' => $request->id]);
+        $cart->quantity += $request->quantity;
+        $cart->save();
+
+        return back()->with('success_with_btn', 'Products added to cart successfully.');
     }
 
-    // cart item delete
     public function cartdelete($id)
     {
-        Cart::where('product', $id)->forceDelete();
-        return back()->with('success', 'You are success');
+        $cart_item = Cart::where('id', $id)->where('cookie', Cookie::get('cart'))->firstOrFail();
+        $cart_item->forceDelete();
+        return back()->with('success', 'Item removed from cart.');
     }
-    // cart item delete
-    public function update_cart(Request $req)
+
+    public function update_cart(Request $request)
     {
-        foreach ($req->quantity as $id => $item_quantity) {
-            Cart::find($id)->update([
-                'quantity' => $item_quantity,
-            ]);
+        $cookie_name = Cookie::get('cart');
+        if (!$cookie_name) {
+            return back()->with('error', 'Your cart has expired.');
         }
 
-        return back()->with('success', 'You are success');
+        foreach ($request->quantity as $cart_id => $quantity) {
+            $cart_item = Cart::where('id', $cart_id)->where('cookie', $cookie_name)->first();
+            if ($cart_item) {
+                $cart_item->update(['quantity' => $quantity]);
+            }
+        }
+
+        return back()->with('success', 'Cart updated successfully.');
     }
 }

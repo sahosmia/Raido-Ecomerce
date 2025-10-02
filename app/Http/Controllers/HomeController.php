@@ -24,9 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('backend.home', [
-            'messages' => Message::latest()->get(),
-            'message_count' => Message::where('action', 1)->count(),
-        ]);
+        $messages = Message::latest()->get();
+        $message_count = $messages->where('action', 1)->count();
+
+        return view('backend.home', compact('messages', 'message_count'));
     }
 }

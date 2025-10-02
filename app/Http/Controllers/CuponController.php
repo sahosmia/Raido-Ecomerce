@@ -17,14 +17,14 @@ class CuponController extends Controller
 
     public function index()
     {
-        return view('cupon.cupon', [
+        return view('cupon.index', [
             'cupons' => Cupon::latest()->paginate(10),
         ]);
     }
 
     public function create()
     {
-        return view('cupon.addcupon');
+        return view('cupon.create');
     }
 
     public function store(CuponStoreRequest $request)
@@ -42,7 +42,7 @@ class CuponController extends Controller
 
     public function edit(Cupon $cupon)
     {
-        return view('cupon.update_cupon', [
+        return view('cupon.edit', [
             'item' => $cupon,
         ]);
     }
@@ -67,7 +67,7 @@ class CuponController extends Controller
 
     public function trashed()
     {
-        return view('cupon.recyclebin_cupon', [
+        return view('cupon.trashed', [
             'cupons' => Cupon::onlyTrashed()->paginate(10),
         ]);
     }

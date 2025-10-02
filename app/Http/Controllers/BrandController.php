@@ -18,14 +18,14 @@ class BrandController extends Controller
 
     public function index()
     {
-        return view('brand.brand', [
+        return view('brand.index', [
             'brands' => Brand::latest()->paginate(10),
         ]);
     }
 
     public function create()
     {
-        return view('brand.addbrand');
+        return view('brand.create');
     }
 
     public function store(BrandStoreRequest $request)
@@ -48,7 +48,7 @@ class BrandController extends Controller
 
     public function edit(Brand $brand)
     {
-        return view('brand.update_brand', [
+        return view('brand.edit', [
             'item' => $brand,
         ]);
     }
@@ -82,7 +82,7 @@ class BrandController extends Controller
 
     public function trashed()
     {
-        return view('brand.recyclebin_brand', [
+        return view('brand.trashed', [
             'brands' => Brand::onlyTrashed()->paginate(10),
         ]);
     }

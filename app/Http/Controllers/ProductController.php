@@ -22,14 +22,14 @@ class ProductController extends Controller
 
     public function index()
     {
-        return view('product.product', [
+        return view('product.index', [
             'products' => Product::with('category_info', 'subcategory_info', 'user', 'photos')->latest()->paginate(10),
         ]);
     }
 
     public function create()
     {
-        return view('product.addproduct', [
+        return view('product.create', [
             'categories' => Category::all(),
         ]);
     }
@@ -68,7 +68,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return view('product.view_product', [
+        return view('product.show', [
             'item' => $product,
             'product_photos' => $product->photos,
         ]);
@@ -76,7 +76,7 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        return view('product.update_product', [
+        return view('product.edit', [
             'item' => $product,
             'categories' => Category::all(),
             'subcategories' => Subcategory::where('category', $product->category)->get(),
@@ -112,7 +112,7 @@ class ProductController extends Controller
 
     public function trashed()
     {
-        return view('product.recyclebin_product', [
+        return view('product.trashed', [
             'products' => Product::onlyTrashed()->with('category_info', 'subcategory_info', 'user')->paginate(10),
         ]);
     }
@@ -156,7 +156,7 @@ class ProductController extends Controller
 
     public function view_product_photo(Product $product)
     {
-        return view('product.view_product_photo', [
+        return view('product.photos.index', [
             'product' => $product,
             'product_photos' => $product->photos()->paginate(10),
         ]);
@@ -164,7 +164,7 @@ class ProductController extends Controller
 
     public function addproductphoto(Product $product)
     {
-        return view('product.addproductphoto', [
+        return view('product.photos.create', [
             'product' => $product,
         ]);
     }

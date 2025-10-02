@@ -24,125 +24,90 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\SslCommerzPaymentController;
-
 use App\Http\Controllers\BlankController;
 
-// Frontend page
-Route::get('/', [FrontendController::class, 'index'])->name('front');
-Route::get('about', [FrontendController::class, 'about'])->name('about');
-Route::get('front_search', [FrontendController::class, 'search']);
-Route::get('front/contact_us', [FrontendController::class, 'contact_us'])->name('front_contact_us');
-Route::get('front/category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct']);
-Route::get('front/product/{id}', [FrontendController::class, 'product_view_single']);
+// Frontend Routes
+Route::name('front.')->group(function () {
+    // Frontend page
+    Route::get('/', [FrontendController::class, 'index'])->name('index');
+    Route::get('about', [FrontendController::class, 'about'])->name('about');
+    Route::get('search', [FrontendController::class, 'search'])->name('search');
+    Route::get('contact-us', [FrontendController::class, 'contact_us'])->name('contact_us');
+    Route::get('category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct'])->name('category.subcategory');
+    Route::get('product/{id}', [FrontendController::class, 'product_view_single'])->name('product.view_single');
 
-// Wishlist Controller page
-Route::get('front/wishlist', [WishlistController::class, 'wishlist'])->name('wishlist');
-Route::get('front/wishlist/product_id/{id}', [WishlistController::class, 'wishlistadd']);
-Route::get('front/wishlist/delete/product_id/{id}', [WishlistController::class, 'wishlistdelete']);
+    // Wishlist Routes
+    Route::prefix('wishlist')->name('wishlist.')->group(function () {
+        Route::get('/', [WishlistController::class, 'wishlist'])->name('index');
+        Route::get('add/{id}', [WishlistController::class, 'wishlistadd'])->name('add');
+        Route::get('delete/{id}', [WishlistController::class, 'wishlistdelete'])->name('delete');
+    });
 
-// Cart Controller page
-Route::get('front/cart', [CartController::class, 'cart'])->name('cart');
-Route::get('front/cart/{coupon}', [CartController::class, 'cart']);
-Route::get('front/cart/product/{id}', [CartController::class, 'cartadd']);
-Route::post('front/cart/product/multiple/add', [CartController::class, 'cartaddmultiple'])->name('cartaddmultiple');
-Route::get('front/cart/delete/product_id/{id}', [CartController::class, 'cartdelete']);
-Route::post('front/cart/update', [CartController::class, 'update_cart'])->name('update_cart');
+    // Cart Routes
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'cart'])->name('index');
+        Route::get('{coupon}', [CartController::class, 'cart'])->name('coupon');
+        Route::get('add/{id}', [CartController::class, 'cartadd'])->name('add');
+        Route::post('add-multiple', [CartController::class, 'cartaddmultiple'])->name('add_multiple');
+        Route::get('delete/{id}', [CartController::class, 'cartdelete'])->name('delete');
+        Route::post('update', [CartController::class, 'update_cart'])->name('update');
+    });
 
-// checkout Controller page
-Route::get('front/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-Route::get('front/checkout/product_id/{id}', [CheckoutController::class, 'checkoutadd']);
-Route::get('front/checkout/delete/product_id/{id}', [CheckoutController::class, 'checkoutdelete']);
-Route::post('/front/getdistrictname', [CheckoutController::class, 'getdistrictname']);
+    // Checkout Routes
+    Route::prefix('checkout')->name('checkout.')->group(function () {
+        Route::get('/', [CheckoutController::class, 'checkout'])->name('index');
+        Route::get('add/{id}', [CheckoutController::class, 'checkoutadd'])->name('add');
+        Route::get('delete/{id}', [CheckoutController::class, 'checkoutdelete'])->name('delete');
+        Route::post('get-district-name', [CheckoutController::class, 'getdistrictname'])->name('get_district_name');
+    });
 
-// order Controller page
-Route::post('/front/order_submit', [OrderController::class, 'order_submit'])->name('order_submit');
-Route::get('/front/order', [OrderController::class, 'index'])->name('order');
-Route::get('/order', [OrderController::class, 'order_backend'])->name('order_backend');
+    // Order Routes
+    Route::prefix('order')->name('order.')->group(function () {
+        Route::post('submit', [OrderController::class, 'order_submit'])->name('submit');
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+    });
 
-// ProfileController
-Route::get('front/profile', [ProfileController::class, 'front_profile'])->name('front_profile');
-Route::post('profile.update', [ProfileController::class, 'profile_update'])->name('profile_update');
-Route::get('profile/adduser', [ProfileController::class, 'adduser'])->name('adduser');
-Route::post('profile/adduserinsert', [ProfileController::class, 'adduserinsert'])->name('adduserinsert');
+    // Profile Routes
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'front_profile'])->name('index');
+        Route::post('update', [ProfileController::class, 'profile_update'])->name('update');
+        Route::get('add-user', [ProfileController::class, 'adduser'])->name('add_user');
+        Route::post('add-user-insert', [ProfileController::class, 'adduserinsert'])->name('add_user_insert');
+    });
+
+    // Review Routes
+    Route::post('review/add', [ReviewController::class, 'review_add'])->name('review.add');
+});
+
+// Message Routes
+Route::prefix('message')->name('message.')->group(function () {
+    Route::post('add', [MessageController::class, 'message_add'])->name('add');
+    Route::get('delete/{id}', [MessageController::class, 'message_delete'])->name('delete');
+    Route::get('view/{id}', [MessageController::class, 'message_view'])->name('view');
+});
 
 // Home
 Auth::routes();
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
-// black page
+// Blank Page
 Route::get('blank', [BlankController::class, 'index'])->name('blank');
-Route::get('blank_form', [BlankController::class, 'blank_form'])->name('blank_form');
-Route::post('blank_form_submit', [BlankController::class, 'blank_form_submit'])->name('blank_form_submit');
+Route::get('blank-form', [BlankController::class, 'blank_form'])->name('blank_form');
+Route::post('blank-form-submit', [BlankController::class, 'blank_form_submit'])->name('blank_form_submit');
 
+// SSLCOMMERZ Routes
+Route::prefix('sslcommerz')->name('sslcommerz.')->group(function () {
+    Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout'])->name('example1');
+    Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout'])->name('example2');
+    Route::post('/pay', [SslCommerzPaymentController::class, 'index'])->name('pay');
+    Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax'])->name('pay_via_ajax');
+    Route::post('/success', [SslCommerzPaymentController::class, 'success'])->name('success');
+    Route::post('/fail', [SslCommerzPaymentController::class, 'fail'])->name('fail');
+    Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel'])->name('cancel');
+    Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn'])->name('ipn');
+});
 
-// Review
-Route::post('front.review_add', [ReviewController::class, 'review_add'])->name('review_add');
-
-
-
-
-
-
-// Message
-Route::post('message.add', [MessageController::class, 'message_add'])->name('message_add');
-Route::get('message/delete/{id}', [MessageController::class, 'message_delete']);
-Route::get('message/view/{id}', [MessageController::class, 'message_view']);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// profail page
-Route::get('profile', [ProfileController::class, 'index'])->name('profile');
-
-
-
-// Testimonial
-
-
-// SSLCOMMERZ Start
-Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
-Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
-
-Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
-Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
-
-Route::post('/success', [SslCommerzPaymentController::class, 'success']);
-Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
-Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
-
-Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
-//SSLCOMMERZ END
-
-
-
+// Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::post('categories/restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
@@ -192,6 +157,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('teams/force-delete/{id}', [TeamController::class, 'forceDelete'])->name('teams.forceDelete');
     Route::resource('teams', TeamController::class);
 });
-
-
-

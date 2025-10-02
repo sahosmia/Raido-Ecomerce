@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-lg-9 col-md-8 col-sm-6 d-flex align-items-center mb-4">
                     <div class="w-100">
-                        <form class="pl-lg-2" action="{{ route('message_add') }}" method="POST">
+                        <form class="pl-lg-2" action="{{ route('message.add') }}" method="POST">
                             @csrf
                             <h4 class="ls-m font-weight-bold">Let’s Connect</h4>
                             <p>Your email address will not be published. Required fields are
@@ -139,5 +139,3 @@
     <!-- End Store Section -->
 </div>
 @endsection
-
-

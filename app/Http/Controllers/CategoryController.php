@@ -45,13 +45,13 @@ class CategoryController extends Controller
 
     public function update(CategoryUpdateRequest $request, Category $category)
     {
-        $this->categoryService->updateCategory($category->id, $request->validated(), $request->file('img'));
+        $this->categoryService->updateCategory($category, $request->validated(), $request->file('img'));
         return back()->with('success', 'Successfully updated the category.');
     }
 
     public function destroy(Category $category)
     {
-        $this->categoryService->deleteCategory($category->id);
+        $this->categoryService->deleteCategory($category);
         return back()->with('success', 'Category successfully moved to trash.');
     }
 
@@ -62,15 +62,15 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function restore($id)
+    public function restore(Category $category)
     {
-        $this->categoryService->restoreCategory($id);
+        $this->categoryService->restoreCategory($category);
         return back()->with('success', 'Successfully restored the category.');
     }
 
-    public function forceDelete($id)
+    public function forceDelete(Category $category)
     {
-        $this->categoryService->forceDeleteCategory($id);
+        $this->categoryService->forceDeleteCategory($category);
         return back()->with('success', 'Permanently deleted the category.');
     }
 }

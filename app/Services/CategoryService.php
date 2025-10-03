@@ -3,31 +3,40 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryService
 {
     protected $categoryRepository;
+    protected $fileService;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepository)
+    public function __construct(CategoryRepositoryInterface $categoryRepository, FileService $fileService)
     {
         $this->categoryRepository = $categoryRepository;
+        $this->fileService = $fileService;
     }
 
     public function getAllCategories(int $perPage = 10)
     {
-        return $this->categoryRepository->getAll($perPage);
+        $page = request('page', 1);
+        return Cache::tags(['categories'])->remember("categories.page.{$page}", now()->addMinutes(60), function () use ($perPage) {
+            return $this->categoryRepository->getAll($perPage);
+        });
     }
 
     public function getTrashedCategories(int $perPage = 10)
     {
-        return $this->categoryRepository->getTrashed($perPage);
+        $page = request('page', 1);
+        return Cache::tags(['categories'])->remember("categories.trashed.page.{$page}", now()->addMinutes(60), function () use ($perPage) {
+            return $this->categoryRepository->getTrashed($perPage);
+        });
     }
 
     public function getCategoryById(int $id)
     {
-        return $this->categoryRepository->getById($id);
+        return Cache::tags(['categories'])->remember("category.{$id}", now()->addMinutes(60), function () use ($id) {
+            return $this->categoryRepository->getById($id);
+        });
     }
 
     public function createCategory(array $data, $image = null)
@@ -35,54 +44,48 @@ class CategoryService
         $category = $this->categoryRepository->create($data);
 
         if ($image) {
-            $this->uploadImage($category, $image);
+            $this->fileService->uploadImage($category, $image, 'category');
         }
 
+        $this->clearCategoriesCache();
         return $category;
     }
 
-    public function updateCategory(int $id, array $data, $image = null)
+    public function updateCategory(\App\Models\Category $category, array $data, $image = null)
     {
-        $category = $this->categoryRepository->getById($id);
-
         if ($image) {
-            $this->deleteImage($category->img);
-            $data['img'] = $this->uploadImage($category, $image);
+            $this->fileService->updateImage($category, $image, $category->img, 'category');
         }
 
-        return $this->categoryRepository->update($id, $data);
+        $result = $this->categoryRepository->update($category->id, $data);
+        $this->clearCategoriesCache();
+        return $result;
     }
 
-    public function deleteCategory(int $id)
+    public function deleteCategory(\App\Models\Category $category)
     {
-        return $this->categoryRepository->delete($id);
+        $result = $this->categoryRepository->delete($category->id);
+        $this->clearCategoriesCache();
+        return $result;
     }
 
-    public function restoreCategory(int $id)
+    public function restoreCategory(\App\Models\Category $category)
     {
-        return $this->categoryRepository->restore($id);
+        $result = $this->categoryRepository->restore($category->id);
+        $this->clearCategoriesCache();
+        return $result;
     }
 
-    public function forceDeleteCategory(int $id)
+    public function forceDeleteCategory(\App\Models\Category $category)
     {
-        $category = $this->categoryRepository->getTrashedById($id);
-        $this->deleteImage($category->img);
-        return $this->categoryRepository->forceDelete($id);
+        $this->fileService->deleteImage($category->img, 'category');
+        $result = $this->categoryRepository->forceDelete($category->id);
+        $this->clearCategoriesCache();
+        return $result;
     }
 
-    protected function uploadImage($category, $image)
+    protected function clearCategoriesCache()
     {
-        $filename = $category->id . '_category_' . time() . '.' . $image->getClientOriginalExtension();
-        $location = public_path('upload/category/' . $filename);
-        Image::make($image)->save($location);
-        $category->update(['img' => $filename]);
-        return $filename;
-    }
-
-    protected function deleteImage($filename)
-    {
-        if ($filename && File::exists(public_path('upload/category/' . $filename))) {
-            File::delete(public_path('upload/category/' . $filename));
-        }
+        Cache::tags(['categories'])->flush();
     }
 }

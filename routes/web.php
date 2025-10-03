@@ -110,8 +110,8 @@ Route::prefix('sslcommerz')->name('sslcommerz.')->group(function () {
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
-    Route::post('categories/restore/{id}', [CategoryController::class, 'restore'])->name('categories.restore');
-    Route::delete('categories/force-delete/{id}', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
+    Route::post('categories/restore/{category}', [CategoryController::class, 'restore'])->name('categories.restore')->withTrashed();
+    Route::delete('categories/force-delete/{category}', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete')->withTrashed();
     Route::resource('categories', CategoryController::class);
 
     // Product Routes

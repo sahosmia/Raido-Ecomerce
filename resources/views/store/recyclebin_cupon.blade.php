@@ -20,7 +20,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('cupon') }}">cupon</a>
+                        <a href="{{ route('admin.cupons.index') }}">cupon</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Recyclebin</li>
@@ -148,9 +148,15 @@
                                         <i class="ti-more-alt"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('cupon/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">P. Delete</a>
-                                        <a href="{{ url('cupon/restore') }}/{{ $item->id }}" class="dropdown-item text-primary">Resotor</a>
+                                        <a href="#" class="dropdown-item text-danger" onclick="event.preventDefault(); if(confirm('Are you sure you want to permanently delete this item?')) document.getElementById('force-delete-form-{{$item->id}}').submit();">P. Delete</a>
+                                        <form id="force-delete-form-{{$item->id}}" action="{{ route('admin.cupons.forceDelete', $item->id) }}" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                        <a href="#" class="dropdown-item text-primary" onclick="event.preventDefault(); document.getElementById('restore-form-{{$item->id}}').submit();">Restore</a>
+                                        <form id="restore-form-{{$item->id}}" action="{{ route('admin.cupons.restore', $item->id) }}" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>
                                     </div>
                                 </div>
                             </td>

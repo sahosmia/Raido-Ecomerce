@@ -11,7 +11,7 @@
 			<nav class="breadcrumb-nav">
 				<div class="container">
 					<ul class="breadcrumb">
-						<li><a href="{{ route('front') }}"><i class="d-icon-home"></i></a></li>
+						<li><a href="{{ route('front.index') }}"><i class="d-icon-home"></i></a></li>
 						<li>Account</li>
 					</ul>
 				</div>
@@ -96,7 +96,7 @@
                                 </table>
 							</div>
 							<div class="tab-pane" id="account">
-								<form action="{{ route('profile_update') }}" method="post" class="form" enctype="multipart/form-data">
+								<form action="{{ route('front.profile.update') }}" method="post" class="form" enctype="multipart/form-data">
                                     @csrf
                                 @if(session()->has('success'))
                                     <div class="alert alert-success alert-dark alert-round alert-inline">

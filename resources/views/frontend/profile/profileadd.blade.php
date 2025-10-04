@@ -29,7 +29,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('profile') }}">profile</a>
+                        <a href="{{ route('front.profile.index') }}">profile</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Add profile Page</li>
@@ -50,7 +50,7 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">profile Add++</div>
         <div class="card-body">
-            <form action="{{ route('adduserinsert') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('front.profile.add_user_insert') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 {{-- name --}}
                 <div class="form-group">

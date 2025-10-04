@@ -23,7 +23,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('cupon') }}">cupon</a>
+                        <a href="{{ route('admin.cupons.index') }}">cupon</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Update cupon Page</li>
@@ -55,8 +55,9 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">All Update</div>
         <div class="card-body">
-            <form action="{{ route('cupon_update') }}" method="post">
+            <form action="{{ route('admin.cupons.update', $item->id) }}" method="post">
                 @csrf
+                @method('PUT')
                 <input name="id" type="hidden" value="{{ $item->id }}">
 
 

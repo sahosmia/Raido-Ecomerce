@@ -23,7 +23,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('cupon') }}">cupon</a>
+                        <a href="{{ route('admin.cupons.index') }}">cupon</a>
                     </li>
 
                     <li class="breadcrumb-item active" aria-current="page">Add cupon Page</li>
@@ -37,7 +37,7 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">cupon Add++</div>
         <div class="card-body">
-            <form action="{{ route('addcuponinsert') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.cupons.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
 
 

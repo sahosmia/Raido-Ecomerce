@@ -14,7 +14,7 @@
     <div class="container">
          @if(session()->has('success_with_btn'))
         <div class="alert alert-success alert-simple alert-btn">
-            <a href="{{ route('cart') }}" class="btn btn-success btn-md btn-rounded">view Cart</a>
+            <a href="{{ route('front.cart.index') }}" class="btn btn-success btn-md btn-rounded">view Cart</a>
             {{ session()->get('success_with_btn') }}
             <button type="button" class="btn btn-link btn-close">
                 <i class="d-icon-times"></i>
@@ -69,7 +69,7 @@
                         </a>
                     </td>
                     <td class="product-name">
-                        <a href="{{ url('front/product') }}/{{ $item->product_id }}">{{ Product::find($item->product_id)->name }}</a>
+                        <a href="{{ route('front.product.view_single', $item->product_id) }}">{{ Product::find($item->product_id)->name }}</a>
                     </td>
                     <td class="product-price">
                         <span class="amount">${{ $price }}</span>
@@ -83,11 +83,11 @@
                         @endif
                     </td>
                     <td class="product-add-to-cart">
-                        <a href="{{ url('front/cart/product') }}/{{ $item->product_id }}" class="btn-product btn-primary"><span>Add to Cart</span></a>
+                        <a href="{{ route('front.cart.add', $item->product_id) }}" class="btn-product btn-primary"><span>Add to Cart</span></a>
                     </td>
                     <td class="product-remove">
                         <div>
-                            <a href="{{ url('front/wishlist/delete/product_id') }}/{{ $item->id }}" class="remove" title="Remove this product"><i class="fas fa-times"></i></a>
+                            <a href="{{ route('front.wishlist.delete', $item->id) }}" class="remove" title="Remove this product"><i class="fas fa-times"></i></a>
                         </div>
                     </td>
                 </tr>

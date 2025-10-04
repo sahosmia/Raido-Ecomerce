@@ -92,7 +92,7 @@
                     <hr class="product-divider">
 
                     <div class="product-form product-qty">
-                        <form action="{{ route('cartaddmultiple') }}" method="POST">
+                        <form action="{{ route('front.cart.add_multiple') }}" method="POST">
                             @csrf
                         <div class="product-form-group">
                             <div class="input-group mr-2">
@@ -119,7 +119,7 @@
                         </div>
                         <span class="divider d-lg-show"></span>
                         <div class="product-action">
-                            <a href="{{ url('front/wishlist/product_id') }}/{{ $item->id }}" class=" btn-wishlist mr-6"><i class="d-icon-heart"></i>Add to
+                            <a href="{{ route('front.wishlist.add', $product->id) }}" class=" btn-wishlist mr-6"><i class="d-icon-heart"></i>Add to
                                 wishlist</a>
 
                         </div>
@@ -254,7 +254,7 @@
                         </ul>
                     </div>
                     <!-- End Comments -->
-                    <form action="{{ route('review_add') }}" method="post">
+                    <form action="{{ route('front.review.add') }}" method="post">
                         @csrf
                         <div class="reply">
                             <div class="title-wrapper text-left">

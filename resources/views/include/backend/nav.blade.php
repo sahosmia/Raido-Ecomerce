@@ -25,7 +25,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="@yield('subcategory')" href="{{ route('subcategory') }}">
+                        <a class="@yield('subcategory')" href="{{ route('admin.subcategories.index') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>
                             </span>
@@ -33,7 +33,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="@yield('product')" href="{{ route('product') }}">
+                        <a class="@yield('product')" href="{{ route('admin.products.index') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>
                             </span>
@@ -41,15 +41,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="@yield('order')" href="{{ route('order_backend') }}">
-                            <span class="nav-link-icon">
-                                <i data-feather="pie-chart"></i>
-                            </span>
-                            <span>Order</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="@yield('cupon')" href="{{ route('cupon') }}">
+                        <a class="@yield('cupon')" href="{{ route('admin.cupons.index') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>
                             </span>
@@ -57,7 +49,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="@yield('brand')" href="{{ route('brand') }}">
+                        <a class="@yield('brand')" href="{{ route('admin.brands.index') }}">
                             <span class="nav-link-icon">
                                 <i data-feather="pie-chart"></i>
                             </span>

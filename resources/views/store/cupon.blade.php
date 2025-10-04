@@ -50,10 +50,10 @@
 @csrf
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('addcupon') }}">Add New</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.cupons.create') }}">Add New</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-dark mr-2" href="{{ route('recyclebin_cupon') }}">Recycle Bin</a>
+                <a class="nav-link btn btn-dark mr-2" href="{{ route('admin.cupons.trashed') }}">Recycle Bin</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link btn btn-danger mr-2 {{ $cupons_count == 0 ? "disabled" : "" }}" href="{{ route('cupon_p_delete_all') }}">All P. Delete</a>
@@ -145,10 +145,18 @@
                                         <i class="ti-more-alt"></i>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="{{ url('cupon/view') }}/{{ $item->id }}" class="dropdown-item">View Detail</a>
-                                        <a href="{{ url('cupon/update') }}/{{ $item->id }}" class="dropdown-item text-info">Update</a>
-                                        <a href="{{ url('cupon/soft_delete') }}/{{ $item->id }}" class="dropdown-item text-warning">Delete</a>
-                                        <a href="{{ url('cupon/p_delete') }}/{{ $item->id }}" class="dropdown-item text-danger">Permanent Delete</a>
+                                        <a href="{{ route('admin.cupons.show', $item->id) }}" class="dropdown-item">View Detail</a>
+                                        <a href="{{ route('admin.cupons.edit', $item->id) }}" class="dropdown-item text-info">Update</a>
+                                        <a href="#" class="dropdown-item text-warning" onclick="event.preventDefault(); if(confirm('Are you sure?')) document.getElementById('delete-form-{{$item->id}}').submit();">Delete</a>
+                                        <form id="delete-form-{{$item->id}}" action="{{ route('admin.cupons.destroy', $item->id) }}" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
+                                        <a href="#" class="dropdown-item text-danger" onclick="event.preventDefault(); if(confirm('Are you sure you want to permanently delete?')) document.getElementById('force-delete-form-{{$item->id}}').submit();">Permanent Delete</a>
+                                        <form id="force-delete-form-{{$item->id}}" action="{{ route('admin.cupons.forceDelete', $item->id) }}" method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
                                         @if ($item->action == 1)
                                         <a href="{{ url('cupon/action') }}/{{ $item->id }}" class="dropdown-item text-primary">Dactive</a>
                                         @else

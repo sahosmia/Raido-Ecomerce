@@ -20,14 +20,14 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return view('category.index', [
+        return view('backend.category.index', [
             'categories' => $this->categoryService->getAllCategories(10),
         ]);
     }
 
     public function create()
     {
-        return view('category.create');
+        return view('backend.category.create');
     }
 
     public function store(CategoryStoreRequest $request)
@@ -38,7 +38,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        return view('category.edit', [
+        return view('backend.category.edit', [
             'item' => $category,
         ]);
     }
@@ -57,7 +57,7 @@ class CategoryController extends Controller
 
     public function trashed()
     {
-        return view('category.trashed', [
+        return view('backend.category.trashed', [
             'categories' => $this->categoryService->getTrashedCategories(10),
         ]);
     }

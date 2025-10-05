@@ -20,14 +20,14 @@ class SubcategoryController extends Controller
 
     public function index()
     {
-        return view('subcategory.index', [
+        return view('backend.subcategory.index', [
             'subcategories' => $this->subcategoryService->getAllSubcategories(10),
         ]);
     }
 
     public function create()
     {
-        return view('subcategory.create', [
+        return view('backend.subcategory.create', [
             'categories' => $this->subcategoryService->getAllCategories(),
         ]);
     }
@@ -40,7 +40,7 @@ class SubcategoryController extends Controller
 
     public function edit(Subcategory $subcategory)
     {
-        return view('subcategory.edit', [
+        return view('backend.subcategory.edit', [
             'item' => $subcategory,
             'categories' => $this->subcategoryService->getAllCategories(),
         ]);
@@ -60,7 +60,7 @@ class SubcategoryController extends Controller
 
     public function trashed()
     {
-        return view('subcategory.trashed', [
+        return view('backend.subcategory.trashed', [
             'subcategories' => $this->subcategoryService->getTrashedSubcategories(10),
         ]);
     }

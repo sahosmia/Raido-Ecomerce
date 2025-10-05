@@ -93,7 +93,7 @@ class OrderController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('order.order', [
+        return view('backend.order.order', [
             'order_details' => $order_details,
         ]);
     }

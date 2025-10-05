@@ -20,14 +20,14 @@ class CuponController extends Controller
 
     public function index()
     {
-        return view('cupon.index', [
+        return view('backend.cupon.index', [
             'cupons' => $this->cuponService->getAllCupons(10),
         ]);
     }
 
     public function create()
     {
-        return view('cupon.create');
+        return view('backend.cupon.create');
     }
 
     public function store(CuponStoreRequest $request)
@@ -38,7 +38,7 @@ class CuponController extends Controller
 
     public function edit(Cupon $cupon)
     {
-        return view('cupon.edit', [
+        return view('backend.cupon.edit', [
             'item' => $cupon,
         ]);
     }
@@ -57,7 +57,7 @@ class CuponController extends Controller
 
     public function trashed()
     {
-        return view('cupon.trashed', [
+        return view('backend.cupon.trashed', [
             'cupons' => $this->cuponService->getTrashedCupons(10),
         ]);
     }

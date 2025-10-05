@@ -20,14 +20,14 @@ class BrandController extends Controller
 
     public function index()
     {
-        return view('brand.index', [
+        return view('backend.brand.index', [
             'brands' => $this->brandService->getAllBrands(10),
         ]);
     }
 
     public function create()
     {
-        return view('brand.create');
+        return view('backend.brand.create');
     }
 
     public function store(BrandStoreRequest $request)
@@ -38,7 +38,7 @@ class BrandController extends Controller
 
     public function edit(Brand $brand)
     {
-        return view('brand.edit', [
+        return view('backend.brand.edit', [
             'item' => $brand,
         ]);
     }
@@ -57,7 +57,7 @@ class BrandController extends Controller
 
     public function trashed()
     {
-        return view('brand.trashed', [
+        return view('backend.brand.trashed', [
             'brands' => $this->brandService->getTrashedBrands(10),
         ]);
     }

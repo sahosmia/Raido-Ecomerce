@@ -18,13 +18,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Daterangepicker -->
-    {{-- <link rel="stylesheet" href="{{ asset('backend/vendors/datepicker/daterangepicker.css') }}" type="text/css"> --}}
+    <link rel="stylesheet" href="{{ asset('backend/vendors/datepicker/daterangepicker.css') }}" type="text/css">
 
     <!-- DataTable -->
     <link rel="stylesheet" href="{{ asset('backend/vendors/dataTable/datatables.min.css') }}" type="text/css">
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('backend/vendors/select2/css/select2.min.css') }}" type="text/css">
+
+    <!-- Slick -->
+    <link rel="stylesheet" href="{{ asset('backend/vendors/slick/slick.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('backend/vendors/slick/slick-theme.css') }}" type="text/css">
+
     @yield('exta_css')
 
-<!-- App css -->
+    <!-- App css -->
     <link rel="stylesheet" href="{{ asset('backend/assets/css/app.min.css') }}" type="text/css">
 
     <!--[if lt IE 9]>
@@ -95,10 +103,16 @@
     <!-- DataTable -->
     <script src="{{ asset('backend/vendors/dataTable/datatables.min.js') }}"></script>
 
+    <!-- Select2 -->
+    <script src="{{ asset('backend/vendors/select2/js/select2.min.js') }}"></script>
+
+    <!-- Slick -->
+    <script src="{{ asset('backend/vendors/slick/slick.min.js') }}"></script>
+
     <!-- Dashboard scripts -->
     <script src="{{ asset('backend/assets/js/examples/pages/dashboard.js') }}"></script>
-@yield('exta_js')
-<!-- App scripts -->
-<script src="{{ asset('backend/assets/js/app.min.js') }}"></script>
+    @yield('exta_js')
+    <!-- App scripts -->
+    <script src="{{ asset('backend/assets/js/app.min.js') }}"></script>
 </body>
 </html>

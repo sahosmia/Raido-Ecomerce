@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
-    <title>Riode - Ultimate eCommerce Template</title>
+    <title>@yield('page_title') - {{ config('app.name', 'Riode') }}</title>
 
     <meta name="keywords" content="HTML5 Template" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -32,6 +32,11 @@
     <!-- Plugins CSS File -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/vendor/magnific-popup/magnific-popup.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/vendor/owl-carousel/owl.carousel.min.css') }}"/>
+    <!-- Custom CSS File -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/assets/css/custom.css') }}"/>
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/vendor/photoswipe/photoswipe.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/photoswipe/default-skin/default-skin.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('frontend/vendor/nouislider/nouislider.min.css') }}">
     @yield('exta_css')
     <!-- Main CSS File -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/style.min.css') }}"/>
@@ -81,6 +86,11 @@
     <script src="{{ asset('frontend/vendor/elevatezoom/jquery.elevatezoom.min.js') }}"></script>
     <script src="{{ asset('frontend/vendor/magnific-popup/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('frontend/vendor/owl-carousel/owl.carousel.min.js') }}"></script>
+    <!-- Custom JS File -->
+    <script src="{{ asset('frontend/assets/js/custom.js')}}"></script>
+    <script src="{{ asset('frontend/vendor/photoswipe/photoswipe.min.js') }}"></script>
+    <script src="{{ asset('frontend/photoswipe/photoswipe-ui-default.min.js') }}"></script>
+    <script src="{{ asset('frontend/vendor/nouislider/nouislider.min.js') }}"></script>
      @yield('exta_js')
     <!-- Main JS File -->
     <script src="{{ asset('frontend/js/main.min.js')}}"></script>

@@ -1,79 +1,84 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('cupon')
-    active
-@endsection
+@section('cupon', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Cupon Add
-@endsection
+@section('page_title', 'Add Coupon')
 
-{{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add Cupon Page</h3>
+            <h3>Add Coupon</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.cupons.index') }}">Cupon</a>
+                        <a href="{{ route('admin.cupons.index') }}">Coupons</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Cupon Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Coupon</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-<div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
-    <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">Cupon Add++</div>
-        <div class="card-body">
-            <form action="{{ route('admin.cupons.store') }}" method="post">
-                @csrf
-                {{-- name --}}
-                <div class="form-group">
-                     <label>Cupon Name</label>
-                    <input name="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Cupon Name">
-                    @error('name')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card border border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Add New Coupon</h5>
                 </div>
-
-                {{-- code  --}}
-                <div class="form-group">
-                     <label>Cupon Code</label>
-                    <input name="code" value="{{ old('code') }}" type="text" class="form-control @error('code') is-invalid @enderror" placeholder="Enter New Cupon Code">
-                    @error('code')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+                <div class="card-body">
+                    <form action="{{ route('admin.cupons.store') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label for="name">Coupon Name</label>
+                            <input type="text" name="name" id="name"
+                                class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
+                                placeholder="Enter coupon name" required>
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="code">Coupon Code</label>
+                            <input type="text" name="code" id="code"
+                                class="form-control @error('code') is-invalid @enderror" value="{{ old('code') }}"
+                                placeholder="Enter coupon code" required>
+                            @error('code')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="discount">Discount (%)</label>
+                            <input type="number" name="discount" id="discount"
+                                class="form-control @error('discount') is-invalid @enderror"
+                                value="{{ old('discount') }}" placeholder="Enter discount percentage" required>
+                            @error('discount')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Expiration Date</label>
+                            <input type="date" name="date" id="date"
+                                class="form-control @error('date') is-invalid @enderror"
+                                value="{{ old('date', now()->format('Y-m-d')) }}" required>
+                            @error('date')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Add Coupon</button>
+                    </form>
                 </div>
-
-                {{-- discount --}}
-                <div class="form-group">
-                     <label>Discount</label>
-                    <input name="discount" value="{{ old('discount') }}" type="number" class="form-control @error('discount') is-invalid @enderror" placeholder="Enter New Cupon Discount">
-                    @error('discount')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                {{-- end cupon --}}
-                <div class="form-group">
-                     <label>Cupon End Date</label>
-                     <input name="date" value="{{ old('date', \Carbon\Carbon::now()->format('Y-m-d')) }}" type="date" class="form-control @error('date') is-invalid @enderror">
-                    @error('date')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection

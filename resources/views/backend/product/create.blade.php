@@ -1,189 +1,192 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('product')
-    active
-@endsection
+@section('product', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Product Add
-@endsection
+@section('page_title', 'Add Product')
 
-{{-- exta css  --}}
-@section('exta_css')
-
-<!-- Style -->
-<link rel="stylesheet" href="{{ asset('backend/vendors/select2/css/select2.min.css') }}" type="text/css">
-
-@endsection
-
-{{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add Product Page</h3>
+            <h3>Add New Product</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.products.index') }}">Product</a>
+                        <a href="{{ route('admin.products.index') }}">Products</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Product Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Product</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-
-<div class="col-md-8 col-sm-10 col-lg-8 col-xl-8 m-auto">
-    <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">Product Add++</div>
-        <div class="card-body">
-            <form action="{{ route('admin.products.store') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                {{-- category option  --}}
-                <div class="form-row">
-                <div class="form-group col-md-6">
-                     <label>Select Category</label>
-                     <select id="category" class="select2-example @error('category') is-invalid @enderror" name="category" >
-                        <option value="">Select</option>
-                         @foreach ($categories as $item)
-                        <option {{ old('category') == $item->id ? "selected" : "" }} value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('category')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <div class="card border border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Add New Product</h5>
                 </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="category">Category</label>
+                                <select id="category" name="category"
+                                    class="form-control select2-example @error('category') is-invalid @enderror" required>
+                                    <option value="">-- Select Category --</option>
+                                    @foreach ($categories as $item)
+                                        <option value="{{ $item->id }}"
+                                            {{ old('category') == $item->id ? 'selected' : '' }}>{{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('category')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="subcategory">Subcategory</label>
+                                <select id="subcategory" name="subcategory"
+                                    class="form-control select2-example @error('subcategory') is-invalid @enderror"
+                                    required>
+                                    <option value="">-- Select Category First --</option>
+                                </select>
+                                @error('subcategory')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                        </div>
 
-                {{-- subcategory option  --}}
-                <div class="form-group col-md-6">
-                     <label>Select Subcategory</label>
-                     <select id="subcategory" class="select2-example @error('subcategory') is-invalid @enderror" name="subcategory">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="name">Product Name</label>
+                                <input type="text" name="name" id="name"
+                                    class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
+                                    placeholder="Enter product name" required>
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="price">Price</label>
+                                <input type="number" name="price" id="price"
+                                    class="form-control @error('price') is-invalid @enderror"
+                                    value="{{ old('price') }}" placeholder="Enter price" required>
+                                @error('price')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                        </div>
 
-                    </select>
-                    @error('subcategory')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" name="quantity" id="quantity"
+                                    class="form-control @error('quantity') is-invalid @enderror"
+                                    value="{{ old('quantity') }}" placeholder="Enter quantity" required>
+                                @error('quantity')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="discount">Discount (%)</label>
+                                <input type="number" name="discount" id="discount"
+                                    class="form-control @error('discount') is-invalid @enderror"
+                                    value="{{ old('discount') }}" placeholder="Enter discount percentage">
+                                @error('discount')
+                                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="notification_quantity">Alert Quantity</label>
+                                <input type="number" name="notification_quantity" id="notification_quantity"
+                                    class="form-control @error('notification_quantity') is-invalid @enderror"
+                                    value="{{ old('notification_quantity') }}" placeholder="Stock alert level">
+                                @error('notification_quantity')
+                                    <span class="invalid-feedback"
+                                        role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                        </div>
 
-                {{-- name --}}
-                <div class="form-group col-md-6">
-                     <label>New Product Name</label>
-                    <input name="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Product Name">
-                    @error('name')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+                        <div class="form-group">
+                            <label for="des">Description</label>
+                            <textarea name="des" id="des" class="form-control @error('des') is-invalid @enderror"
+                                rows="4" placeholder="Enter product description"
+                                required>{{ old('des') }}</textarea>
+                            @error('des')
+                                <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                            @enderror
+                        </div>
 
-                {{-- price --}}
-                <div class="form-group col-md-6">
-                     <label>Product price</label>
-                    <input name="price" value="{{ old('price') }}" type="number" class="form-control @error('price') is-invalid @enderror" placeholder="Enter New Product price">
-                    @error('price')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-                {{-- Product Quantity --}}
-                <div class="form-group col-md-4">
-                     <label>Product Quantity</label>
-                    <input name="quantity" value="{{ old('quantity') }}" type="number" class="form-control @error('quantity') is-invalid @enderror" placeholder="Enter New Product quantity">
-                    @error('quantity')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="img">Featured Image</label>
+                                <div class="custom-file">
+                                    <input type="file" name="img" id="img"
+                                        class="custom-file-input @error('img') is-invalid @enderror" required>
+                                    <label class="custom-file-label" for="img">Choose file...</label>
+                                </div>
+                                @error('img')
+                                    <span class="invalid-feedback d-block"
+                                        role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="img_multiple">Additional Images</label>
+                                <div class="custom-file">
+                                    <input type="file" name="img_multiple[]" id="img_multiple"
+                                        class="custom-file-input @error('img_multiple.*') is-invalid @enderror" multiple>
+                                    <label class="custom-file-label" for="img_multiple">Choose files...</label>
+                                </div>
+                                @error('img_multiple.*')
+                                    <span class="invalid-feedback d-block"
+                                        role="alert"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                        </div>
 
-                {{-- Discount --}}
-                <div class="form-group col-md-4">
-                     <label>Discount</label>
-                    <input name="discount" value="{{ old('discount') }}" type="number" class="form-control @error('discount') is-invalid @enderror" placeholder="Enter New Product discount">
-                    @error('discount')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+                        <button type="submit" class="btn btn-primary btn-block mt-4">Add Product</button>
+                    </form>
                 </div>
-
-                {{-- Notification Quantity --}}
-                <div class="form-group col-md-4">
-                     <label>Notification Quantity</label>
-                    <input name="notification_quantity" value="{{ old('notification_quantity') }}" type="number" class="form-control @error('notification_quantity') is-invalid @enderror" placeholder="Enter New Product notification_quantity">
-                    @error('notification_quantity')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <!-- Textarea -->
-                <div class="form-group col-md-12">
-                    <label>Description</label>
-                    <textarea name="des" class="form-control @error('des') is-invalid @enderror" rows="3">{{ old('des') }}</textarea>
-                    @error('des')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <!-- File input -->
-                <div class="form-group col-md-6">
-                    <label>Select product Image</label>
-                    <input name="img" value="{{ old('img') }}" type="file" class="form-control-file">
-                    @error('img')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                <!-- File input multiple -->
-                <div class="form-group col-md-6">
-                    <label>Example Multiple file input</label>
-                    <input name="img_multiple[]" value="{{ old('img_multiple') }}" type="file" class="form-control-file" multiple>
-                    @error('img_multiple')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection
 
-
-
-{{-- exta js  --}}
 @section('exta_js')
-
-    <!-- select -->
-    <script src="{{ asset('backend/vendors/select2/js/select2.min.js') }}"></script>
-
     <script>
-
-        // select2
-        $('.select2-example').select2({
-            placeholder: 'Select'
-        });
-        $('#category').change(function(){
-            var id = $('#category').val();
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
-                $.ajax({
-                    type : 'POST',
-                    url : '{{ route("admin.products.getSubcategories") }}',
-                    data : {id:id},
-                    success : function(data){
-                        $('#subcategory').html(data);
-
-                    }
-                });
+        $(document).ready(function() {
+            $('.select2-example').select2({
+                placeholder: 'Select an option'
             });
-
-
-
+            $('#category').on('change', function() {
+                var categoryId = $(this).val();
+                if (categoryId) {
+                    $.ajax({
+                        url: '{{ route('admin.products.getSubcategories') }}',
+                        type: 'POST',
+                        data: {
+                            id: categoryId,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        dataType: 'html',
+                        success: function(data) {
+                            $('#subcategory').html(data);
+                        },
+                        error: function() {
+                            $('#subcategory').html(
+                                '<option value="">-- Could not load subcategories --</option>'
+                            );
+                        }
+                    });
+                } else {
+                    $('#subcategory').html('<option value="">-- Select Category First --</option>');
+                }
+            });
+        });
     </script>
 @endsection

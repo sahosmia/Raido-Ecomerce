@@ -1,74 +1,77 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('brand')
-    active
-@endsection
+@section('brand', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Brand Update
-@endsection
+@section('page_title', 'Update Brand')
 
-{{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Update Brand Page</h3>
+            <h3>Update Brand</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.brands.index') }}">Brand</a>
+                        <a href="{{ route('admin.brands.index') }}">Brands</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Update Brand Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Update Brand</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-    @if(session()->has('success'))
-    <div class="alert alert-success d-flex align-items-center" role="alert">
-        <i class="ti-check mr-2"></i> {{ session()->get('success') }}
-    </div>
-    @endif
-    @if(session()->has('error'))
-        <div class="alert alert-danger d-flex align-items-center" role="alert">
-            <i class="ti-close mr-2"></i> {{ session()->get('error') }}
-        </div>
-    @endif
+    <x-alert />
 
-    <div class="col-md-6 col-sm-8 col-lg-5 col-xl-6 m-auto">
-        <div class="card text-dark border border-primary">
-            <div class="card-header bg-primary">Update Brand</div>
-            <div class="card-body">
-                <form action="{{ route('admin.brands.update', $item->id) }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    <div class="form-group text-center">
-                        <figure class="avatar avatar-xl">
-                           <img class="rounded" src="{{ asset('upload/brand') }}/{{ $item->img }}" alt="avatar">
-                        </figure>
-                    </div>
-                    <!-- File input -->
-                    <div class="form-group">
-                        <label>Select New Brand Image</label>
-                        <input name="img" type="file" class="form-control-file @error('img') is-invalid @enderror">
-                        @error('img')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                         <label>Brand Name</label>
-                        <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter Brand Name">
-                        @error('name')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Update</button>
-                </form>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card border border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Update Brand</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.brands.update', $item->id) }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="form-group text-center">
+                            <figure class="avatar avatar-xl">
+                                <img class="rounded" src="{{ asset('upload/brand/' . $item->img) }}"
+                                    alt="Current Brand Image">
+                            </figure>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Brand Name</label>
+                            <input type="text" name="name" id="name"
+                                class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $item->name) }}"
+                                placeholder="Enter brand name" required>
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="img">Update Brand Image (Optional)</label>
+                            <div class="custom-file">
+                                <input type="file" name="img" id="img"
+                                    class="custom-file-input @error('img') is-invalid @enderror">
+                                <label class="custom-file-label" for="img">Choose file...</label>
+                            </div>
+                            @error('img')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Update Brand</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

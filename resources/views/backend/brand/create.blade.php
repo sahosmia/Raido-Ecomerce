@@ -1,58 +1,64 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('brand')
-    active
-@endsection
+@section('brand', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Brand Add
-@endsection
+@section('page_title', 'Add Brand')
 
-{{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add Brand Page</h3>
+            <h3>Add Brand</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.brands.index') }}">Brand</a>
+                        <a href="{{ route('admin.brands.index') }}">Brands</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Brand Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Brand</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-<div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
-    <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">Brand Add++</div>
-        <div class="card-body">
-            <form action="{{ route('admin.brands.store') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <!-- File input -->
-                <div class="form-group">
-                    <label>Select Brand Image</label>
-                    <input name="img" type="file" class="form-control-file @error('img') is-invalid @enderror">
-                    @error('img')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card border border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Add New Brand</h5>
                 </div>
-                <div class="form-group">
-                     <label>New Brand Name</label>
-                    <input name="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Brand Name">
-                    @error('name')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+                <div class="card-body">
+                    <form action="{{ route('admin.brands.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="name">Brand Name</label>
+                            <input type="text" name="name" id="name"
+                                class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
+                                placeholder="Enter brand name" required>
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="img">Brand Image</label>
+                            <div class="custom-file">
+                                <input type="file" name="img" id="img"
+                                    class="custom-file-input @error('img') is-invalid @enderror" required>
+                                <label class="custom-file-label" for="img">Choose file...</label>
+                            </div>
+                            @error('img')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Add Brand</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection

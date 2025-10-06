@@ -1,5 +1,7 @@
 @extends('layouts.frontend')
 
+@section('page_title', 'Home')
+
 @section('content')
 {{-- banner pert --}}
 <section class="intro-section">

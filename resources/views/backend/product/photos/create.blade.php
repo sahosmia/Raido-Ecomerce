@@ -1,56 +1,62 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('product')
-    active
-@endsection
+@section('product', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Add Product Photo
-@endsection
+@section('page_title', 'Add Product Photos')
 
-{{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add Product Photo</h3>
+            <h3>Add Photos to "{{ $product->name }}"</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.products.index') }}">Product</a>
+                        <a href="{{ route('admin.products.index') }}">Products</a>
                     </li>
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.products.photos.index', $product->id) }}">Product Photos</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Product Photo</li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Photos</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-    <div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
-        <div class="card text-dark border border-primary">
-            <div class="card-header bg-primary">Add New Photos</div>
-            <div class="card-body">
-                <form action="{{ route('admin.products.photos.store', $product->id) }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <!-- File input multiple -->
-                    <div class="form-group ">
-                        <label>Select Multiple Files</label>
-                        <input name="img_multiple[]" type="file" class="form-control-file" multiple>
-                        @error('img_multiple.*')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                        @error('img_multiple')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
-                </form>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card border border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Upload New Photos</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.products.photos.store', $product->id) }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <label for="img_multiple">Select Images (Multiple files allowed)</label>
+                            <div class="custom-file">
+                                <input type="file" name="img_multiple[]" id="img_multiple"
+                                    class="custom-file-input @error('img_multiple.*') is-invalid @enderror" multiple
+                                    required>
+                                <label class="custom-file-label" for="img_multiple">Choose files...</label>
+                            </div>
+                            @error('img_multiple.*')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                            @error('img_multiple')
+                                <span class="invalid-feedback d-block" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block mt-4">Upload Photos</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

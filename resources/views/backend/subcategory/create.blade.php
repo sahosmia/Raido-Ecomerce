@@ -1,83 +1,79 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('subcategory')
-    active
-@endsection
+@section('subcategory', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Subcategory Add
-@endsection
+@section('page_title', 'Add Subcategory')
 
-{{-- exta css  --}}
-@section('exta_css')
-<!-- Style -->
-<link rel="stylesheet" href="{{ asset('backend/vendors/select2/css/select2.min.css') }}" type="text/css">
-@endsection
-
-{{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Add Subcategory Page</h3>
+            <h3>Add New Subcategory</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.subcategories.index') }}">Subcategory</a>
+                        <a href="{{ route('admin.subcategories.index') }}">Subcategories</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Add Subcategory Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Subcategory</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-<div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
-    <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">Subcategory Add++</div>
-        <div class="card-body">
-            <form action="{{ route('admin.subcategories.store') }}" method="post">
-                @csrf
-                {{-- select option  --}}
-                <div class="form-group">
-                    <label>Select Category</label>
-                     <select class="select2-example @error('category_id') is-invalid @enderror" name="category_id">
-                        <option value="">Select</option>
-                        @foreach ($categories as $item)
-                        <option {{ old('category_id') == $item->id ? "selected" : "" }} value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('category_id')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card border border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Add New Subcategory</h5>
                 </div>
-
-                <div class="form-group">
-                     <label>New Subcategory Name</label>
-                    <input name="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Subcategory Name">
-                    @error('name')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
+                <div class="card-body">
+                    <form action="{{ route('admin.subcategories.store') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label for="category_id">Parent Category</label>
+                            <select name="category_id" id="category_id"
+                                class="form-control select2-example @error('category_id') is-invalid @enderror" required>
+                                <option value="">-- Select a Category --</option>
+                                @foreach ($categories as $item)
+                                    <option value="{{ $item->id }}"
+                                        {{ old('category_id') == $item->id ? 'selected' : '' }}>
+                                        {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Subcategory Name</label>
+                            <input type="text" name="name" id="name"
+                                class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
+                                placeholder="Enter subcategory name" required>
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Add Subcategory</button>
+                    </form>
                 </div>
-
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection
 
-{{-- exta js  --}}
 @section('exta_js')
-    <!-- select -->
-    <script src="{{ asset('backend/vendors/select2/js/select2.min.js') }}"></script>
     <script>
-        // select2
-        $('.select2-example').select2({
-            placeholder: 'Select'
+        $(document).ready(function() {
+            $('.select2-example').select2({
+                placeholder: 'Select an option'
+            });
         });
     </script>
 @endsection

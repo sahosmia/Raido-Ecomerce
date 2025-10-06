@@ -1,88 +1,88 @@
 @extends('layouts.backend')
 
-{{-- nav active satatus --}}
-@section('cupon')
-    active
-@endsection
+@section('cupon', 'active')
 
-{{-- title name --}}
-@section('page_title')
-    Cupon Update
-@endsection
+@section('page_title', 'Update Coupon')
 
-{{-- content --}}
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Update Cupon Page</h3>
+            <h3>Update Coupon</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.cupons.index') }}">Cupon</a>
+                        <a href="{{ route('admin.cupons.index') }}">Coupons</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Update Cupon Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Update Coupon</li>
                 </ol>
             </nav>
         </div>
     </div>
 
-    @if(session()->has('success'))
-    <div class="alert alert-success d-flex align-items-center" role="alert">
-        <i class="ti-check mr-2"></i> {{ session()->get('success') }}
-    </div>
-    @endif
-    @if(session()->has('error'))
-        <div class="alert alert-danger d-flex align-items-center" role="alert">
-            <i class="ti-close mr-2"></i> {{ session()->get('error') }}
+    <x-alert />
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card border border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Update Coupon</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.cupons.update', $item->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group">
+                            <label for="name">Coupon Name</label>
+                            <input type="text" name="name" id="name"
+                                class="form-control @error('name') is-invalid @enderror"
+                                value="{{ old('name', $item->name) }}" placeholder="Enter coupon name" required>
+                            @error('name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="code">Coupon Code</label>
+                            <input type="text" name="code" id="code"
+                                class="form-control @error('code') is-invalid @enderror"
+                                value="{{ old('code', $item->code) }}" placeholder="Enter coupon code" required>
+                            @error('code')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="discount">Discount (%)</label>
+                            <input type="number" name="discount" id="discount"
+                                class="form-control @error('discount') is-invalid @enderror"
+                                value="{{ old('discount', $item->discount) }}" placeholder="Enter discount percentage"
+                                required>
+                            @error('discount')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Expiration Date</label>
+                            <input type="date" name="date" id="date"
+                                class="form-control @error('date') is-invalid @enderror"
+                                value="{{ old('date', $item->date) }}" required>
+                            @error('date')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Update Coupon</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    @endif
-
-<div class="col-md-6 col-sm-8 col-lg-5 col-xl-4 m-auto">
-    <div class="card text-dark border border-primary">
-        <div class="card-header bg-primary">Update Cupon</div>
-        <div class="card-body">
-            <form action="{{ route('admin.cupons.update', $item->id) }}" method="post">
-                @csrf
-                @method('PUT')
-                <div class="form-group">
-                     <label>Cupon Name</label>
-                    <input name="name" value="{{ $item->name }}" type="text" class="form-control @error('name') is-invalid @enderror" placeholder="Enter New Cupon Name">
-                    @error('name')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-                  {{-- code  --}}
-                <div class="form-group">
-                     <label>Cupon Code</label>
-                    <input name="code" value="{{ $item->code }}" type="text" class="form-control @error('code') is-invalid @enderror" placeholder="Enter New Cupon Code">
-                    @error('code')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                {{-- discount --}}
-                <div class="form-group">
-                     <label>Discount</label>
-                    <input name="discount" value="{{ $item->discount }}" type="number" class="form-control @error('discount') is-invalid @enderror" placeholder="Enter New Cupon Discount">
-                    @error('discount')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-
-                {{-- end cupon --}}
-                <div class="form-group">
-                     <label>Cupon End Date</label>
-                     <input name="date" value="{{ $item->end_cupon }}" type="date" class="form-control @error('date') is-invalid @enderror">
-                    @error('date')
-                        <small class="text-danger">{{ $message }}</small>
-                    @enderror
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Update</button>
-            </form>
-        </div>
     </div>
-</div>
 @endsection

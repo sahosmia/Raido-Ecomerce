@@ -1,132 +1,96 @@
 @extends('layouts.backend')
 
-<!-- Nav active satatus -->
 @section('category', 'active')
 
-<!-- title name -->
-@section('page_title', 'Category')
-
-
+@section('page_title', 'Categories')
 
 @section('content')
     <div class="page-header">
         <div>
-            <h3>Category Page</h3>
+            <h3>Category Management</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a href="{{ route('home') }}">Home</a>
                     </li>
-
-                    <li class="breadcrumb-item active" aria-current="page">Category Page</li>
+                    <li class="breadcrumb-item active" aria-current="page">Categories</li>
                 </ol>
             </nav>
         </div>
     </div>
- @if(session()->has('success'))
-    <div class="alert alert-success d-flex align-items-center" role="alert">
-        <i class="ti-check mr-2"></i> {{ session()->get('success') }}
-    </div>
-@endif
 
- @if(session()->has('warning'))
-    <div class="alert alert-warning d-flex align-items-center" role="alert">
-        <i class="ti-help mr-2"></i> {{ session()->get('warning') }}
-    </div>
-@endif
- @if(session()->has('error'))
-    <div class="alert alert-danger d-flex align-items-center" role="alert">
-        <i class="ti-close mr-2"></i> {{ session()->get('error') }}
-    </div>
-@endif
+    <x-alert />
 
-    <div class="card text-center border border-primary p-3">
+    <div class="card text-center border border-primary p-3 mb-3">
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.categories.create') }}">Add New</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.categories.create') }}">Add New Category</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-dark mr-2" href="{{ route('admin.categories.trashed') }}">Recycle Bin</a>
+                <a class="nav-link btn btn-dark" href="{{ route('admin.categories.trashed') }}">Recycle Bin</a>
             </li>
         </ul>
     </div>
 
-
-    <div class="card text-center border border-primary">
-        <div class="card-header bg-primary">
-            <h5>Category Item</h5>
+    <div class="card border border-primary">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Category List</h5>
         </div>
-        <div class="card-body border-primary">
+        <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered text-center">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Category Image</th>
-                            <th scope="col">Details</th>
-                            <th scope="col">Action</th>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th>Details</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach ($categories as $key => $item)
-                        <tr>
-                            <th>{{ $categories->firstItem() + $key }}</th>
-                            <td>{{ $item->name }}</td>
-                            <td>
-                                <figure class="avatar">
-                                    <img src="{{ asset('upload/category') }}/{{ $item->img }}" alt="avatar">
-                                </figure>
-                            </td>
-                            <td>
-                                <ul>
-                                    <li>Added By :
-                                        @php
-                                        if($item->added_by) echo App\Models\User::find($item->added_by)->name;
-                                        @endphp
-                                    </li>
-                                    <li>Created At :
-
-                                        @if ($item->created_at->diffInDays() >= 30)
-                                        <span class="badge badge-dark">
-                                            {{ $item->created_at->format('d M, Y') }}
-                                        </span>
-                                        @elseif ($item->created_at->diffInDays() >= 2)
-                                        <span class="badge badge-info">
-                                            {{ $item->created_at->diffForHumans() }}
-                                        </span>
-                                        @else
-                                            <span class="badge badge-danger">
-                                                {{ $item->created_at->diffForHumans() }}
-                                            </span>
-                                        @endif
-                                        @if ($item->created_at->diffInDays() <= 2)
-                                            <span class="badge badge-primary">new</span>
-                                        @endif
-
-                                    </li>
-                                </ul>
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-center">
-                                    <a href="{{ route('admin.categories.edit', $item->id) }}" class="btn btn-info btn-sm mr-2">Edit</a>
-                                    <form action="{{ route('admin.categories.destroy', $item->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-warning btn-sm">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
+                        @forelse ($categories as $key => $item)
+                            <tr>
+                                <th>{{ $categories->firstItem() + $key }}</th>
+                                <td>{{ $item->name }}</td>
+                                <td>
+                                    <figure class="avatar">
+                                        <img src="{{ asset('upload/category/' . $item->img) }}" alt="Category Image">
+                                    </figure>
+                                </td>
+                                <td class="text-left">
+                                    <ul class="list-unstyled">
+                                        <li><strong>Added By:</strong> {{ $item->user->name ?? 'N/A' }}</li>
+                                        <li><strong>Created At:</strong> {{ $item->created_at->diffForHumans() }}</li>
+                                    </ul>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a href="{{ route('admin.categories.edit', $item->id) }}"
+                                            class="btn btn-info btn-sm mr-2">Edit</a>
+                                        <form action="{{ route('admin.categories.destroy', $item->id) }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center text-danger">No categories found.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-            {{ $categories->links() }}
+            <div class="mt-3">
+                {{ $categories->links() }}
+            </div>
         </div>
-
-        <div class="card-footer bg-primary ">
-            <h5>Total Catagory: {{ $categories->total() }}</h5>
+        <div class="card-footer bg-primary text-white">
+            <h5 class="mb-0">Total Categories: {{ $categories->total() }}</h5>
         </div>
     </div>
 @endsection

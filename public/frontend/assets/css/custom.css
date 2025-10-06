@@ -1,0 +1,47 @@
+.cart-wrap .quantity {
+    position: relative;
+}
+.cart-wrap .quantity .qtybutton {
+    top: 50%;
+    left: 0px;
+    transform: translateY(-51%);
+    -webkit-transform: translateY(-51%);
+    -moz-transform: translateY(-51%);
+}
+
+.cart-wrap .quantity .qtybutton.inc {
+    right: 27px;
+    left: auto;
+}
+.quantity input {
+    width: 106px;
+    padding: 0;
+    text-align: center;
+    height: 35px;
+    position: relative;
+    background: #ccc;
+    border: none;
+    top: -1px;
+}
+
+.quantity .qtybutton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 35px;
+    width: 35px;
+    text-align: center;
+    line-height: 35px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #333;
+    background:#ddd;
+}
+
+.quantity .qtybutton:hover {
+    background: #2266cc;
+    color: #fff;
+}
+.cart-wrap .quantity .qtybutton.inc {
+    left: 72px;
+}

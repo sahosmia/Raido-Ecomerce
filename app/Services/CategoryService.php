@@ -19,10 +19,7 @@ class CategoryService
 
     public function getAllCategories(int $perPage = 10)
     {
-        $page = request('page', 1);
-        return Cache::tags(['categories'])->remember("categories.page.{$page}", now()->addMinutes(60), function () use ($perPage) {
-            return $this->categoryRepository->getAll($perPage);
-        });
+        return $this->categoryRepository->getAll($perPage);
     }
 
     public function getTrashedCategories(int $perPage = 10)

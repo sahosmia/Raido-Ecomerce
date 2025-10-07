@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 
 class Subcategory extends Model
@@ -18,13 +19,26 @@ class Subcategory extends Model
         'added_by',
     ];
 
-    public function user()
+
+
+     protected static function boot()
     {
-        return $this->belongsTo(User::class, 'added_by');
+        parent::boot();
+
+        static::creating(function ($subcategory) {
+            $subcategory->slug = Str::slug($subcategory->name);
+        });
     }
 
-    public function category_info()
-    {
-        return $this->belongsTo(Category::class, 'category');
-    }
+
+    public function category()
+{
+    return $this->belongsTo(Category::class, 'category_id');
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class, 'added_by');
+}
+
 }

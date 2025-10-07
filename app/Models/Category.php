@@ -30,4 +30,10 @@ class Category extends Model
             get: fn ($value) => $value ? asset('upload/category/' . $value) : 'https://placehold.co/600x400?text=No+Image',
         );
     }
+
+    public function subcategories()
+{
+    return $this->hasMany(Subcategory::class, 'category_id');
+}
+
 }

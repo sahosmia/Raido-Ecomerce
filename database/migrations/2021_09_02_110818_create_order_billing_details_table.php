@@ -15,14 +15,15 @@ class CreateOrderBillingDetailsTable extends Migration
     {
         Schema::create('order_billing_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->string('name', 100);
-            $table->string('email',);
-            $table->integer('division');
-            $table->integer('district');
-            $table->string('cookie');
-            $table->string('address',);
-            $table->integer('zip_code');
-            $table->integer('phone');
+            $table->string('email');
+            $table->string('phone');
+            $table->text('address');
+            $table->foreignId('division_id')->constrained('divisions');
+            $table->foreignId('district_id')->constrained('districts');
+            $table->string('zip_code');
+            $table->timestamps();
         });
     }
 

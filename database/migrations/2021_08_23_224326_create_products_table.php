@@ -15,17 +15,18 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
+            $table->string('name', 100)->unique();
+            $table->string('slug', 100)->unique();
             $table->string('img')->nullable();
-            $table->integer('price');
+            $table->decimal('price', 8, 2);
             $table->integer('quantity');
-            $table->text('des',);
-            $table->integer('category');
-            $table->integer('subcategory');
-            $table->integer('added_by');
-            $table->integer('best_sell')->default(0);
-            $table->integer('action')->default(1);
-            $table->float('discount')->default(0);
+            $table->text('description');
+            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('subcategory_id')->constrained('subcategories');
+            $table->foreignId('added_by')->constrained('users');
+            $table->boolean('best_sell')->default(false);
+            $table->boolean('is_active')->default(true);
+            $table->decimal('discount', 8, 2)->default(0);
             $table->integer('notification_quantity')->default(0);
             $table->softDeletes();
             $table->timestamps();

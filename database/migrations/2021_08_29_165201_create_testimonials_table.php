@@ -17,10 +17,10 @@ class CreateTestimonialsTable extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('title', 100);
-            $table->text('des');
+            $table->text('description');
             $table->string('img')->default('testimonial.jpg');
-            $table->integer('action')->default(1);
-            $table->integer('added_by');
+            $table->boolean('is_active')->default(true);
+            $table->foreignId('added_by')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
         });

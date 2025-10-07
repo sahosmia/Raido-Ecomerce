@@ -11,11 +11,20 @@ class ProductPhoto extends Model
     use HasFactory;
     protected $table = 'product_photos';
     protected $fillable = [
+        'product_id',
         'img',
-        'product',
+        'is_active',
         'added_by',
-        'action',
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 
     protected function img(): Attribute
     {
@@ -26,6 +35,11 @@ class ProductPhoto extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product');
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'added_by');
     }
 }

@@ -15,10 +15,10 @@ class CreateProductPhotosTable extends Migration
     {
         Schema::create('product_photos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_id')->constrained('products');
             $table->string('img');
-            $table->integer('product');
-            $table->integer('action')->default(1);
-            $table->integer('added_by');
+            $table->boolean('is_active')->default(true);
+            $table->foreignId('added_by')->constrained('users');
             $table->timestamps();
         });
     }

@@ -38,7 +38,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered table-striped">
                     <thead class="thead-dark">
                         <tr>
                             <th>#</th>
@@ -74,20 +74,26 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <ul class="list-unstyled text-left">
+                                    <dl class="row mb-0">
                                         @if ($item->discount)
-                                            <li><strong>Discount:</strong> {{ $item->discount }}%</li>
+                                            <dt class="col-sm-5">Discount:</dt>
+                                            <dd class="col-sm-7">{{ $item->discount }}%</dd>
                                         @endif
-                                        <li><strong>Subcategory:</strong> {{ $item->subcategory_info->name ?? 'N/A' }}</li>
-                                        <li><strong>Category:</strong> {{ $item->category_info->name ?? 'N/A' }}</li>
-                                        <li><strong>Quantity:</strong> {{ $item->quantity }}</li>
+                                        <dt class="col-sm-5">Subcategory:</dt>
+                                        <dd class="col-sm-7">{{ $item->subcategory_info->name ?? 'N/A' }}</dd>
+                                        <dt class="col-sm-5">Category:</dt>
+                                        <dd class="col-sm-7">{{ $item->category_info->name ?? 'N/A' }}</dd>
+                                        <dt class="col-sm-5">Quantity:</dt>
+                                        <dd class="col-sm-7">{{ $item->quantity }}</dd>
                                         @if ($item->notification_quantity)
-                                            <li><strong>Notification Quantity:</strong> {{ $item->notification_quantity }}
-                                            </li>
+                                            <dt class="col-sm-5">Alert Qty:</dt>
+                                            <dd class="col-sm-7">{{ $item->notification_quantity }}</dd>
                                         @endif
-                                        <li><strong>Added By:</strong> {{ $item->user->name ?? 'N/A' }}</li>
-                                        <li><strong>Created At:</strong> {{ $item->created_at->diffForHumans() }}</li>
-                                    </ul>
+                                        <dt class="col-sm-5">Added By:</dt>
+                                        <dd class="col-sm-7">{{ $item->user->name ?? 'N/A' }}</dd>
+                                        <dt class="col-sm-5">Created At:</dt>
+                                        <dd class="col-sm-7">{{ $item->created_at->diffForHumans() }}</dd>
+                                    </dl>
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">

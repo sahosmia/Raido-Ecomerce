@@ -47,7 +47,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="category">Category</label>
+                                <label for="category">Category <span class="text-danger">*</span></label>
                                 <select id="category" name="category"
                                     class="form-control select2-example @error('category') is-invalid @enderror"
                                     required>
@@ -64,7 +64,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="subcategory">Subcategory</label>
+                                <label for="subcategory">Subcategory <span class="text-danger">*</span></label>
                                 <select id="subcategory" name="subcategory"
                                     class="form-control select2-example @error('subcategory') is-invalid @enderror"
                                     required>
@@ -83,7 +83,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="name">Product Name</label>
+                                <label for="name">Product Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" id="name"
                                     class="form-control @error('name') is-invalid @enderror"
                                     value="{{ old('name', $item->name) }}" placeholder="Enter product name" required>
@@ -92,7 +92,7 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="price">Price</label>
+                                <label for="price">Price <span class="text-danger">*</span></label>
                                 <input type="number" name="price" id="price"
                                     class="form-control @error('price') is-invalid @enderror"
                                     value="{{ old('price', $item->price) }}" placeholder="Enter price" required>
@@ -104,7 +104,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label for="quantity">Quantity</label>
+                                <label for="quantity">Quantity <span class="text-danger">*</span></label>
                                 <input type="number" name="quantity" id="quantity"
                                     class="form-control @error('quantity') is-invalid @enderror"
                                     value="{{ old('quantity', $item->quantity) }}" placeholder="Enter quantity"
@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="des">Description</label>
+                            <label for="des">Description <span class="text-danger">*</span></label>
                             <textarea name="des" id="des" class="form-control @error('des') is-invalid @enderror"
                                 rows="4" placeholder="Enter product description"
                                 required>{{ old('des', $item->des) }}</textarea>
@@ -149,7 +149,7 @@
                             <label for="img">Update Featured Image (Optional)</label>
                             <div class="custom-file">
                                 <input type="file" name="img" id="img"
-                                    class="custom-file-input @error('img') is-invalid @enderror">
+                                    class="custom-file-input @error('img') is-invalid @enderror" accept="image/*">
                                 <label class="custom-file-label" for="img">Choose file...</label>
                             </div>
                             @error('img')

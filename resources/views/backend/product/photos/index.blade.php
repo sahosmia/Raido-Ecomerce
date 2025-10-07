@@ -28,7 +28,7 @@
         <ul class="nav justify-content-center">
             <li class="nav-item">
                 <a class="nav-link btn btn-primary"
-                    href="{{ route('admin.products.photos.create', $product->id) }}">Add New Photos</a>
+                    href="{{ route('admin.products.photos.create', $product) }}">Add New Photos</a>
             </li>
         </ul>
     </div>
@@ -65,7 +65,7 @@
                                     </ul>
                                 </td>
                                 <td>
-                                    <form action="{{ route('admin.products.photos.destroy', $item->id) }}"
+                                    <form action="{{ route('admin.products.photos.destroy', $item) }}"
                                         method="POST"
                                         onsubmit="return confirm('Are you sure you want to delete this photo?');">
                                         @csrf

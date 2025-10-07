@@ -37,7 +37,7 @@
                     @forelse ($wishlists as $item)
                         <tr>
                             <td class="product-thumbnail">
-                                <a href="{{ route('front.product.show', $item->product->id) }}">
+                                <a href="{{ route('front.product.view', $item->product->id) }}">
                                     <figure>
                                         <img src="{{ asset('upload/product/' . $item->product->img) }}" width="100"
                                             height="100" alt="product">
@@ -46,7 +46,7 @@
                             </td>
                             <td class="product-name">
                                 <a
-                                    href="{{ route('front.product.show', $item->product->id) }}">{{ $item->product->name }}</a>
+                                    href="{{ route('front.product.view', $item->product->id) }}">{{ $item->product->name }}</a>
                             </td>
                             <td class="product-price">
                                 <span class="amount">${{ $item->product->discounted_price }}</span>
@@ -59,14 +59,22 @@
                                 @endif
                             </td>
                             <td class="product-add-to-cart">
-                                <a href="{{ route('front.cart.add', $item->product->id) }}"
-                                    class="btn-product btn-primary"><span>Add to Cart</span></a>
+                                <form action="{{ route('front.cart.add', $item->product) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn-product btn-primary"><span>Add to
+                                            Cart</span></button>
+                                </form>
                             </td>
                             <td class="product-remove">
-                                <div>
-                                    <a href="{{ route('front.wishlist.delete', $item->id) }}" class="remove"
-                                        title="Remove this product"><i class="fas fa-times"></i></a>
-                                </div>
+                                <form action="{{ route('front.wishlist.delete', $item) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="remove" title="Remove this product"
+                                        style="background:none; border:none; padding:0; cursor:pointer; font-size: 1.5rem; color: #999;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @empty

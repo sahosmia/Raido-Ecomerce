@@ -17,7 +17,7 @@
                         <a href="{{ route('admin.products.index') }}">Products</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.products.photos.index', $product->id) }}">Product Photos</a>
+                        <a href="{{ route('admin.products.photos.index', $product) }}">Product Photos</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Add Photos</li>
                 </ol>
@@ -32,7 +32,7 @@
                     <h5 class="mb-0">Upload New Photos</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.products.photos.store', $product->id) }}" method="POST"
+                    <form action="{{ route('admin.products.photos.store', $product) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">

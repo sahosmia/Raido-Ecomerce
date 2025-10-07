@@ -15,12 +15,14 @@ class CreateCuponsTable extends Migration
     {
         Schema::create('cupons', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('code', 100);
-            $table->integer('discount');
-            $table->date('end_cupon');
-            $table->integer('action')->default(1);
-            $table->integer('added_by');
+            $table->string('name', 100)->unique();
+            $table->string('slug', 100)->unique();
+            $table->string('code', 100)->unique();
+            $table->decimal('discount_value', 8, 2);
+            $table->enum('discount_type', ['fixed', 'percentage'])->default('fixed');
+            $table->timestamp('expires_at');
+            $table->boolean('is_active')->default(true);
+            $table->foreignId('added_by')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -15,13 +15,10 @@ class CreateOrderDetailsTable extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->string('cookie');
-            $table->integer('total');
-            $table->integer('payment_status')->default(1);
-            $table->integer('payment_method');
-            $table->integer('dalivary_status')->default(1);
-            $table->integer('user_id');
-            $table->integer('cupon_id')->default(0);
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products');
+            $table->unsignedInteger('quantity');
+            $table->decimal('price', 8, 2);
             $table->timestamps();
         });
     }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Category extends Model
@@ -14,10 +14,29 @@ class Category extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'slug',
         'img',
-        'action',
+        'is_active',
         'added_by',
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    protected static function booted()
+    {
+        static::creating(function ($category) {
+            if (empty($category->slug)) {
+                $category->slug = Str::slug($category->name);
+            }
+        });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 
     public function user()
     {

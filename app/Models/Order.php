@@ -9,13 +9,31 @@ class Order extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'product_id',
-        'quantity',
-        'cookie',
+        'user_id',
+        'sub_total',
+        'discount',
+        'total',
+        'status',
     ];
 
-    public function product()
+    protected $casts = [
+        'sub_total' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'total' => 'decimal:2',
+    ];
+
+    public function user()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(User::class);
+    }
+
+    public function details()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
+
+    public function billingDetail()
+    {
+        return $this->hasOne(OrderBillingDetail::class);
     }
 }

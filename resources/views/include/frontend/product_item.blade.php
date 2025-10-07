@@ -15,7 +15,7 @@
         </figure>
         <div class="product-details">
             <div class="product-cat">
-                <a href="{{ url('front/category/subcategory') }}/{{ $item->category }}/{{ 'null' }}">{{ App\Models\Category::find($item->category)->name }}</a>
+                <a href="{{ route('front.category.subcategory', ['category' => $item->category->id, 'subcategory' => 'null']) }}">{{ $item->category->name }}</a>
             </div>
             <h3 class="product-name"><a href="{{ url('front/product') }}/{{ $item->id }}">{{ $item->name }}</a></h3>
             <div class="product-price">
@@ -29,22 +29,12 @@
             <div class="ratings-container">
                 <div class="ratings-full">
                     @php
-                        $reviews_count = App\Models\Review::where('product', $item->id)->count();
-                        $reviews = App\Models\Review::where('product', $item->id)->get();
-                        if ($reviews_count != 0) {
-                            $rating_total = 0;
-                            foreach ($reviews as $review) {
-                                $rating = $review->rating;
-                                $rating_total += $rating;
-                            }
-                            $rating_point = $rating_total/$reviews_count;
-                            $rating_persent = 100*$rating_point/5;
-                        }
-                        @endphp
-                    <span class="ratings" style="width: {{ $reviews_count == 0 ? 0 : $rating_persent }}%"></span>
+                        $rating_percent = ($item->reviews_avg_rating ?? 0) * 20;
+                    @endphp
+                    <span class="ratings" style="width: {{ $rating_percent }}%"></span>
                     <span class="tooltiptext tooltip-top"></span>
                 </div>
-                <a class="rating-reviews">( {{  $reviews_count }} reviews )</a>
+                <a class="rating-reviews">( {{ $item->reviews_count }} reviews )</a>
             </div>
             <div class="product-action">
                 <a href="{{ url('front/cart/product') }}/{{ $item->id }}" class="btn-cart" ><i class="d-icon-bag"></i><span>Add to cart</span></a>

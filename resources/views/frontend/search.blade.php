@@ -25,8 +25,8 @@
                             <div class="row cols-2 cols-sm-3 cols-md-4 cols-xl-5">
                                 @forelse ($products as $item)
                                     <div class="product-wrap">
-                                        @include('include.frontend.product_item_simple', [
-                                            'item' => $item,
+                                        @include('include.frontend.product_item', [
+                                            'items' => [$item],
                                         ])
                                     </div>
                                 @empty

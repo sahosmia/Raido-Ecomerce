@@ -20,6 +20,8 @@ class Brand extends Model
         'added_by',
     ];
 
+    protected $with = ['user'];
+
     protected $casts = [
         'is_active' => 'boolean',
     ];

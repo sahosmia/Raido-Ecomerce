@@ -82,8 +82,8 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="{{ route('admin.teams.edit', $item->id) }}" class="btn btn-info btn-sm mr-2">Edit</a>
-                                    <form action="{{ route('admin.teams.destroy', $item->id) }}" method="POST">
+                                    <a href="{{ route('admin.teams.edit', $item) }}" class="btn btn-info btn-sm mr-2">Edit</a>
+                                    <form action="{{ route('admin.teams.destroy', $item) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-warning btn-sm">Delete</button>

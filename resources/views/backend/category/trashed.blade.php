@@ -66,12 +66,12 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <form action="{{ route('admin.categories.restore', $item->id) }}" method="POST"
+                                        <form action="{{ route('admin.categories.restore', $item) }}" method="POST"
                                             class="mr-2">
                                             @csrf
                                             <button type="submit" class="btn btn-success btn-sm">Restore</button>
                                         </form>
-                                        <form action="{{ route('admin.categories.forceDelete', $item->id) }}"
+                                        <form action="{{ route('admin.categories.forceDelete', $item) }}"
                                             method="POST"
                                             onsubmit="return confirm('Are you sure you want to permanently delete this category? This action cannot be undone.');">
                                             @csrf

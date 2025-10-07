@@ -31,7 +31,7 @@
                                         <tr>
                                             <td class="product-thumbnail">
                                                 <figure>
-                                                    <a href="{{ route('front.product.show', $item->product->id) }}">
+                                                    <a href="{{ route('front.product.view', $item->product->id) }}">
                                                         <img src="{{ asset('upload/product/' . $item->product->img) }}"
                                                             width="100" height="100" alt="product">
                                                     </a>
@@ -40,7 +40,7 @@
                                             <td class="product-name">
                                                 <div class="product-name-section">
                                                     <a
-                                                        href="{{ route('front.product.show', $item->product->id) }}">{{ $item->product->name }}</a>
+                                                        href="{{ route('front.product.view', $item->product->id) }}">{{ $item->product->name }}</a>
                                                     @if ($item->quantity > $item->product->quantity)
                                                         <span class="tip tip-hot">Stock Out</span>
                                                     @endif
@@ -58,10 +58,16 @@
                                                     class="amount">${{ $item->product->discounted_price * $item->quantity }}</span>
                                             </td>
                                             <td class="product-close">
-                                                <a href="{{ route('front.cart.delete', $item->id) }}"
-                                                    class="product-remove" title="Remove this product">
-                                                    <i class="fas fa-times"></i>
-                                                </a>
+                                                <form action="{{ route('front.cart.delete', $item) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="product-remove"
+                                                        title="Remove this product"
+                                                        style="background:none; border:none; padding:0; cursor:pointer;">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -79,11 +85,15 @@
 
                         <div class="cart-coupon-box mb-8">
                             <h4 class="title coupon-title text-uppercase ls-m">Coupon Discount</h4>
-                            <input type="text" name="coupon_code"
-                                class="input-text form-control text-grey ls-m mb-4" id="coupon_code"
-                                value="{{ $coupon }}" placeholder="Enter coupon code here...">
-                            <a href="#" id="coupon_code_btn"
-                                class="btn btn-md btn-dark btn-rounded btn-outline">Apply Coupon</a>
+                            <form action="{{ route('front.cart.coupon.apply') }}" method="POST">
+                                @csrf
+                                <input type="text" name="coupon_code"
+                                    class="input-text form-control text-grey ls-m mb-4" id="coupon_code"
+                                    value="{{ old('coupon_code', $coupon ?? '') }}"
+                                    placeholder="Enter coupon code here...">
+                                <button type="submit" class="btn btn-md btn-dark btn-rounded btn-outline">Apply
+                                    Coupon</button>
+                            </form>
                         </div>
                         <x-alert />
                     </div>

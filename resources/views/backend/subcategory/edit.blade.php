@@ -50,7 +50,7 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">Update Subcategory</div>
         <div class="card-body">
-            <form action="{{ route('admin.subcategories.update', $item->id) }}" method="post">
+            <form action="{{ route('admin.subcategories.update', $item) }}" method="post">
                 @csrf
                 @method('PUT')
 

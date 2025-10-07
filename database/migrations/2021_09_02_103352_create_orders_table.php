@@ -15,9 +15,12 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->integer('product_id');
-            $table->integer('quantity');
-            $table->string('cookie');
+            $table->foreignId('user_id')->constrained('users');
+            $table->decimal('sub_total', 8, 2);
+            $table->decimal('discount', 8, 2)->default(0);
+            $table->decimal('total', 8, 2);
+            $table->enum('status', ['pending', 'processing', 'completed', 'declined', 'cancelled'])->default('pending');
+            $table->timestamps();
         });
     }
 

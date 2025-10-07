@@ -15,10 +15,11 @@ class CreateSubcategoriesTable extends Migration
     {
         Schema::create('subcategories', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->integer('category');
-            $table->integer('action')->default(1);
-            $table->integer('added_by');
+            $table->string('name', 100)->unique();
+            $table->string('slug', 100)->unique();
+            $table->foreignId('category_id')->constrained('categories');
+            $table->boolean('is_active')->default(true);
+            $table->foreignId('added_by')->constrained('users');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -9,6 +9,18 @@ class Message extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'action',
+        'name',
+        'email',
+        'message',
+        'is_read',
     ];
+
+    protected $casts = [
+        'is_read' => 'boolean',
+    ];
+
+    public function scopeUnread($query)
+    {
+        return $query->where('is_read', false);
+    }
 }

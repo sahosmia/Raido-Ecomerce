@@ -12,7 +12,7 @@
                 <h3 class="title title-simple title-step"><a href="#">3. Order Complete</a></h3>
             </div>
             <div class="container mt-7">
-                <form action="{{ url('/pay') }}" class="form" method="POST">
+                <form action="{{ route('front.order.submit') }}" class="form" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-lg-7 mb-6 mb-lg-0 pr-lg-4">

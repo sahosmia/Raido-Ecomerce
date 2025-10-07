@@ -66,9 +66,9 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('admin.categories.edit', $item->id) }}"
+                                        <a href="{{ route('admin.categories.edit', $item) }}"
                                             class="btn btn-info btn-sm mr-2">Edit</a>
-                                        <form action="{{ route('admin.categories.destroy', $item->id) }}" method="POST"
+                                        <form action="{{ route('admin.categories.destroy', $item) }}" method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this category?');">
                                             @csrf
                                             @method('DELETE')

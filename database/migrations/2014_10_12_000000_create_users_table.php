@@ -23,10 +23,10 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('address')->nullable();
             $table->string('facebook')->nullable();
-            $table->string('instragram')->nullable();
+            $table->string('instagram')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('twitter')->nullable();
-            $table->integer('phone')->nullable();
+            $table->string('phone')->nullable();
             $table->string('blood')->nullable();
             $table->rememberToken();
             $table->softDeletes();

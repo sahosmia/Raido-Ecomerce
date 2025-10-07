@@ -8,20 +8,40 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 
+
 class Subcategory extends Model
 {
     use SoftDeletes;
     use HasFactory;
     protected $fillable = [
         'name',
-        'category',
-        'action',
+        'slug',
+        'category_id',
+        'is_active',
         'added_by',
     ];
 
 
 
-     protected static function boot()
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    protected static function booted()
+    {
+        static::creating(function ($subcategory) {
+            if (empty($subcategory->slug)) {
+                $subcategory->slug = Str::slug($subcategory->name);
+            }
+        });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    protected static function boot()
     {
         parent::boot();
 

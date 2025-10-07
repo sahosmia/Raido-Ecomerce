@@ -14,9 +14,23 @@ class Testimonial extends Model
     protected $fillable = [
         'name',
         'title',
+        'description',
         'img',
-        'des',
-        'action',
-
+        'is_active',
+        'added_by',
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
 }

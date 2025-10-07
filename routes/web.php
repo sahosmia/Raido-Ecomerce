@@ -28,62 +28,66 @@ use App\Http\Controllers\BlankController;
 
 // Frontend Routes
 Route::name('front.')->group(function () {
-    // Frontend page
+    // Frontend pages
     Route::get('/', [FrontendController::class, 'index'])->name('index');
     Route::get('about', [FrontendController::class, 'about'])->name('about');
+    Route::get('shop', [FrontendController::class, 'shop'])->name('shop');
     Route::get('search', [FrontendController::class, 'search'])->name('search');
-    Route::get('contact-us', [FrontendController::class, 'contact_us'])->name('contact_us');
-    Route::get('category/subcategory/{category}/{subcategory}', [FrontendController::class, 'allproduct'])->name('category.subcategory');
-    Route::get('product/{id}', [FrontendController::class, 'product_view_single'])->name('product.view_single');
+    Route::get('contact-us', [FrontendController::class, 'contact_us'])->name('contact');
+    Route::get('categories/{category}/subcategories/{subcategory}', [FrontendController::class, 'allproduct'])->name('category.subcategory');
+    Route::get('products/{product}', [FrontendController::class, 'product_view_single'])->name('product.view');
 
     // Wishlist Routes
-    Route::prefix('wishlist')->name('wishlist.')->group(function () {
+    Route::prefix('wishlist')->name('wishlist.')->middleware('auth')->group(function () {
         Route::get('/', [WishlistController::class, 'wishlist'])->name('index');
-        Route::get('add/{id}', [WishlistController::class, 'wishlistadd'])->name('add');
-        Route::get('delete/{id}', [WishlistController::class, 'wishlistdelete'])->name('delete');
+        Route::post('add/{product}', [WishlistController::class, 'wishlistadd'])->name('add');
+        Route::delete('delete/{wishlist}', [WishlistController::class, 'wishlistdelete'])->name('delete');
     });
 
     // Cart Routes
     Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'cart'])->name('index');
-        Route::get('{coupon}', [CartController::class, 'cart'])->name('coupon');
-        Route::get('add/{id}', [CartController::class, 'cartadd'])->name('add');
+        Route::post('add/{product}', [CartController::class, 'cartadd'])->name('add');
         Route::post('add-multiple', [CartController::class, 'cartaddmultiple'])->name('add_multiple');
-        Route::get('delete/{id}', [CartController::class, 'cartdelete'])->name('delete');
+        Route::delete('delete/{cart}', [CartController::class, 'cartdelete'])->name('delete');
         Route::post('update', [CartController::class, 'update_cart'])->name('update');
+        Route::post('coupon', [CartController::class, 'applyCoupon'])->name('coupon.apply');
     });
 
     // Checkout Routes
-    Route::prefix('checkout')->name('checkout.')->group(function () {
+    Route::prefix('checkout')->name('checkout.')->middleware('auth')->group(function () {
         Route::get('/', [CheckoutController::class, 'checkout'])->name('index');
-        Route::get('add/{id}', [CheckoutController::class, 'checkoutadd'])->name('add');
-        Route::get('delete/{id}', [CheckoutController::class, 'checkoutdelete'])->name('delete');
         Route::post('get-district-name', [CheckoutController::class, 'getdistrictname'])->name('get_district_name');
     });
 
     // Order Routes
-    Route::prefix('order')->name('order.')->group(function () {
-        Route::post('submit', [OrderController::class, 'order_submit'])->name('submit');
+    Route::prefix('order')->name('order.')->middleware('auth')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::post('/', [OrderController::class, 'order_submit'])->name('submit');
     });
 
     // Profile Routes
-    Route::prefix('profile')->name('profile.')->group(function () {
+    Route::prefix('profile')->name('profile.')->middleware('auth')->group(function () {
         Route::get('/', [ProfileController::class, 'front_profile'])->name('index');
-        Route::post('update', [ProfileController::class, 'profile_update'])->name('update');
-        Route::get('add-user', [ProfileController::class, 'adduser'])->name('add_user');
-        Route::post('add-user-insert', [ProfileController::class, 'adduserinsert'])->name('add_user_insert');
+        Route::put('update', [ProfileController::class, 'profile_update'])->name('update');
+
+        Route::prefix('users')->name('users.')->group(function () {
+            Route::get('create', [ProfileController::class, 'adduser'])->name('create');
+            Route::post('/', [ProfileController::class, 'adduserinsert'])->name('store');
+        });
     });
 
     // Review Routes
-    Route::post('review/add', [ReviewController::class, 'review_add'])->name('review.add');
+    Route::post('reviews', [ReviewController::class, 'review_add'])->name('review.store');
 });
 
 // Message Routes
-Route::prefix('message')->name('message.')->group(function () {
-    Route::post('add', [MessageController::class, 'message_add'])->name('add');
-    Route::get('delete/{id}', [MessageController::class, 'message_delete'])->name('delete');
-    Route::get('view/{id}', [MessageController::class, 'message_view'])->name('view');
+Route::prefix('messages')->name('messages.')->group(function () {
+    Route::post('/', [MessageController::class, 'message_add'])->name('store');
+    Route::middleware('auth')->group(function () {
+        Route::get('{message}', [MessageController::class, 'message_view'])->name('show');
+        Route::delete('{message}', [MessageController::class, 'message_delete'])->name('destroy');
+    });
 });
 
 // Home
@@ -109,54 +113,67 @@ Route::prefix('sslcommerz')->name('sslcommerz.')->group(function () {
 });
 
 // Admin Routes
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
-    Route::post('categories/restore/{category}', [CategoryController::class, 'restore'])->name('categories.restore')->withTrashed();
-    Route::delete('categories/force-delete/{category}', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete')->withTrashed();
-    Route::post('categories/get-subcategories', [CategoryController::class, 'getSubcategories'])->name('categories.getSubcategories');
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    // Category Routes
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('trashed', [CategoryController::class, 'trashed'])->name('trashed');
+        Route::post('{category}/restore', [CategoryController::class, 'restore'])->name('restore')->withTrashed();
+        Route::delete('{category}/force-delete', [CategoryController::class, 'forceDelete'])->name('forceDelete')->withTrashed();
+        Route::post('get-subcategories', [CategoryController::class, 'getSubcategories'])->name('getSubcategories');
+    });
     Route::resource('categories', CategoryController::class);
 
     // Product Routes
-    Route::middleware('auth')->group(function () {
-        Route::get('products/trashed', [ProductController::class, 'trashed'])->name('products.trashed');
-        Route::post('products/restore/{product}', [ProductController::class, 'restore'])->name('products.restore')->withTrashed();
-        Route::delete('products/force-delete/{product}', [ProductController::class, 'forceDelete'])->name('products.forceDelete')->withTrashed();
-        Route::resource('products', ProductController::class);
-    });
+    Route::prefix('products')->name('products.')->group(function () {
+        Route::get('trashed', [ProductController::class, 'trashed'])->name('trashed');
+        Route::post('{product}/restore', [ProductController::class, 'restore'])->name('restore')->withTrashed();
+        Route::delete('{product}/force-delete', [ProductController::class, 'forceDelete'])->name('forceDelete')->withTrashed();
 
-    // Product Photos Routes
-    Route::get('products/{product}/photos', [ProductController::class, 'view_product_photo'])->name('products.photos.index');
-    Route::get('products/{product}/photos/create', [ProductController::class, 'addproductphoto'])->name('products.photos.create');
-    Route::post('products/{product}/photos', [ProductController::class, 'addproductphotoinsert'])->name('products.photos.store');
-    Route::delete('products/photos/{photo}', [ProductController::class, 'delete_product_photo'])->name('products.photos.destroy');
+        // Product Photos Routes
+        Route::get('{product}/photos', [ProductController::class, 'view_product_photo'])->name('photos.index');
+        Route::get('{product}/photos/create', [ProductController::class, 'addproductphoto'])->name('photos.create');
+        Route::post('{product}/photos', [ProductController::class, 'addproductphotoinsert'])->name('photos.store');
+        Route::delete('photos/{photo}', [ProductController::class, 'delete_product_photo'])->name('photos.destroy');
+    });
+    Route::resource('products', ProductController::class);
 
     // Brand Routes
-    Route::get('brands/trashed', [BrandController::class, 'trashed'])->name('brands.trashed');
-    Route::post('brands/restore/{id}', [BrandController::class, 'restore'])->name('brands.restore');
-    Route::delete('brands/force-delete/{id}', [BrandController::class, 'forceDelete'])->name('brands.forceDelete');
+    Route::prefix('brands')->name('brands.')->group(function () {
+        Route::get('trashed', [BrandController::class, 'trashed'])->name('trashed');
+        Route::post('{brand}/restore', [BrandController::class, 'restore'])->name('restore')->withTrashed();
+        Route::delete('{brand}/force-delete', [BrandController::class, 'forceDelete'])->name('forceDelete')->withTrashed();
+    });
     Route::resource('brands', BrandController::class);
 
     // SubCategory Routes
-    Route::get('subcategories/trashed', [SubcategoryController::class, 'trashed'])->name('subcategories.trashed');
-    Route::post('subcategories/restore/{id}', [SubcategoryController::class, 'restore'])->name('subcategories.restore');
-    Route::delete('subcategories/force-delete/{id}', [SubcategoryController::class, 'forceDelete'])->name('subcategories.forceDelete');
+    Route::prefix('subcategories')->name('subcategories.')->group(function () {
+        Route::get('trashed', [SubcategoryController::class, 'trashed'])->name('trashed');
+        Route::post('{subcategory}/restore', [SubcategoryController::class, 'restore'])->name('restore')->withTrashed();
+        Route::delete('{subcategory}/force-delete', [SubcategoryController::class, 'forceDelete'])->name('forceDelete')->withTrashed();
+    });
     Route::resource('subcategories', SubcategoryController::class);
 
-    // Cupon Routes
-    Route::get('cupons/trashed', [CuponController::class, 'trashed'])->name('cupons.trashed');
-    Route::post('cupons/restore/{id}', [CuponController::class, 'restore'])->name('cupons.restore');
-    Route::delete('cupons/force-delete/{id}', [CuponController::class, 'forceDelete'])->name('cupons.forceDelete');
-    Route::resource('cupons', CuponController::class);
+    // Coupon Routes
+    Route::prefix('coupons')->name('coupons.')->group(function () {
+        Route::get('trashed', [CuponController::class, 'trashed'])->name('trashed');
+        Route::post('{coupon}/restore', [CuponController::class, 'restore'])->name('restore')->withTrashed();
+        Route::delete('{coupon}/force-delete', [CuponController::class, 'forceDelete'])->name('forceDelete')->withTrashed();
+    });
+    Route::resource('coupons', CuponController::class);
 
     // Testimonial Routes
-    Route::get('testimonials/trashed', [TestimonialController::class, 'trashed'])->name('testimonials.trashed');
-    Route::post('testimonials/restore/{id}', [TestimonialController::class, 'restore'])->name('testimonials.restore');
-    Route::delete('testimonials/force-delete/{id}', [TestimonialController::class, 'forceDelete'])->name('testimonials.forceDelete');
+    Route::prefix('testimonials')->name('testimonials.')->group(function () {
+        Route::get('trashed', [TestimonialController::class, 'trashed'])->name('trashed');
+        Route::post('{testimonial}/restore', [TestimonialController::class, 'restore'])->name('restore')->withTrashed();
+        Route::delete('{testimonial}/force-delete', [TestimonialController::class, 'forceDelete'])->name('forceDelete')->withTrashed();
+    });
     Route::resource('testimonials', TestimonialController::class);
 
     // Team Routes
-    Route::get('teams/trashed', [TeamController::class, 'trashed'])->name('teams.trashed');
-    Route::post('teams/restore/{id}', [TeamController::class, 'restore'])->name('teams.restore');
-    Route::delete('teams/force-delete/{id}', [TeamController::class, 'forceDelete'])->name('teams.forceDelete');
+    Route::prefix('teams')->name('teams.')->group(function () {
+        Route::get('trashed', [TeamController::class, 'trashed'])->name('trashed');
+        Route::post('{team}/restore', [TeamController::class, 'restore'])->name('restore')->withTrashed();
+        Route::delete('{team}/force-delete', [TeamController::class, 'forceDelete'])->name('forceDelete')->withTrashed();
+    });
     Route::resource('teams', TeamController::class);
 });

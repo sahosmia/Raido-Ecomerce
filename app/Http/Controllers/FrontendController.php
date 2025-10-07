@@ -51,6 +51,15 @@ class FrontendController extends Controller
         return view('frontend.contact_us');
     }
 
+    public function shop()
+    {
+        $categories = Category::where('action', 1)->latest()->get();
+        $subcategories = Subcategory::where('action', 1)->latest()->get();
+        $products = Product::with('category_info', 'subcategory_info')->where('action', 1)->latest()->get();
+
+        return view('frontend.shop', compact('categories', 'subcategories', 'products'));
+    }
+
     public function allproduct($category_slug, $subcategory_slug = null)
     {
         $categories = Category::where('action', 1)->latest()->get();

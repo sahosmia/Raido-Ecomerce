@@ -75,14 +75,13 @@
                             <hr class="product-divider">
 
                             <div class="product-form product-qty">
-                                <form action="{{ route('front.cart.add_multiple') }}" method="POST">
+                                <form action="{{ route('front.cart.add', $product) }}" method="POST">
                                     @csrf
                                     <div class="product-form-group">
                                         <div class="input-group mr-2">
-                                            <input type="hidden" name="id" value="{{ $product->id }}">
                                             <button type="button" class="quantity-minus d-icon-minus"></button>
-                                            <input class="quantity form-control" type="number" name="quantity" min="1"
-                                                max="1000000" value="1">
+                                            <input class="quantity form-control" type="number" name="quantity"
+                                                min="1" max="1000000" value="1">
                                             <button type="button" class="quantity-plus d-icon-plus"></button>
                                         </div>
                                         <button type="submit"
@@ -105,8 +104,14 @@
                                 </div>
                                 <span class="divider d-lg-show"></span>
                                 <div class="product-action">
-                                    <a href="{{ route('front.wishlist.add', $product->id) }}"
-                                        class="btn-wishlist mr-6"><i class="d-icon-heart"></i>Add to wishlist</a>
+                                    <form action="{{ route('front.wishlist.add', $product) }}" method="POST"
+                                        style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn-wishlist mr-6"
+                                            style="background: none; border: none; cursor: pointer; padding: 0; color: #666; font-size: 1.4rem; text-transform: uppercase; letter-spacing: -0.025em; font-weight: 600;">
+                                            <i class="d-icon-heart"></i>Add to wishlist
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +185,7 @@
                                     <p>Your email address will not be published. Required fields are marked *</p>
                                 </div>
                                 <x-alert />
-                                <form action="{{ route('front.review.add') }}" method="post">
+                                <form action="{{ route('front.review.store') }}" method="post">
                                     @csrf
                                     <input type="hidden" value="{{ $product->id }}" name="product">
                                     <div class="rating-form">

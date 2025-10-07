@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Subcategory;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Support\Facades\Cache;
 
@@ -37,6 +38,11 @@ class CategoryService
         return Cache::tags(['categories'])->remember("category.{$id}", now()->addMinutes(60), function () use ($id) {
             return $this->categoryRepository->getById($id);
         });
+    }
+
+    public function getSubcategoriesByCategoryId(int $categoryId)
+    {
+        return Subcategory::where('category', $categoryId)->get();
     }
 
     public function createCategory(array $data, $image = null)

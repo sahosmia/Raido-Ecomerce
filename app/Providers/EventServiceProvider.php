@@ -6,9 +6,10 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Cupon;
 use App\Models\Product;
-use App\Models\Product_photo;
+use App\Models\ProductPhoto;
 use App\Models\Subcategory;
 use App\Observers\BlameableObserver;
+use App\Observers\ProductObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -36,8 +37,7 @@ class EventServiceProvider extends ServiceProvider
         Brand::class => [BlameableObserver::class],
         Category::class => [BlameableObserver::class],
         Cupon::class => [BlameableObserver::class],
-        Product::class => [BlameableObserver::class],
-        Product_photo::class => [BlameableObserver::class],
+        Product::class => [BlameableObserver::class, ProductObserver::class],
         Subcategory::class => [BlameableObserver::class],
     ];
 

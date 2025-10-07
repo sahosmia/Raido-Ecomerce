@@ -212,7 +212,7 @@ The database schema is designed to support a comprehensive e-commerce platform. 
 - **Subcategory**: Represents a sub-category of a product category.
 - **Brand**: Represents a product brand.
 - **Product**: Represents a product in the store.
-- **Product_photo**: Represents a photo of a product.
+- **ProductPhoto**: Represents a photo of a product.
 - **Order**: Represents a customer's order.
 - **Order_detail**: Represents a single item in an order.
 - **Order_billing_detail**: Represents the billing details for an order.

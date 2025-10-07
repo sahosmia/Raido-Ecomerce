@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
+use App\Models\Subcategory;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
@@ -72,5 +73,11 @@ class CategoryController extends Controller
     {
         $this->categoryService->forceDeleteCategory($category);
         return back()->with('success', 'Permanently deleted the category.');
+    }
+
+    public function getSubcategories(Request $request)
+    {
+        $subcategories = $this->categoryService->getSubcategoriesByCategoryId($request->id);
+        return view('backend.product.include.subcategory_options', compact('subcategories'))->render();
     }
 }

@@ -89,6 +89,7 @@ Route::prefix('message')->name('message.')->group(function () {
 // Home
 Auth::routes();
 Route::get('home', [HomeController::class, 'index'])->name('home');
+Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 
 // Blank Page
 Route::get('blank', [BlankController::class, 'index'])->name('blank');
@@ -112,14 +113,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('categories/trashed', [CategoryController::class, 'trashed'])->name('categories.trashed');
     Route::post('categories/restore/{category}', [CategoryController::class, 'restore'])->name('categories.restore')->withTrashed();
     Route::delete('categories/force-delete/{category}', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete')->withTrashed();
+    Route::post('categories/get-subcategories', [CategoryController::class, 'getSubcategories'])->name('categories.getSubcategories');
     Route::resource('categories', CategoryController::class);
 
     // Product Routes
-    Route::get('products/trashed', [ProductController::class, 'trashed'])->name('products.trashed');
-    Route::post('products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
-    Route::delete('products/force-delete/{id}', [ProductController::class, 'forceDelete'])->name('products.forceDelete');
-    Route::post('products/get-subcategories', [ProductController::class, 'getSubcategories'])->name('products.getSubcategories');
-    Route::resource('products', ProductController::class);
+    Route::middleware('auth')->group(function () {
+        Route::get('products/trashed', [ProductController::class, 'trashed'])->name('products.trashed');
+        Route::post('products/restore/{product}', [ProductController::class, 'restore'])->name('products.restore')->withTrashed();
+        Route::delete('products/force-delete/{product}', [ProductController::class, 'forceDelete'])->name('products.forceDelete')->withTrashed();
+        Route::resource('products', ProductController::class);
+    });
 
     // Product Photos Routes
     Route::get('products/{product}/photos', [ProductController::class, 'view_product_photo'])->name('products.photos.index');

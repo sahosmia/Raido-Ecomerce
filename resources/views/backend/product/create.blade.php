@@ -167,7 +167,7 @@
                 var categoryId = $(this).val();
                 if (categoryId) {
                     $.ajax({
-                        url: '{{ route('admin.products.getSubcategories') }}',
+                        url: '{{ route('admin.categories.getSubcategories') }}',
                         type: 'POST',
                         data: {
                             id: categoryId,

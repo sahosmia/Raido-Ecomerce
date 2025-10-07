@@ -3,7 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Product;
-use App\Models\Product_photo;
+use App\Models\ProductPhoto;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\File;
@@ -68,20 +68,20 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getPhotosByProductId(int $productId, int $perPage = 10)
     {
-        return Product_photo::where('product', $productId)->paginate($perPage);
+        return ProductPhoto::where('product', $productId)->paginate($perPage);
     }
 
     public function createPhotos(array $photos): bool
     {
-        return Product_photo::insert($photos);
+        return ProductPhoto::insert($photos);
     }
 
-    public function findPhotoById(int $photoId): Product_photo
+    public function findPhotoById(int $photoId): ProductPhoto
     {
-        return Product_photo::findOrFail($photoId);
+        return ProductPhoto::findOrFail($photoId);
     }
 
-    public function deletePhoto(Product_photo $photo): bool
+    public function deletePhoto(ProductPhoto $photo): bool
     {
         $this->deletePhotoFile($photo->img);
         return $photo->delete();

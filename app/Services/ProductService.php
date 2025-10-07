@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Subcategory;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Support\Facades\File;
@@ -38,38 +37,16 @@ class ProductService
 
     public function getAllCategories()
     {
-        return $this->categoryRepository->getAll(9999); // Fetch all categories
+        return $this->categoryRepository->getAll(9999);
     }
 
-    public function getSubcategoriesByCategoryId(int $categoryId)
+    public function createProduct(array $data)
     {
-        return Subcategory::where('category', $categoryId)->get();
+        return $this->productRepository->create($data);
     }
 
-    public function createProduct(array $data, $mainImage = null, array $multipleImages = [])
+    public function updateProduct(int $id, array $data)
     {
-        $product = $this->productRepository->create($data);
-
-        if ($mainImage) {
-            $this->uploadMainImage($product, $mainImage);
-        }
-
-        if (!empty($multipleImages)) {
-            $this->uploadMultipleImages($product, $multipleImages);
-        }
-
-        return $product;
-    }
-
-    public function updateProduct(int $id, array $data, $mainImage = null)
-    {
-        $product = $this->productRepository->getById($id);
-
-        if ($mainImage) {
-            $this->deleteFile('upload/product/' . $product->img);
-            $data['img'] = $this->uploadMainImage($product, $mainImage, false);
-        }
-
         return $this->productRepository->update($id, $data);
     }
 
@@ -96,34 +73,10 @@ class ProductService
     public function addPhotosToProduct(int $productId, array $images)
     {
         $product = $this->productRepository->getById($productId);
-        $this->uploadMultipleImages($product, $images);
-    }
-
-    public function deleteProductPhoto(int $photoId)
-    {
-        $photo = $this->productRepository->findPhotoById($photoId);
-        return $this->productRepository->deletePhoto($photo);
-    }
-
-    private function uploadMainImage($product, $image, bool $updateOnModel = true)
-    {
-        $filename = $product->id . '.' . $image->getClientOriginalExtension();
-        $location = public_path('upload/product/' . $filename);
-        Image::make($image)->save($location);
-
-        if ($updateOnModel) {
-            $product->update(['img' => $filename]);
-        }
-
-        return $filename;
-    }
-
-    private function uploadMultipleImages($product, array $images)
-    {
         $photos = [];
         foreach ($images as $product_photo) {
-            $img_extention = $product_photo->getClientOriginalExtension();
-            $img_name = $product->id . "_product_photo_" . rand(1, 9999) . "." . $img_extention;
+            $img_extension = $product_photo->getClientOriginalExtension();
+            $img_name = $product->id . "_product_photo_" . rand(1, 9999) . "." . $img_extension;
             Image::make($product_photo)->save(public_path('upload/product_photo/' . $img_name));
 
             $photos[] = [
@@ -136,10 +89,17 @@ class ProductService
         $this->productRepository->createPhotos($photos);
     }
 
-    private function deleteFile(string $path)
+    public function deleteProductPhoto(int $photoId)
     {
-        if (File::exists(public_path($path))) {
-            File::delete(public_path($path));
+        $photo = $this->productRepository->findPhotoById($photoId);
+
+        if ($photo) {
+            $imagePath = public_path('upload/product_photo/' . $photo->getOriginal('img'));
+            if (File::exists($imagePath)) {
+                File::delete($imagePath);
+            }
+            return $this->productRepository->deletePhoto($photo);
         }
+        return false;
     }
 }

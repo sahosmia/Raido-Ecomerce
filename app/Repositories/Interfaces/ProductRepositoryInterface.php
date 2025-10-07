@@ -3,7 +3,7 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\Product;
-use App\Models\Product_photo;
+use App\Models\ProductPhoto;
 use Illuminate\Database\Eloquent\Collection;
 
 interface ProductRepositoryInterface
@@ -21,6 +21,6 @@ interface ProductRepositoryInterface
     // Product Photos
     public function getPhotosByProductId(int $productId, int $perPage);
     public function createPhotos(array $photos): bool;
-    public function findPhotoById(int $photoId): Product_photo;
-    public function deletePhoto(Product_photo $photo): bool;
+    public function findPhotoById(int $photoId): ProductPhoto;
+    public function deletePhoto(ProductPhoto $photo): bool;
 }

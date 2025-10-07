@@ -6,18 +6,20 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Requests\ProductPhotoInsertRequest;
 use App\Models\Product;
-use App\Models\Product_photo;
+use App\Models\ProductPhoto;
 use App\Services\ProductService;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     protected $productService;
+    protected $categoryService;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, CategoryService $categoryService)
     {
-        $this->middleware('auth');
         $this->productService = $productService;
+        $this->categoryService = $categoryService;
     }
 
     public function index()
@@ -36,12 +38,7 @@ class ProductController extends Controller
 
     public function store(ProductStoreRequest $request)
     {
-        $this->productService->createProduct(
-            $request->validated(),
-            $request->file('img'),
-            $request->file('img_multiple', [])
-        );
-
+        $this->productService->createProduct($request->validated());
         return redirect()->route('admin.products.index')->with('success', 'You have successfully added a new product.');
     }
 
@@ -58,13 +55,13 @@ class ProductController extends Controller
         return view('backend.product.edit', [
             'item' => $product,
             'categories' => $this->productService->getAllCategories(),
-            'subcategories' => $this->productService->getSubcategoriesByCategoryId($product->category),
+            'subcategories' => $this->categoryService->getSubcategoriesByCategoryId($product->category),
         ]);
     }
 
     public function update(ProductUpdateRequest $request, Product $product)
     {
-        $this->productService->updateProduct($product->id, $request->validated(), $request->file('img'));
+        $this->productService->updateProduct($product->id, $request->validated());
         return redirect()->route('admin.products.index')->with('success', 'You have successfully updated the product.');
     }
 
@@ -81,22 +78,16 @@ class ProductController extends Controller
         ]);
     }
 
-    public function restore($id)
+    public function restore(Product $product)
     {
-        $this->productService->restoreProduct($id);
+        $this->productService->restoreProduct($product->id);
         return back()->with('success', 'You have successfully restored the product.');
     }
 
-    public function forceDelete($id)
+    public function forceDelete(Product $product)
     {
-        $this->productService->forceDeleteProduct($id);
+        $this->productService->forceDeleteProduct($product->id);
         return back()->with('success', 'You have permanently deleted the product.');
-    }
-
-    public function getSubcategories(Request $request)
-    {
-        $subcategories = $this->productService->getSubcategoriesByCategoryId($request->id);
-        return response()->json($subcategories);
     }
 
     public function view_product_photo(Product $product)
@@ -120,7 +111,7 @@ class ProductController extends Controller
         return redirect()->route('admin.products.photos.index', $product->id)->with('success', 'You have successfully added new photos.');
     }
 
-    public function delete_product_photo(Product_photo $photo)
+    public function delete_product_photo(ProductPhoto $photo)
     {
         $this->productService->deleteProductPhoto($photo->id);
         return back()->with('success', 'You have deleted the product photo.');

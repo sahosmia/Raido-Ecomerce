@@ -82,11 +82,11 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <form action="{{ route('admin.teams.restore', $item->id) }}" method="POST" class="mr-2">
+                                    <form action="{{ route('admin.teams.restore', $item) }}" method="POST" class="mr-2">
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-sm">Restore</button>
                                     </form>
-                                    <form action="{{ route('admin.teams.forceDelete', $item->id) }}" method="POST">
+                                    <form action="{{ route('admin.teams.forceDelete', $item) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm">Delete Permanently</button>

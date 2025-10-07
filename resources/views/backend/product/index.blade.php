@@ -62,7 +62,7 @@
                                     </figure>
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.products.photos.index', $item->id) }}">
+                                    <a href="{{ route('admin.products.photos.index', $item) }}">
                                         <div class="avatar-group">
                                             @foreach ($item->photos->take(3) as $product_photo)
                                                 <figure class="avatar">
@@ -97,11 +97,11 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('admin.products.show', $item->id) }}"
+                                        <a href="{{ route('admin.products.show', $item) }}"
                                             class="btn btn-primary btn-sm mr-2">View</a>
-                                        <a href="{{ route('admin.products.edit', $item->id) }}"
+                                        <a href="{{ route('admin.products.edit', $item) }}"
                                             class="btn btn-info btn-sm mr-2">Edit</a>
-                                        <form action="{{ route('admin.products.destroy', $item->id) }}" method="POST"
+                                        <form action="{{ route('admin.products.destroy', $item) }}" method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this item?');">
                                             @csrf
                                             @method('DELETE')

@@ -44,7 +44,7 @@
     <div class="card text-dark border border-primary">
         <div class="card-header bg-primary">Update Team Member</div>
         <div class="card-body">
-            <form action="{{ route('admin.teams.update', $item->id) }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.teams.update', $item) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="form-group text-center">

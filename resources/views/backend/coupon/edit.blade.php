@@ -14,7 +14,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.cupons.index') }}">Coupons</a>
+                        <a href="{{ route('admin.coupons.index') }}">Coupons</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Update Coupon</li>
                 </ol>
@@ -31,7 +31,7 @@
                     <h5 class="mb-0">Update Coupon</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.cupons.update', $item->id) }}" method="POST">
+                    <form action="{{ route('admin.coupons.update', $item) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="form-group">

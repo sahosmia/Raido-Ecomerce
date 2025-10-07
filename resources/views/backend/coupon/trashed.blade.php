@@ -14,7 +14,7 @@
                         <a href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('admin.cupons.index') }}">Coupons</a>
+                        <a href="{{ route('admin.coupons.index') }}">Coupons</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Recycle Bin</li>
                 </ol>
@@ -27,7 +27,7 @@
     <div class="card text-center border border-primary p-3 mb-3">
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary" href="{{ route('admin.cupons.index') }}">Back to Coupons</a>
+                <a class="nav-link btn btn-primary" href="{{ route('admin.coupons.index') }}">Back to Coupons</a>
             </li>
         </ul>
     </div>
@@ -66,12 +66,12 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <form action="{{ route('admin.cupons.restore', $item->id) }}" method="POST"
+                                        <form action="{{ route('admin.coupons.restore', $item) }}" method="POST"
                                             class="mr-2">
                                             @csrf
                                             <button type="submit" class="btn btn-success btn-sm">Restore</button>
                                         </form>
-                                        <form action="{{ route('admin.cupons.forceDelete', $item->id) }}" method="POST"
+                                        <form action="{{ route('admin.coupons.forceDelete', $item) }}" method="POST"
                                             onsubmit="return confirm('Are you sure you want to permanently delete this coupon? This action cannot be undone.');">
                                             @csrf
                                             @method('DELETE')

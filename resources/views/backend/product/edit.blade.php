@@ -31,7 +31,7 @@
                     <h5 class="mb-0">Update Product Information</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.products.update', $item->id) }}" method="POST"
+                    <form action="{{ route('admin.products.update', $item) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')

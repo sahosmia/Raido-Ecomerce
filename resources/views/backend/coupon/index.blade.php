@@ -24,10 +24,10 @@
     <div class="card text-center border border-primary p-3 mb-3">
         <ul class="nav justify-content-center">
             <li class="nav-item">
-                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.cupons.create') }}">Add New Coupon</a>
+                <a class="nav-link btn btn-primary mr-2" href="{{ route('admin.coupons.create') }}">Add New Coupon</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link btn btn-dark" href="{{ route('admin.cupons.trashed') }}">Recycle Bin</a>
+                <a class="nav-link btn btn-dark" href="{{ route('admin.coupons.trashed') }}">Recycle Bin</a>
             </li>
         </ul>
     </div>
@@ -66,9 +66,9 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('admin.cupons.edit', $item->id) }}"
+                                        <a href="{{ route('admin.coupons.edit', $item) }}"
                                             class="btn btn-info btn-sm mr-2">Edit</a>
-                                        <form action="{{ route('admin.cupons.destroy', $item->id) }}" method="POST"
+                                        <form action="{{ route('admin.coupons.destroy', $item) }}" method="POST"
                                             onsubmit="return confirm('Are you sure you want to delete this coupon?');">
                                             @csrf
                                             @method('DELETE')

@@ -65,8 +65,8 @@
                                         @if ($item->discount)
                                             <li><strong>Discount:</strong> {{ $item->discount }}%</li>
                                         @endif
-                                        <li><strong>Category:</strong> {{ $item->category_info->name ?? 'N/A' }}</li>
-                                        <li><strong>Subcategory:</strong> {{ $item->subcategory_info->name ?? 'N/A' }}
+                                        <li><strong>Category:</strong> {{ $item->category->name ?? 'N/A' }}</li>
+                                        <li><strong>Subcategory:</strong> {{ $item->subcategory->name ?? 'N/A' }}
                                         </li>
                                         <li><strong>Quantity:</strong> {{ $item->quantity }}</li>
                                         @if ($item->notification_quantity)

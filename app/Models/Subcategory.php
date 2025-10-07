@@ -21,6 +21,8 @@ class Subcategory extends Model
         'added_by',
     ];
 
+    protected $with = ['user', 'category'];
+
     protected $casts = [
         'is_active' => 'boolean',
     ];

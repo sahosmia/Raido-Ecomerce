@@ -12,6 +12,11 @@ class CuponRepository implements CuponRepositoryInterface
         return Cupon::latest()->paginate($perPage);
     }
 
+    public function getActive(int $perPage = 10)
+    {
+        return Cupon::active()->latest()->paginate($perPage);
+    }
+
     public function getTrashed(int $perPage = 10)
     {
         return Cupon::onlyTrashed()->paginate($perPage);

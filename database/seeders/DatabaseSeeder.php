@@ -27,6 +27,15 @@ class DatabaseSeeder extends Seeder
             SubcategorySeeder::class,
             ProductSeeder::class,
             CuponSeeder::class,
+            DivisionSeeder::class,
+            DistrictSeeder::class,
+            OrderSeeder::class,
+            ProductPhotoSeeder::class,
+            ReviewSeeder::class,
+            TestimonialSeeder::class,
+            WishlistSeeder::class,
+            CartSeeder::class,
+            MessageSeeder::class,
         ]);
     }
 }

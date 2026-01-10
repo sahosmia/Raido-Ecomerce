@@ -19,12 +19,16 @@
                                 @foreach ($categories as $item)
                                     <li>
                                         <a class="mb-2"
-                                            href="{{ url('front/category/subcategory') }}/{{ $item->id }}/{{ 'null' }}">{{ $item->name }}</a>
+                                            href="{{ route('front.category.subcategory', ['category' => $item->id, 'subcategory' => 'null']) }}">{{ $item->name }}</a>
+                                        @php
+                                            $show_status = $show_status ?? null;
+                                            $category_id = $category_id ?? null;
+                                        @endphp
                                         <ul
                                             class="{{ $show_status == 'with_subcategory' && $category_id == $item->id ? 'show' : '' }}">
-                                            @foreach ($subcategories->where('category', $item->id) as $subcategory)
+                                            @foreach ($subcategories->where('category_id', $item->id) as $subcategory)
                                                 <li><a
-                                                        href="{{ url('front/category/subcategory') }}/{{ $item->id }}/{{ $subcategory->id }}">{{ $subcategory->name }}</a>
+                                                        href="{{ route('front.category.subcategory', ['category' => $item->id, 'subcategory' => $subcategory->id]) }}">{{ $subcategory->name }}</a>
                                                 </li>
                                             @endforeach
                                         </ul>

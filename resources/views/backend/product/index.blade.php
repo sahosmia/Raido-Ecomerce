@@ -80,9 +80,9 @@
                                             <dd class="col-sm-7">{{ $item->discount }}%</dd>
                                         @endif
                                         <dt class="col-sm-5">Subcategory:</dt>
-                                        <dd class="col-sm-7">{{ $item->subcategory_info->name ?? 'N/A' }}</dd>
+                                        <dd class="col-sm-7">{{ $item->subcategory->name ?? 'N/A' }}</dd>
                                         <dt class="col-sm-5">Category:</dt>
-                                        <dd class="col-sm-7">{{ $item->category_info->name ?? 'N/A' }}</dd>
+                                        <dd class="col-sm-7">{{ $item->category->name ?? 'N/A' }}</dd>
                                         <dt class="col-sm-5">Quantity:</dt>
                                         <dd class="col-sm-7">{{ $item->quantity }}</dd>
                                         @if ($item->notification_quantity)

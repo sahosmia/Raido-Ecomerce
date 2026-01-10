@@ -10,12 +10,17 @@ class BrandRepository implements BrandRepositoryInterface
 {
     public function getAll(int $perPage = 10)
     {
-        return Brand::with('user')->latest()->paginate($perPage);
+        return Brand::latest()->paginate($perPage);
+    }
+
+    public function getActive(int $perPage = 10)
+    {
+        return Brand::active()->latest()->paginate($perPage);
     }
 
     public function getTrashed(int $perPage = 10)
     {
-        return Brand::onlyTrashed()->with('user')->latest()->paginate($perPage);
+        return Brand::onlyTrashed()->latest()->paginate($perPage);
     }
 
     public function getById(int $id)

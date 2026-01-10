@@ -12,12 +12,17 @@ class ProductRepository implements ProductRepositoryInterface
 {
     public function getAll(int $perPage = 10)
     {
-        return Product::with('category_info', 'subcategory_info', 'user', 'photos')->latest()->paginate($perPage);
+        return Product::with('photos')->latest()->paginate($perPage);
+    }
+
+    public function getActive(int $perPage = 10)
+    {
+        return Product::active()->with('photos')->latest()->paginate($perPage);
     }
 
     public function getTrashed(int $perPage = 10)
     {
-        return Product::onlyTrashed()->with('category_info', 'subcategory_info', 'user')->latest()->paginate($perPage);
+        return Product::onlyTrashed()->latest()->paginate($perPage);
     }
 
     public function getById(int $id)

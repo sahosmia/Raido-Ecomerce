@@ -23,6 +23,8 @@ class Cupon extends Model
         'added_by',
     ];
 
+    protected $with = ['user'];
+
     protected $casts = [
         'expires_at' => 'datetime',
         'discount_value' => 'decimal:2',

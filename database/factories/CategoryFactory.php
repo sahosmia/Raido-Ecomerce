@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
         return [
             'name' => $this->faker->unique()->word,
             'img' => null, // Let the accessor handle the default image
-            'action' => $this->faker->boolean,
+            'is_active' => $this->faker->boolean,
             'added_by' => 1, // Assumes a user with ID 1 exists
         ];
     }

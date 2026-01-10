@@ -72,7 +72,7 @@
                         <tr>
                             <th>{{ $subcategories->firstItem() + $key }}</th>
                             <td>{{ $item->name }}</td>
-                            <td>{{ $item->category_info->name ?? 'N/A' }}</td>
+                            <td>{{ $item->category->name ?? 'N/A' }}</td>
                             <td>
                                 <ul>
                                     <li>Added By : {{ $item->user->name ?? 'N/A' }}</li>

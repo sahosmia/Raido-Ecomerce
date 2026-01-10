@@ -14,11 +14,13 @@ class FrontendController extends Controller
     # front
     public function index()
     {
+        $products = Product::active()->withCount('reviews')->withAvg('reviews', 'rating');
+
         return view('frontend.index', [
-            'brands' => Brand::where('action', 1)->latest()->get(),
-            'categories' => Category::where('action', 1)->latest()->get(),
-            'best_seller' => Product::with('category_info', 'subcategory_info')->where('action', 1)->latest()->get(),
-            'products' => Product::with('category_info', 'subcategory_info')->where('action', 1)->orderBy('best_sell', 'desc')->latest()->get(),
+            'brands' => Brand::active()->latest()->get(),
+            'categories' => Category::active()->latest()->get(),
+            'best_seller' => (clone $products)->latest()->get(),
+            'products' => (clone $products)->orderBy('best_sell', 'desc')->latest()->get(),
         ]);
     }
 
@@ -26,9 +28,9 @@ class FrontendController extends Controller
     public function about()
     {
         return view('frontend.about', [
-            'brands' => Brand::where('action', 1)->latest()->get(),
-            'categories' => Category::where('action', 1)->latest()->get(),
-            'products' => Product::with('category_info', 'subcategory_info')->where('action', 1)->latest()->get(),
+            'brands' => Brand::active()->latest()->get(),
+            'categories' => Category::active()->latest()->get(),
+            'products' => Product::active()->withCount('reviews')->withAvg('reviews', 'rating')->latest()->get(),
         ]);
     }
 
@@ -36,9 +38,10 @@ class FrontendController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('search');
-        $products = Product::with('category_info', 'subcategory_info')
-            ->where('name', 'like', '%' . $search . '%')
-            ->where('action', 1)
+        $products = Product::where('name', 'like', '%' . $search . '%')
+            ->active()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->latest()
             ->get();
 
@@ -53,26 +56,26 @@ class FrontendController extends Controller
 
     public function shop()
     {
-        $categories = Category::where('action', 1)->latest()->get();
-        $subcategories = Subcategory::where('action', 1)->latest()->get();
-        $products = Product::with('category_info', 'subcategory_info')->where('action', 1)->latest()->get();
+        $categories = Category::active()->latest()->get();
+        $subcategories = Subcategory::active()->latest()->get();
+        $products = Product::active()->withCount('reviews')->withAvg('reviews', 'rating')->latest()->get();
 
         return view('frontend.shop', compact('categories', 'subcategories', 'products'));
     }
 
     public function allproduct($category_slug, $subcategory_slug = null)
     {
-        $categories = Category::where('action', 1)->latest()->get();
-        $subcategories = Subcategory::where('action', 1)->latest()->get();
-        $productsQuery = Product::with('category_info', 'subcategory_info')->where('action', 1);
+        $categories = Category::active()->latest()->get();
+        $subcategories = Subcategory::active()->latest()->get();
+        $productsQuery = Product::active()->withCount('reviews')->withAvg('reviews', 'rating');
 
         if ($category_slug !== 'all') {
             $category = Category::where('slug', $category_slug)->firstOrFail();
-            $productsQuery->where('category', $category->id);
+            $productsQuery->where('category_id', $category->id);
 
-            if ($subcategory_slug) {
-                $subcategory = Subcategory::where('slug', $subcategory_slug)->where('category', $category->id)->firstOrFail();
-                $productsQuery->where('subcategory', $subcategory->id);
+            if ($subcategory_slug && $subcategory_slug !== 'null') {
+                $subcategory = Subcategory::where('slug', $subcategory_slug)->where('category_id', $category->id)->firstOrFail();
+                $productsQuery->where('subcategory_id', $subcategory->id);
             }
         }
 
@@ -83,12 +86,13 @@ class FrontendController extends Controller
 
     public function product_view_single(Product $product)
     {
-        $product->load('photos', 'reviews.user');
+        $product->load('photos', 'reviews.user')->loadCount('reviews')->loadAvg('reviews', 'rating');
 
-        $other_products = Product::with('category_info', 'subcategory_info')
-            ->where('subcategory', $product->subcategory)
+        $other_products = Product::where('subcategory_id', $product->subcategory_id)
             ->where('id', '!=', $product->id)
-            ->where('action', 1)
+            ->active()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->latest()
             ->take(5)
             ->get();

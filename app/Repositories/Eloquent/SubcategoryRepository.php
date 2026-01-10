@@ -9,12 +9,17 @@ class SubcategoryRepository implements SubcategoryRepositoryInterface
 {
     public function getAll(int $perPage = 10)
     {
-        return Subcategory::with('category_info', 'user')->latest()->paginate($perPage);
+        return Subcategory::latest()->paginate($perPage);
+    }
+
+    public function getActive(int $perPage = 10)
+    {
+        return Subcategory::active()->latest()->paginate($perPage);
     }
 
     public function getTrashed(int $perPage = 10)
     {
-        return Subcategory::onlyTrashed()->with('category_info', 'user')->latest()->paginate($perPage);
+        return Subcategory::onlyTrashed()->latest()->paginate($perPage);
     }
 
     public function getById(int $id)

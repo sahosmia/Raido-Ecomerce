@@ -30,6 +30,8 @@ class Product extends Model
         'notification_quantity',
     ];
 
+    protected $with = ['category', 'subcategory', 'user'];
+
     protected $casts = [
         'price' => 'decimal:2',
         'quantity' => 'integer',

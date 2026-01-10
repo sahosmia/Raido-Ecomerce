@@ -58,8 +58,8 @@
                         <div class="col-md-6">
                             <div class="d-flex justify-content-between mb-2">
                                 <p class="text-muted mb-0">
-                                    {{ $item->category_info->name ?? 'N/A' }} >
-                                    {{ $item->subcategory_info->name ?? 'N/A' }}
+                                    {{ $item->category->name ?? 'N/A' }} >
+                                    {{ $item->subcategory->name ?? 'N/A' }}
                                 </p>
                                 <span class="d-flex align-items-center">
                                     @if ($item->quantity == 0)

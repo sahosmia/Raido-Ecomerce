@@ -11,12 +11,17 @@ class CategoryRepository implements CategoryRepositoryInterface
 {
     public function getAll(int $perPage = 10)
     {
-        return Category::with('user')->latest()->paginate($perPage);
+        return Category::latest()->paginate($perPage);
+    }
+
+    public function getActive(int $perPage = 10)
+    {
+        return Category::active()->latest()->paginate($perPage);
     }
 
     public function getTrashed(int $perPage = 10)
     {
-        return Category::onlyTrashed()->with('user')->latest()->paginate($perPage);
+        return Category::onlyTrashed()->latest()->paginate($perPage);
     }
 
     public function getById(int $id)

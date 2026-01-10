@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 interface ProductRepositoryInterface
 {
     public function getAll(int $perPage);
+    public function getActive(int $perPage);
     public function getTrashed(int $perPage);
     public function getById(int $id);
     public function getTrashedById(int $id);

@@ -9,7 +9,7 @@
             </p>
         </div>
         <div class="header-right">
-            <a href="{{ route('front.contact_us') }}" class="contact d-lg-show"><i class="d-icon-map"></i>Contact</a>
+            <a href="{{ route('front.contact') }}" class="contact d-lg-show"><i class="d-icon-map"></i>Contact</a>
             @if (Route::has('login'))
                 @auth
                 <div class="dropdown ml-5">
